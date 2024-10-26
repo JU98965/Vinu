@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24A335" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ProjectCoreData" representedClassName="ProjectCoreData" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="items" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="VideoCoreData" inverseName="projectData" inverseEntity="VideoCoreData"/>
+    </entity>
+    <entity name="VideoCoreData" representedClassName="VideoCoreData" syncable="YES">
+        <attribute name="assetID" attributeType="String" valueTransformerName="NSSecureUnarchiveFromData" customClassName="AVAsset"/>
+        <attribute name="duration" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="projectData" maxCount="1" deletionRule="Nullify" destinationEntity="ProjectCoreData" inverseName="items" inverseEntity="ProjectCoreData"/>
+    </entity>
+</model>
