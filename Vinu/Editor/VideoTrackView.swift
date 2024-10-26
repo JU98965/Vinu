@@ -127,6 +127,8 @@ final class VideoTrackView: UIView {
     
     // MARK: - Binding
     private func setBinding() {
+        guard videoTrackVM != nil else { return }
+        
         // 핀치 제스처를 가공해서 뷰모델에 전달
         let pinchScale = pinchGesture
             .rx.event
@@ -212,9 +214,7 @@ final class VideoTrackView: UIView {
         output.frameImages
             .take(1)
             .bind(to: videoClipCV.rx.items(cellIdentifier: VideoClipCell.identifier, cellType: VideoClipCell.self)) { index, item, cell in
-                // let images = [CGImage](repeating: UIImage(systemName: "macpro.gen3.fill")!.cgImage! , count: 20)
-                cell.configure(VideoClipCellVM(frameImages: item))
-                cell.frameCV.backgroundColor = .black
+                cell.configure(item)
             }
             .disposed(by: bag)
         

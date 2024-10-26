@@ -56,12 +56,6 @@ final class EditorVC: UIViewController {
         cv.backgroundColor = .clear
         return cv
     }()
-    
-    let focus = {
-        let view = UIView()
-        view.backgroundColor = .black
-        return view
-    }()
 
     let button = {
         let button = UIButton(configuration: .plain())
@@ -98,7 +92,6 @@ final class EditorVC: UIViewController {
         trackContentView.addSubview(trackContentSV)
         trackContentSV.addArrangedSubview(videoClipCV)
         view.addSubview(button)
-        view.addSubview(focus)
         
         previewPlayerView.snp.makeConstraints {
             $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -137,6 +130,8 @@ final class EditorVC: UIViewController {
     
     // MARK: - Binding
     private func setBinding() {
+        guard editorVM != nil else { return }
+        
         let input = EditorVM.Input(
             playerItemStatus: player.rx.playerItemStatus,
             playerTimeControllStatus: player.rx.timeControlStatus,
@@ -183,7 +178,7 @@ final class EditorVC: UIViewController {
         output.frameImages
             .bind(to: videoClipCV.rx.items(cellIdentifier: VideoClipCell.identifier, cellType: VideoClipCell.self)) { index, item, cell in
                 cell.frameCV.backgroundColor = .chuColorPalette.randomElement()
-                cell.configure(VideoClipCellVM(frameImages: item))
+                // cell.configure(VideoClipCellVM(frameImages: item))
             }
             .disposed(by: bag)
         
