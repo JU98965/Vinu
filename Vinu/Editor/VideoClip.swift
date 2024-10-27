@@ -5,11 +5,11 @@
 //  Created by 신정욱 on 10/2/24.
 //
 
-import Foundation
+import UIKit
 import AVFoundation
 
 struct VideoClip {
-    typealias FrameImages = [CGImage]
+    // typealias FrameImages = [CGImage]
     
     struct Metadata {
         let asset: AVAsset
@@ -21,7 +21,7 @@ struct VideoClip {
     }
 
     let metadata: Self.Metadata
-    let frameImages: FrameImages
+    let image: UIImage
 }
 
 

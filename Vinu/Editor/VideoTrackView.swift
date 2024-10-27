@@ -15,7 +15,7 @@ final class VideoTrackView: UIView {
     
     private let bag = DisposeBag()
     private var isSet = false
-    // let frameImages = BehaviorSubject<[VideoClip.FrameImages]>(value: <#T##[VideoClip.FrameImages]#>)
+    let sourcesInput = BehaviorSubject<[VideoTrackModel]>(value: [])
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()

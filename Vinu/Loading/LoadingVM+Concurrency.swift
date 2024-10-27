@@ -5,7 +5,7 @@
 //  Created by 신정욱 on 10/10/24.
 //
 
-import Foundation
+import UIKit
 import RxSwift
 import RxCocoa
 import AVFoundation
@@ -16,11 +16,11 @@ extension LoadingVM {
         let avAssets = await fetchAVAssets(phAssets)
         
         async let metadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
-        async let imagesArr = fetchImagesArr(avAssets).compactMap { $0 }
+        async let images = fetchImages(phAssets).compactMap { $0 }
         
-        if await metadataArr.count == imagesArr.count {
-            let result = await zip(metadataArr, imagesArr).map { (metadata, images) in
-                VideoClip(metadata: metadata, frameImages: images)
+        if await metadataArr.count == images.count {
+            let result = await zip(metadataArr, images).map { (metadata, image) in
+                VideoClip(metadata: metadata, image: image)
             }
             return Result.success(result)
         } else {
@@ -109,71 +109,98 @@ extension LoadingVM {
     }
     
     // MARK: - fetchImages
-    private func fetchImagesArr(_ avAssets: [AVAsset?]) async -> [VideoClip.FrameImages?] {
-        var imagesArr = [VideoClip.FrameImages?](repeating: nil, count: avAssets.count)
+    // phAsset에서 비디오 트랙에 들어갈 프레임 이미지 추출 (일단은 썸네일 이미지 1장으로 대체)
+    private func fetchImages(_ phAssets: [PHAsset]) async -> [UIImage?] {
+        var images = [UIImage?](repeating: nil, count: phAssets.count)
         
-        await withTaskGroup(of: (Int, VideoClip.FrameImages?).self) { group in
-            for (i, avAsset) in avAssets.enumerated() {
+        await withTaskGroup(of: (Int, UIImage?).self) { group in
+            for (i, phAsset) in phAssets.enumerated() {
                 group.addTask {
-                    let images = await self.fetchImages(avAsset)
-                    return (i, images)
+                    let image = await self.fetchImage(phAsset)
+                    return (i, image)
                 }
             }
             
-            for await (i, images) in group {
-                imagesArr[i] = images
+            for await (i, image) in group {
+                images[i] = image
             }
-        }
-        
-        return imagesArr
-    }
-    
-    // 가져온 메타데이터를 바탕으로 클립 셀에 들어갈 프레임 이미지 가져오기
-    private func fetchImages(_ avAsset: AVAsset?) async -> VideoClip.FrameImages? {
-        var images = VideoClip.FrameImages()
-        
-        guard
-            let avAsset,
-            // 전체 재생시간에서 소수점을 버린 값으로 시간 배열을 만들기
-            let duration = try? await avAsset.load(.duration).seconds
-        else { return nil }
-        
-        // 1초에 1장 단위로 가져오도록 시간 배열 만들어주기
-        let cmTimes = (0...Int(duration)).map { CMTime(value: CMTimeValue($0 * 1), timescale: 1) }
-        
-        let imageGenerator = AVAssetImageGenerator(asset: avAsset)
-        // 이미지 방향 유지시켜주는 옵션 (CGImage는 방향을 기억하지 못함)
-        imageGenerator.appliesPreferredTrackTransform = true
-        // 과도한 메모리 사용을 방지하기 위해 이미지 사이즈 조절
-        imageGenerator.maximumSize = CGSize(width: 180, height: 180)
-        
-        // 이미지 생성을 위한 AsyncSequence 반환
-        let results = imageGenerator.images(for: cmTimes)
-        
-        for await result in results {
-            guard let image = try? result.image else { return nil }
-            images.append(image)
         }
         
         return images
     }
+
+    private func fetchImage(_ phAsset: PHAsset) async -> UIImage? {
+        return await withCheckedContinuation { continuation in
+            phAsset.fetchImage { continuation.resume(returning: $0) }
+        }
+    }
     
     // MARK: - fetchPHAsset (코어데이터가 필요해지면 사용할 예정)
     // 로컬 식별자로 PHAsset불러오기, 동기적 메서드
-    /* private func fetchPHAssets(identifiers: [String]) -> [PHAsset] {
-        var assets = [PHAsset]()
-        
-        let options = PHFetchOptions()
-        options.includeHiddenAssets = false
-        options.includeAssetSourceTypes = [.typeUserLibrary]
-        
-        // fetchAssets이 순서를 기억못함, Set으로 넘겨주고 SortDescriptor로 정렬하는 방식인 듯
-        // 그러니까 차라리 하나씩 넣어주는 쪽이 나을 듯
-        identifiers.forEach { id in
-            let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [id], options: options)
-            fetchResult.enumerateObjects { asset, _, _ in assets.append(asset) }
-        }
-        
-        return assets
-    } */
+    // private func fetchPHAssets(identifiers: [String]) -> [PHAsset] {
+    //     var assets = [PHAsset]()
+    //
+    //     let options = PHFetchOptions()
+    //     options.includeHiddenAssets = false
+    //     options.includeAssetSourceTypes = [.typeUserLibrary]
+    //
+    //     // fetchAssets이 순서를 기억못함, Set으로 넘겨주고 SortDescriptor로 정렬하는 방식인 듯
+    //     // 그러니까 차라리 하나씩 넣어주는 쪽이 나을 듯
+    //     identifiers.forEach { id in
+    //         let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [id], options: options)
+    //         fetchResult.enumerateObjects { asset, _, _ in assets.append(asset) }
+    //     }
+    //
+    //     return assets
+    // }
+    
+    // MARK: - fetchImages (1초 단위로 프레임 이미지 불러오기, 필요하면 사용할 예정)
+    // private func fetchImagesArr(_ avAssets: [AVAsset?]) async -> [VideoClip.FrameImages?] {
+    //     var imagesArr = [VideoClip.FrameImages?](repeating: nil, count: avAssets.count)
+    //
+    //     await withTaskGroup(of: (Int, VideoClip.FrameImages?).self) { group in
+    //         for (i, avAsset) in avAssets.enumerated() {
+    //             group.addTask {
+    //                 let images = await self.fetchImages(avAsset)
+    //                 return (i, images)
+    //             }
+    //         }
+    //
+    //         for await (i, images) in group {
+    //             imagesArr[i] = images
+    //         }
+    //     }
+    //
+    //     return imagesArr
+    // }
+    
+    // 가져온 메타데이터를 바탕으로 클립 셀에 들어갈 프레임 이미지 가져오기
+    // private func fetchImages(_ avAsset: AVAsset?) async -> VideoClip.FrameImages? {
+    //     var images = VideoClip.FrameImages()
+    //
+    //     guard
+    //         let avAsset,
+    //         // 전체 재생시간에서 소수점을 버린 값으로 시간 배열을 만들기
+    //         let duration = try? await avAsset.load(.duration).seconds
+    //     else { return nil }
+    //
+    //     // 1초에 1장 단위로 가져오도록 시간 배열 만들어주기
+    //     let cmTimes = (0...Int(duration)).map { CMTime(value: CMTimeValue($0 * 1), timescale: 1) }
+    //
+    //     let imageGenerator = AVAssetImageGenerator(asset: avAsset)
+    //     // 이미지 방향 유지시켜주는 옵션 (CGImage는 방향을 기억하지 못함)
+    //     imageGenerator.appliesPreferredTrackTransform = true
+    //     // 과도한 메모리 사용을 방지하기 위해 이미지 사이즈 조절
+    //     imageGenerator.maximumSize = CGSize(width: 180, height: 180)
+    //
+    //     // 이미지 생성을 위한 AsyncSequence 반환
+    //     let results = imageGenerator.images(for: cmTimes)
+    //
+    //     for await result in results {
+    //         guard let image = try? result.image else { return nil }
+    //         images.append(image)
+    //     }
+    //
+    //     return images
+    // }
 }
