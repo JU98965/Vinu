@@ -42,7 +42,7 @@ final class ConfigureVM {
                 return formatter.string(from: Date())
             }())
         
-        // 생성 버튼을 누르면 ProjectData를 코어데이터에 저장
+        // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
             .withLatestFrom(Observable.combineLatest(input.titleText, placeHolder, phAssets))
             .map { combined in

@@ -11,10 +11,11 @@ import RxSwift
 import RxCocoa
 
 final class VideoTrackView: UIView {
-    private var videoTrackVM: VideoTrackVM! = VideoTrackVM()
+    private let videoTrackVM = VideoTrackVM()
     
     private let bag = DisposeBag()
-    private var isLazyLayoutSet = false
+    private var isSet = false
+    // let frameImages = BehaviorSubject<[VideoClip.FrameImages]>(value: <#T##[VideoClip.FrameImages]#>)
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()
@@ -68,7 +69,7 @@ final class VideoTrackView: UIView {
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         self.addGestureRecognizer(pinchGesture)
         leftHandle.addGestureRecognizer(panGestureLeft)
         rightHandle.addGestureRecognizer(panGestureRight)
@@ -79,13 +80,13 @@ final class VideoTrackView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        //  최초로 1번만 실행되게끔 조건 걸어주기
-        guard !isLazyLayoutSet else { return }
-        isLazyLayoutSet = true
-        self.layoutIfNeeded()
-        
-        setScrollViewInset()
-        setVideoClipCVLayout()
+        // 최초로 1번만 실행되게끔 조건 걸어주기
+        if !isSet {
+            isSet.toggle()
+            self.layoutIfNeeded()
+            setScrollViewInset()
+            setVideoClipCVLayout()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -127,8 +128,6 @@ final class VideoTrackView: UIView {
     
     // MARK: - Binding
     private func setBinding() {
-        guard videoTrackVM != nil else { return }
-        
         // 핀치 제스처를 가공해서 뷰모델에 전달
         let pinchScale = pinchGesture
             .rx.event
@@ -205,16 +204,16 @@ final class VideoTrackView: UIView {
         output.cellWidths
             .bind(with: self) { owner, newWidth in
                 // 컬렉션 뷰 레이아웃만 업데이트
-                owner.videoClipCV.rx.itemWidths.onNext(newWidth)
+                owner.videoClipCV.itemWidths = newWidth
                 owner.videoClipCV.collectionViewLayout.invalidateLayout()
             }
             .disposed(by: bag)
         
         // 컬렉션 뷰 데이터 소스 바인딩
         output.frameImages
-            .take(1)
             .bind(to: videoClipCV.rx.items(cellIdentifier: VideoClipCell.identifier, cellType: VideoClipCell.self)) { index, item, cell in
-                cell.configure(item)
+                // 셀 내부 서브젝트에 직접 바인딩
+                cell.frameImagesInput.accept(item)
             }
             .disposed(by: bag)
         

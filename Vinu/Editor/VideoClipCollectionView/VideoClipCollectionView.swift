@@ -7,6 +7,9 @@
 
 import UIKit
 
+/// UICollectionViewDelegateFlowLayout의 델리게이트 메서드가 뷰 계층에 보이는 게 보기 싫어서 만든 서브클래스.
+/// itemWidths를 업데이트 하고 invalidateLayout() 호출하면 됨.
+/// rxcocoa로 데이터 소스만 바인딩 한 경우에 사용가능, 그 외에는 델리게이트 프록시와 충돌이 발생할지도?
 final class VideoClipCollectionView: UICollectionView {
     var itemWidths = [CGFloat]()
     

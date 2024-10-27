@@ -14,6 +14,8 @@ final class VideoClipCell: UICollectionViewCell {
     static let identifier = "VideoClipCell"
     
     private let bag = DisposeBag()
+    // 일단 빈 배열로 초기화 후 나중에 데이터 바인딩 (릴레이 하나만 있으니까 뷰모델은 사용하지 않음)
+    let frameImagesInput = BehaviorRelay<VideoClip.FrameImages>(value: [])
 
     // MARK: - Components
     let frameCV = {
@@ -25,6 +27,8 @@ final class VideoClipCell: UICollectionViewCell {
         cv.layer.cornerCurve = .continuous
         cv.clipsToBounds = true
         cv.backgroundColor = .chuTint
+        // 모든 수치가 정해져 있어 layoutsubview 시점에 초기화 시켜줄 필요 없음
+        cv.setSinglelineLayout(spacing: .zero, width: 60, height: 60)
         return cv
     }()
     
@@ -33,16 +37,11 @@ final class VideoClipCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
         setAutoLayout()
-        setCollectionViewLayout()
+        setBinding()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Method Injection
-    func configure(_ images: VideoClip.FrameImages) {
-        setBinding(images)
     }
     
     // MARK: - Layout
@@ -51,14 +50,9 @@ final class VideoClipCell: UICollectionViewCell {
         frameCV.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(right: 4)) }
     }
     
-    private func setCollectionViewLayout() {
-        // 모든 수치가 정해져 있기 때문에 layoutSubviews에 배치될 필요는 없음
-        frameCV.setSinglelineLayout(spacing: .zero, width: 60, height: 60)
-    }
-    
     // MARK: - Binding
-    private func setBinding(_ images: VideoClip.FrameImages) {
-        Observable.just(images)
+    private func setBinding() {
+        frameImagesInput
             .bind(to: frameCV.rx.items(cellIdentifier: FrameCell.identifier, cellType: FrameCell.self)) { index, item, cell in
                 cell.imageView.image = UIImage(cgImage: item)
             }

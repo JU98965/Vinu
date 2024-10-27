@@ -16,9 +16,6 @@ final class EditorVM {
         let playerItemStatus: Observable<AVPlayerItem.Status>
         let playerTimeControllStatus: Observable<AVPlayer.TimeControlStatus>
         let playerElapsedTime: Observable<CMTime>
-        
-        let trackPinchGesture: Observable<UIPinchGestureRecognizer>
-        let didChangeContentOffset: Observable<VideoTrackScrollView>
     }
     
     struct Output {
@@ -27,9 +24,9 @@ final class EditorVM {
         let playerProgress: Observable<Double>
         let frameImages: Observable<[VideoClip.FrameImages]>
         
-        let initalWidths: Observable<[CGFloat]>
-        let changeWidths: Observable<[CGFloat]>
-        let seek: Observable<(CGPoint, AVPlayerItem)>
+//        let initalWidths: Observable<[CGFloat]>
+//        let changeWidths: Observable<[CGFloat]>
+//        let seek: Observable<(CGPoint, AVPlayerItem)>
     }
     
     let bag = DisposeBag()
@@ -69,37 +66,31 @@ final class EditorVM {
                 return elapsed / total
             }
 
-        // 셀의 초기 넓이 설정 (초기화 용이라 1번만 방출하고 종료)
-        let initalWidths = currentWidths.take(1)
-
         // 핀치 제스처의 스케일에 따라서 트랙뷰 너비 변경
-        let changeWidths =  input.trackPinchGesture
-            .withLatestFrom(currentWidths) { gesture, originalWidth in
-                let newWidth = originalWidth.map { $0 * gesture.scale }
-                gesture.scale = 1
-                return newWidth
-            }
-            .do(onNext: { width in
-                // 바뀐 넓이 업데이트
-                currentWidths.onNext(width)
-            })
-            .share(replay: 1)
+//        let changeWidths =  input.trackPinchGesture
+//            .withLatestFrom(currentWidths) { gesture, originalWidth in
+//                let newWidth = originalWidth.map { $0 * gesture.scale }
+//                gesture.scale = 1
+//                return newWidth
+//            }
+//            .do(onNext: { width in
+//                // 바뀐 넓이 업데이트
+//                currentWidths.onNext(width)
+//            })
+//            .share(replay: 1)
         
-        let seek = input.didChangeContentOffset
-            .withLatestFrom(input.playerTimeControllStatus) { ($0.contentOffset, $1) }
-            .filter { _, status in status == .paused }
-            .map { $0.0 }
-            .withLatestFrom(playerItem) { ($0, $1) }
-            .share(replay: 1)
+//        let seek = input.didChangeContentOffset
+//            .withLatestFrom(input.playerTimeControllStatus) { ($0.contentOffset, $1) }
+//            .filter { _, status in status == .paused }
+//            .map { $0.0 }
+//            .withLatestFrom(playerItem) { ($0, $1) }
+//            .share(replay: 1)
 
         return Output(
             playerItem: playerItem,
             playerItemStatus: input.playerItemStatus,
             playerProgress: playerProgress,
-            frameImages: frameImages,
-            initalWidths: initalWidths,
-            changeWidths: changeWidths,
-            seek: seek)
+            frameImages: frameImages)
     }
 }
 

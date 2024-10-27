@@ -29,17 +29,17 @@ final class VideoTrackVM {
         let leftPanInnerOffset: Observable<(CGFloat, IndexPath)> // 셀 내부 컬렉션 뷰 오프셋 변경에 필요
     }
     
-    // private let sources: [VideoClip]
+    // 초기화 시점에 데이터 바인딩 해줘야 하는 컴포넌트 하나도 없음
+    // 다들 나중에 바인딩해주는 편, 즉 일단 임시 값 같은걸로 대충 바인딩 해주고 외부에서 input으로 데이터 넘겨줘서
+    // 이벤트가 발생했을 때 뒤늦게 초기화 할 수 있게끔 로직을 수정할 필요가 있음
+    // 이거 컴포넌트지 뷰로 취급하면 안될 듯
+    
     private let bag = DisposeBag()
     private let images: [CGImage] = [
         UIImage(systemName: "macpro.gen3.fill")!.cgImage!,
         UIImage(systemName: "macbook.gen2")!.cgImage!,
         UIImage(systemName: "macmini.fill")!.cgImage!,
     ]
-
-    // init(_ sources: [VideoClip]) {
-    //     self.sources = sources
-    // }
     
     func transform(input: Input) -> Output {
         let MAX_SCALE: CGFloat = 10.0
@@ -47,12 +47,12 @@ final class VideoTrackVM {
         let MIN_WIDTH: CGFloat = 0.1
         
         let images = Observable.just(images).share(replay: 1)
-        let trackDataArr = BehaviorSubject<[TrackData]>(value: [.init(original: 60), .init(original: 120), .init(original: 90)])
+        let trackDataArr = BehaviorSubject<[VideoTrackModel]>(value: [.init(durationSeconds: 2), .init(durationSeconds: 3), .init(durationSeconds: 4)])
         
         // 바뀐 내부 셀의 컬렉션 뷰의 콘텐츠 오프셋을 전체 길이로 나눠서 시작 지점 특정
         // 시작지점으로 부터 현재 셀의 프레임의 넓이만큼 더하고 전체 길이로 나누면 그곳이 종료지점
         
-        // 셀 넓이 초기 할당 및 모든
+        // 셀 넓이의 초기 할당 및 업데이트
         let cellWidths = trackDataArr
             .map { $0.map { $0.currentWidth } }
             .share(replay: 1)
@@ -175,6 +175,8 @@ final class VideoTrackVM {
                     return VideoClip.FrameImages(repeating: image, count: cellCount)
                 }
             }
+            .share(replay: 1)
+//            .distinctUntilChanged { $0.count == $1.count }
         
         return Output(
             frameImages: frameImages,
@@ -187,31 +189,4 @@ final class VideoTrackVM {
     }
 }
 
-fileprivate struct TrackData {
-    private let originalWidth_: CGFloat
-    private var startPoint_: CGFloat
-    private var endPoint_: CGFloat
-    var scale: CGFloat
-    
-    var originalWidth: CGFloat {
-        originalWidth_ * scale
-    }
-    var startPoint: CGFloat {
-        get { startPoint_ * scale }
-        set { startPoint_ = newValue / scale }
-    }
-    var endPoint: CGFloat {
-        get { endPoint_ * scale }
-        set { endPoint_ = newValue / scale }
-    }
-    var currentWidth: CGFloat {
-        endPoint - startPoint
-    }
-    
-    init(original: CGFloat) {
-        self.originalWidth_ = original
-        self.startPoint_ = 0
-        self.endPoint_ = original
-        self.scale = 1.0
-    }
-}
+

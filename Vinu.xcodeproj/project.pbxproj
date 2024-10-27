@@ -30,7 +30,7 @@
 		5146D5582CAC50DF00C407F3 /* ThumbnailData+RxDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146D5572CAC50DF00C407F3 /* ThumbnailData+RxDataSources.swift */; };
 		5146D5632CAC56DB00C407F3 /* VideoClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146D5622CAC56DB00C407F3 /* VideoClip.swift */; };
 		5146D5662CAC79C500C407F3 /* VideoClipCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146D5652CAC799F00C407F3 /* VideoClipCollectionView.swift */; };
-		5146D56A2CAC7CD400C407F3 /* VideoClipCollectionView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146D5692CAC7CD000C407F3 /* VideoClipCollectionView+Rx.swift */; };
+		514BD1D82CCEB10500611AC5 /* VideoTrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */; };
 		514DECBB2CAD2E2D0004EA00 /* FrameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514DECBA2CAD2E2D0004EA00 /* FrameCell.swift */; };
 		51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */; };
 		51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A032C9C823700E06B99 /* PaddingUILabel.swift */; };
@@ -94,7 +94,7 @@
 		5146D5572CAC50DF00C407F3 /* ThumbnailData+RxDataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailData+RxDataSources.swift"; sourceTree = "<group>"; };
 		5146D5622CAC56DB00C407F3 /* VideoClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClip.swift; sourceTree = "<group>"; };
 		5146D5652CAC799F00C407F3 /* VideoClipCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClipCollectionView.swift; sourceTree = "<group>"; };
-		5146D5692CAC7CD000C407F3 /* VideoClipCollectionView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoClipCollectionView+Rx.swift"; sourceTree = "<group>"; };
+		514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackModel.swift; sourceTree = "<group>"; };
 		514DECBA2CAD2E2D0004EA00 /* FrameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameCell.swift; sourceTree = "<group>"; };
 		516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerStrokeView.swift; sourceTree = "<group>"; };
 		51688A032C9C823700E06B99 /* PaddingUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingUILabel.swift; sourceTree = "<group>"; };
@@ -240,7 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				5146D5652CAC799F00C407F3 /* VideoClipCollectionView.swift */,
-				5146D5692CAC7CD000C407F3 /* VideoClipCollectionView+Rx.swift */,
 			);
 			path = VideoClipCollectionView;
 			sourceTree = "<group>";
@@ -344,6 +343,7 @@
 				51D30D412CA2CE24003B9DF1 /* EditorVM.swift */,
 				517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */,
 				517D56C02CC4051700009E23 /* VideoTrackVM.swift */,
+				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
 				513698792CB84E7A004175DE /* VideoHelper.swift */,
 				5146D5622CAC56DB00C407F3 /* VideoClip.swift */,
 			);
@@ -469,7 +469,6 @@
 				511D399A2CB6EA18006A178B /* LoadingVM+Concurrency.swift in Sources */,
 				51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */,
 				5146D5472CAC3A9F00C407F3 /* UIEdgeInsets.swift in Sources */,
-				5146D56A2CAC7CD400C407F3 /* VideoClipCollectionView+Rx.swift in Sources */,
 				51B048EA2CBFA39500C9382B /* TrimHandleView.swift in Sources */,
 				5146D5632CAC56DB00C407F3 /* VideoClip.swift in Sources */,
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
@@ -508,6 +507,7 @@
 				5141F3F52CA4082100839239 /* ProjectDataManager.swift in Sources */,
 				5146D54B2CAC3AD800C407F3 /* Int.swift in Sources */,
 				5146D5492CAC3AC500C407F3 /* NSDirectionalEdgeInsets.swift in Sources */,
+				514BD1D82CCEB10500611AC5 /* VideoTrackModel.swift in Sources */,
 				519BF0CD2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift in Sources */,
 				51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */,
 			);
