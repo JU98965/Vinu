@@ -20,6 +20,7 @@ final class VideoTrackVM {
         let leftPanTranslation: Observable<CGPoint>
         let leftPanStatus: Observable<UIGestureRecognizer.State>
         let rightPanTranslation: Observable<CGPoint>
+        let scrollProgress: Observable<CGFloat>
     }
     
     struct Output {
@@ -31,6 +32,7 @@ final class VideoTrackVM {
         let drawFocusView: Observable<IndexPath>
         let leftPanInnerOffset: Observable<(CGFloat, IndexPath)> // 셀 내부 컬렉션 뷰 오프셋 변경에 필요
         let currentTimeRanges: Observable<[CMTimeRange]>
+        let scrollProgress: Observable<CGFloat>
     }
     
     // 초기화 시점에 데이터 바인딩 해줘야 하는 컴포넌트 하나도 없음
@@ -181,7 +183,7 @@ final class VideoTrackVM {
                 }
             }
             // 갯수로 필터링하면 오작동은 없을 것으로 예상중
-            .distinctUntilChanged { $0.count == $1.count }
+//            .distinctUntilChanged { $0.count == $1.count }
         
         // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
         let currentTimeRanges = trackDataArr
@@ -189,6 +191,10 @@ final class VideoTrackVM {
                 dataArr.map { $0.newTimeRange }
             }
             .distinctUntilChanged()
+        
+        // 스크롤 진행률 정도만 제공, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
+        let scrollProgress = input.scrollProgress
+
         
         return Output(
             frameImagesArr: frameImagesArr,
@@ -198,7 +204,8 @@ final class VideoTrackVM {
             needUpdateClipCVWidth: needUpdateClipCVWidth,
             drawFocusView: drawFocusView,
             leftPanInnerOffset: leftPanInnerOffset,
-            currentTimeRanges: currentTimeRanges)
+            currentTimeRanges: currentTimeRanges,
+            scrollProgress: scrollProgress)
     }
 }
 

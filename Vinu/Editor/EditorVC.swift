@@ -59,12 +59,11 @@ final class EditorVC: UIViewController {
     // MARK: - Binding
     private func setBinding() {
         guard let editorVM else { return }
-        
-        
-        
+
         let input = EditorVM.Input(
             progress: videoPlayerView.progress.asObservable(),
-            currentTimeRanges: videoTrackView.currentTimeRanges.asObservable())
+            currentTimeRanges: videoTrackView.currentTimeRanges.asObservable(),
+            scrollProgress: videoTrackView.scrollProgress.asObservable())
         
         let output = editorVM.transform(input: input)
 
@@ -77,34 +76,29 @@ final class EditorVC: UIViewController {
         output.trackModels
             .bind(to: videoTrackView.sourceIn)
             .disposed(by: bag)
-
         
-//        // 영상 진행률에 따라서 스크롤 뷰의 오프셋 변경
-//        output.playerProgress
-//            .bind(with: self, onNext: { owner, progress in
-//                let width = owner.trackScroll.contentSize.width
-//                let inset = owner.trackScroll.contentInset.left
-//                // 인셋도 계산에 반영
-//                owner.trackScroll.contentOffset.x = width * progress - inset
-//            })
-//            .disposed(by: bag)
-//        
-//        // 영상 탐색
-//        output.seek
-//            .bind(with: self) { owner, seekSource in
-//                let centerPoint = CGPoint(x: owner.trackScroll.bounds.midX, y: owner.trackScroll.bounds.midY)
-//                // print("indexPathForItem", owner.videoClipCV.indexPathForItem(at: centerPoint))
-//                
-//                let contentSize = owner.trackScroll.contentSize.width
-//                let contentOffset = seekSource.0.x + owner.trackScroll.contentInset.left
-//                let duration = seekSource.1.duration.seconds
-//                
-//                let seconds = Double(contentOffset / contentSize * duration)
-//                let targetTime = CMTime(seconds: seconds , preferredTimescale: 30)
-//                owner.player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero)
-//            }
-//            .disposed(by: bag)
-//
+        // 영상 진행률에 따라서 트랙 뷰의 콘텐츠 오프셋 변경
+        output.progress
+            .bind(with: self) { owner, progress in
+                let trackScrollView = owner.videoTrackView.scrollView
+                
+                let width = trackScrollView.contentSize.width
+                let inset = trackScrollView.contentInset.left // 인셋도 계산에 반영
+
+                trackScrollView.contentOffset.x = width * progress - inset
+            }
+            .disposed(by: bag)
+        
+        // 트랙뷰의 스크롤에 따른 비디오 탐색
+        output.seekingPoint
+            .bind(with: self) { owner, time in
+                let player = owner.videoPlayerView.player
+                // 재생 중일 때도 트랙의 콘텐츠 오프셋은 변하니까 정지중일 경우에만 탐색할 수 있어야 함
+                guard player.timeControlStatus == .paused else { return }
+                player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
+            }
+            .disposed(by: bag)
+
         // MARK: - temp
         button
             .rx.tap

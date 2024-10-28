@@ -19,6 +19,7 @@ final class VideoTrackView: UIView {
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
     let sourceIn = PublishSubject<[VideoTrackModel]>()
     let currentTimeRanges = PublishSubject<[CMTimeRange]>()
+    let scrollProgress = PublishSubject<CGFloat>()
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()
@@ -193,13 +194,27 @@ final class VideoTrackView: UIView {
             .distinctUntilChanged()
             .share(replay: 1)
         
+        let scrollProgress_ = scrollView
+            .rx.contentOffset
+            .map { [weak self] offset -> CGFloat? in
+                guard let self else { return nil }
+                let contentWidth = self.scrollView.contentSize.width
+                let leftInset = self.scrollView.contentInset.left
+                // 인셋을 계산에 넣어줘야 함
+                let actualOffset = offset.x + leftInset
+                return actualOffset / contentWidth
+            }
+            .compactMap { $0 }
+            .share(replay: 1)
+        
         let input = VideoTrackVM.Input(
             sourceIn: sourceIn.asObservable(),
             pinchScale: pinchScale,
             focusedIndexPath: focusedIndexPath,
             leftPanTranslation: leftPanTranslation,
             leftPanStatus: leftPanStatus,
-            rightPanTranslation: rightPanTranslation)
+            rightPanTranslation: rightPanTranslation,
+            scrollProgress: scrollProgress_)
         
         // MARK: - Output
         let output = videoTrackVM.transform(input: input)
@@ -274,6 +289,11 @@ final class VideoTrackView: UIView {
         // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
         output.currentTimeRanges
             .bind(to: currentTimeRanges)
+            .disposed(by: bag)
+        
+        // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
+        output.scrollProgress
+            .bind(to: scrollProgress)
             .disposed(by: bag)
     }
 }

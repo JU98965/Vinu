@@ -20,12 +20,6 @@ final class VideoPlayerView: UIView {
     let progress = PublishSubject<Double>()
     
     // MARK: - Components
-//    let previewPlayerView = {
-//        let view = UIView()
-//        view.backgroundColor = .white
-//        return view
-//    }()
-    
     let player = PreviewPlayer()
     
     var playerLayer: AVPlayerLayer?
@@ -33,18 +27,11 @@ final class VideoPlayerView: UIView {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        setAutoLayout()
         setBinding()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Layout
-    private func setAutoLayout() {
-//        self.addSubview(previewPlayerView)
-//        previewPlayerView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     // MARK: - Binding
