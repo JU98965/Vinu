@@ -11,7 +11,6 @@ import RxSwift
 import RxCocoa
 
 final class VideoTrackVM {
-    
     typealias FrameImages = [UIImage]
     
     struct Input {

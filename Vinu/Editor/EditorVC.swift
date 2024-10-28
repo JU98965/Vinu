@@ -26,7 +26,7 @@ final class EditorVC: UIViewController {
     
     var playerLayer: AVPlayerLayer?
     
-    let videoTrackView: VideoTrackView
+    let videoTrackView = VideoTrackView()
 
     let button = {
         let button = UIButton(configuration: .plain())
@@ -35,22 +35,12 @@ final class EditorVC: UIViewController {
     }()
     
     // MARK: - Life Cycle
-    init(_ vm: EditorVM? = nil) {
-        // editorVM = vm
-        videoTrackView = VideoTrackView()
-        super.init(nibName: nil, bundle: nil)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .chuLightGray
         
         setAutoLayout()
         setBinding()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Layout

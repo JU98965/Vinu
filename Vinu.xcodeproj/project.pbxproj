@@ -68,6 +68,8 @@
 		51D30D522CA30332003B9DF1 /* DivideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D512CA30320003B9DF1 /* DivideView.swift */; };
 		51D30D552CA30C22003B9DF1 /* RatioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D542CA30C22003B9DF1 /* RatioCell.swift */; };
 		51EBA9202CBC242D0025E432 /* LoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBA91F2CBC242D0025E432 /* LoadingError.swift */; };
+		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
+		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -132,6 +134,8 @@
 		51D30D512CA30320003B9DF1 /* DivideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivideView.swift; sourceTree = "<group>"; };
 		51D30D542CA30C22003B9DF1 /* RatioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioCell.swift; sourceTree = "<group>"; };
 		51EBA91F2CBC242D0025E432 /* LoadingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingError.swift; sourceTree = "<group>"; };
+		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +345,8 @@
 				5146D55F2CAC52AE00C407F3 /* SubView */,
 				51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */,
 				51D30D412CA2CE24003B9DF1 /* EditorVM.swift */,
+				51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */,
+				51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */,
 				517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */,
 				517D56C02CC4051700009E23 /* VideoTrackVM.swift */,
 				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
@@ -474,6 +480,7 @@
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
 				5146D5432CAC3A6700C407F3 /* UICollectionView.swift in Sources */,
 				51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */,
+				51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */,
 				5146D53F2CAC3A2A00C407F3 /* UIColor.swift in Sources */,
 				519BF0CB2C9AD8F50064FE0A /* PickerVC.swift in Sources */,
 				5191D5822CAF26E300EB0139 /* VideoTrackScrollViewDelegate.swift in Sources */,
@@ -496,6 +503,7 @@
 				5141F4002CA4611100839239 /* ProjectCoreData+CoreDataClass.swift in Sources */,
 				5146D5512CAC3B7100C407F3 /* UIImage.swift in Sources */,
 				5141F4012CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift in Sources */,
+				51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */,
 				5141F4022CA4611100839239 /* VideoCoreData+CoreDataClass.swift in Sources */,
 				5141F4032CA4611100839239 /* VideoCoreData+CoreDataProperties.swift in Sources */,
 				519BF0AE2C9AB7DC0064FE0A /* Vinu.xcdatamodeld in Sources */,
