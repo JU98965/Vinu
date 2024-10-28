@@ -131,7 +131,29 @@ extension LoadingVM {
 
     private func fetchImage(_ phAsset: PHAsset) async -> UIImage? {
         return await withCheckedContinuation { continuation in
-            phAsset.fetchImage { continuation.resume(returning: $0) }
+            
+            // 썸네일 어떻게 가져올건지 옵션 설정
+            let options = PHImageRequestOptions()
+            // 아이클라우드에 있는 데이터도 가져올건지
+            options.isNetworkAccessAllowed = false
+            // 편집사항을 반영하는 현재 버전 가져오기
+            options.version = .current
+            // targetSize에 근접하도록 알아서 크기 효율적으로 조정
+            options.resizeMode = .fast
+            // isSynchronous가 false라면 처음엔 저화질 주고 고화질로드 끝나면 고화질 줌
+            // resume이 두 번 이상 호출되면 안되기 때문에 여기서는 고퀄로 설정
+            options.deliveryMode = .highQualityFormat
+            // 기본값 false, true일 경우 deliveryMode는 자동으로 .highQualityFormat으로 지정됨
+            options.isSynchronous = true
+            
+            // 옵션과 phAsset을 바탕으로 이미지 가져오기
+            PHImageManager.default().requestImage(
+                for: phAsset,
+                targetSize: CGSize(width: 128, height: 128),
+                contentMode: .aspectFill,
+                options: options) { image, info in
+                    continuation.resume(returning: image)
+                }
         }
     }
     
