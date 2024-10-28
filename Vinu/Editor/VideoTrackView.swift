@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 import SnapKit
 import RxSwift
 import RxCocoa
@@ -17,6 +18,7 @@ final class VideoTrackView: UIView {
     private var isSet = false
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
     let sourceIn = PublishSubject<[VideoTrackModel]>()
+    let currentTimeRanges = PublishSubject<[CMTimeRange]>()
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()
@@ -267,6 +269,11 @@ final class VideoTrackView: UIView {
                 owner.leftHandle.frame = CGRect(origin: leftOrigin, size: leftSize)
                 owner.rightHandle.frame = CGRect(origin: rightOrigin, size: rightSize)
             }
+            .disposed(by: bag)
+        
+        // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
+        output.currentTimeRanges
+            .bind(to: currentTimeRanges)
             .disposed(by: bag)
     }
 }

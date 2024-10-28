@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 import RxSwift
 import RxCocoa
 
@@ -30,6 +31,7 @@ final class VideoTrackVM {
         let needUpdateClipCVWidth: Observable<Void>
         let drawFocusView: Observable<IndexPath>
         let leftPanInnerOffset: Observable<(CGFloat, IndexPath)> // 셀 내부 컬렉션 뷰 오프셋 변경에 필요
+        let currentTimeRanges: Observable<[CMTimeRange]>
     }
     
     // 초기화 시점에 데이터 바인딩 해줘야 하는 컴포넌트 하나도 없음
@@ -182,6 +184,13 @@ final class VideoTrackVM {
             // 갯수로 필터링하면 오작동은 없을 것으로 예상중
             .distinctUntilChanged { $0.count == $1.count }
         
+        // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
+        let currentTimeRanges = trackDataArr
+            .map { dataArr in
+                dataArr.map { $0.newTimeRange }
+            }
+            .distinctUntilChanged()
+        
         return Output(
             frameImagesArr: frameImagesArr,
             cellWidths: cellWidths,
@@ -189,7 +198,8 @@ final class VideoTrackVM {
             leftPanOffsetShift: leftPanOffsetShift,
             needUpdateClipCVWidth: needUpdateClipCVWidth,
             drawFocusView: drawFocusView,
-            leftPanInnerOffset: leftPanInnerOffset)
+            leftPanInnerOffset: leftPanInnerOffset,
+            currentTimeRanges: currentTimeRanges)
     }
 }
 
