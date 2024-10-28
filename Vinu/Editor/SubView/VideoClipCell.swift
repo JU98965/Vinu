@@ -15,7 +15,7 @@ final class VideoClipCell: UICollectionViewCell {
     
     private let bag = DisposeBag()
     // 일단 빈 배열로 초기화 후 나중에 데이터 바인딩 (릴레이 하나만 있으니까 뷰모델은 사용하지 않음)
-    let frameImagesInput = BehaviorRelay<VideoClip.FrameImages>(value: [])
+    let frameImagesIn = BehaviorRelay<[UIImage]>(value: [])
 
     // MARK: - Components
     let frameCV = {
@@ -52,9 +52,9 @@ final class VideoClipCell: UICollectionViewCell {
     
     // MARK: - Binding
     private func setBinding() {
-        frameImagesInput
+        frameImagesIn
             .bind(to: frameCV.rx.items(cellIdentifier: FrameCell.identifier, cellType: FrameCell.self)) { index, item, cell in
-                cell.imageView.image = UIImage(cgImage: item)
+                cell.imageView.image = item
             }
             .disposed(by: bag)
     }

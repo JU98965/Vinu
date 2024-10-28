@@ -11,7 +11,10 @@ import RxCocoa
 
 final class VideoTrackVM {
     
+    typealias FrameImages = [UIImage]
+    
     struct Input {
+        let sourceIn: Observable<[VideoTrackModel]>
         let pinchScale: Observable<CGFloat>
         let focusedIndexPath: Observable<IndexPath>
         let leftPanTranslation: Observable<CGPoint>
@@ -20,7 +23,7 @@ final class VideoTrackVM {
     }
     
     struct Output {
-        let frameImages: Observable<[VideoClip.FrameImages]>
+        let frameImagesArr: Observable<[FrameImages]>
         let cellWidths: Observable<[CGFloat]>
         let focusedIndexPath: Observable<IndexPath>
         let leftPanOffsetShift: Observable<CGFloat> // 스크롤 뷰 오프셋 변경에 필요
@@ -35,19 +38,19 @@ final class VideoTrackVM {
     // 이거 컴포넌트지 뷰로 취급하면 안될 듯
     
     private let bag = DisposeBag()
-    private let images: [CGImage] = [
-        UIImage(systemName: "macpro.gen3.fill")!.cgImage!,
-        UIImage(systemName: "macbook.gen2")!.cgImage!,
-        UIImage(systemName: "macmini.fill")!.cgImage!,
-    ]
     
     func transform(input: Input) -> Output {
         let MAX_SCALE: CGFloat = 10.0
         let MIN_SCALE: CGFloat = 0.1
         let MIN_WIDTH: CGFloat = 0.1
         
-        let images = Observable.just(images).share(replay: 1)
-        let trackDataArr = BehaviorSubject<[VideoTrackModel]>(value: [.init(durationSeconds: 2), .init(durationSeconds: 3), .init(durationSeconds: 4)])
+        // 바인딩 된 데이터를 전적으로 관리하는 서브젝트
+        let trackDataArr = BehaviorSubject<[VideoTrackModel]>(value: [])
+        
+        // 외부로부터 데이터가 바인딩 되면 trackDataArr의 데이터를 업데이트
+        input.sourceIn
+            .bind(to: trackDataArr)
+            .disposed(by: bag)
         
         // 바뀐 내부 셀의 컬렉션 뷰의 콘텐츠 오프셋을 전체 길이로 나눠서 시작 지점 특정
         // 시작지점으로 부터 현재 셀의 프레임의 넓이만큼 더하고 전체 길이로 나누면 그곳이 종료지점
@@ -165,21 +168,22 @@ final class VideoTrackVM {
                 return (offset, path)
             }
         
-        // 트랙 뷰에 들어갈 이미지 묶음들
-        let frameImages = cellWidths
-            .withLatestFrom(images) { widths, images in
-                zip(widths, images).map { width, image in
-                    // 일단 최대 스케일 기준으로 갯수를 상정하고 보내기
-                    let width = width * MAX_SCALE
-                    let cellCount = ceil(width / 60).int
-                    return VideoClip.FrameImages(repeating: image, count: cellCount)
+        // 각 클립에 들어갈 이미지 배열
+        let frameImagesArr = trackDataArr
+            .map { dataArr in
+                return dataArr.map {
+                    let image = $0.image
+                    // 스케일이 반영된 원본 넓이를 기준으로 프레임 이미지 배열 만들기
+                    let cellCount = ceil($0.originalWidth / 60).int
+                    
+                    return FrameImages(repeating: image, count: cellCount)
                 }
             }
-            .share(replay: 1)
-//            .distinctUntilChanged { $0.count == $1.count }
+            // 갯수로 필터링하면 오작동은 없을 것으로 예상중
+            .distinctUntilChanged { $0.count == $1.count }
         
         return Output(
-            frameImages: frameImages,
+            frameImagesArr: frameImagesArr,
             cellWidths: cellWidths,
             focusedIndexPath: focusedIndexPath,
             leftPanOffsetShift: leftPanOffsetShift,

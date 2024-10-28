@@ -10,14 +10,14 @@ import UIKit
 import AVFoundation
 
 struct VideoTrackModel {
-    let image: CGImage
+    let image: UIImage
     private let duration: CMTime
     private let originalWidth_: CGFloat
     private var startPoint_: CGFloat
     private var endPoint_: CGFloat
     var scale: CGFloat
     
-    init(image: CGImage, duration: CMTime) {
+    init(image: UIImage, duration: CMTime) {
         self.image = image
         self.duration = duration
         self.originalWidth_ = duration.seconds * 60

@@ -15,7 +15,8 @@ final class VideoTrackView: UIView {
     
     private let bag = DisposeBag()
     private var isSet = false
-    let sourcesInput = BehaviorSubject<[VideoTrackModel]>(value: [])
+    // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
+    let sourceIn = PublishSubject<[VideoTrackModel]>()
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()
@@ -191,6 +192,7 @@ final class VideoTrackView: UIView {
             .share(replay: 1)
         
         let input = VideoTrackVM.Input(
+            sourceIn: sourceIn.asObservable(),
             pinchScale: pinchScale,
             focusedIndexPath: focusedIndexPath,
             leftPanTranslation: leftPanTranslation,
@@ -210,10 +212,10 @@ final class VideoTrackView: UIView {
             .disposed(by: bag)
         
         // 컬렉션 뷰 데이터 소스 바인딩
-        output.frameImages
+        output.frameImagesArr
             .bind(to: videoClipCV.rx.items(cellIdentifier: VideoClipCell.identifier, cellType: VideoClipCell.self)) { index, item, cell in
                 // 셀 내부 서브젝트에 직접 바인딩
-                cell.frameImagesInput.accept(item)
+                cell.frameImagesIn.accept(item)
             }
             .disposed(by: bag)
         
