@@ -296,6 +296,10 @@ final class VideoTrackView: UIView {
             .bind(to: scrollProgress)
             .disposed(by: bag)
     }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+    }
 }
 
 #Preview {

@@ -182,8 +182,10 @@ final class VideoTrackVM {
                     return FrameImages(repeating: image, count: cellCount)
                 }
             }
-            // 갯수로 필터링하면 오작동은 없을 것으로 예상중
-//            .distinctUntilChanged { $0.count == $1.count }
+            .distinctUntilChanged {
+                // 전체 이미지 개수로 필터링하면 오작동은 없을 것으로 예상중
+                $0.flatMap { $0 }.count == $1.flatMap { $0 }.count
+            }
         
         // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
         let currentTimeRanges = trackDataArr
@@ -191,6 +193,7 @@ final class VideoTrackVM {
                 dataArr.map { $0.newTimeRange }
             }
             .distinctUntilChanged()
+            .share(replay: 1)
         
         // 스크롤 진행률 정도만 제공, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
         let scrollProgress = input.scrollProgress

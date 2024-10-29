@@ -75,16 +75,12 @@ final class LoadingVC: UIViewController {
                 transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
                 owner.view.window?.layer.add(transition, forKey: kCATransition)
                 
-                do {
-                    let vc = EditorVC()
-                    vc.editorVM = try EditorVM(editors)
-                    vc.modalPresentationStyle = .fullScreen
-                    owner.present(vc, animated: false) {
-                        // 네비게이션 스택 모두 닫아주기
-                        owner.navigationController?.popToRootViewController(animated: false)
-                    }
-                } catch {
-                    print(error)
+                let vc = EditorVC()
+                vc.editorVM = EditorVM(editors)
+                vc.modalPresentationStyle = .fullScreen
+                owner.present(vc, animated: false) {
+                    // 네비게이션 스택 모두 닫아주기
+                    owner.navigationController?.popToRootViewController(animated: false)
                 }
             }
             .disposed(by: bag)

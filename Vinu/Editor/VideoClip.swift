@@ -9,7 +9,6 @@ import UIKit
 import AVFoundation
 
 struct VideoClip {
-    // typealias FrameImages = [CGImage]
     
     struct Metadata {
         let asset: AVAsset

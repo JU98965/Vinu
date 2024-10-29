@@ -9,81 +9,13 @@ import UIKit
 import AVFoundation
 
 final class VideoHelper {
-    let metadataArr: [VideoClip.Metadata]
-    let exportSize: CGSize
     
-    let mixComposition = AVMutableComposition()
-    var instructions = [AVMutableVideoCompositionLayerInstruction]()
+    static let shared = VideoHelper()
     
-    init(metadataArr: [VideoClip.Metadata], exportSize: CGSize) throws {
-        self.metadataArr = metadataArr
-        self.exportSize = exportSize
-        try prepare()
-        setInstruction()
-    }
-    
-    private func prepare() throws {
-        var timeRange = CMTime.zero
-        
-        for metadata in metadataArr {
-            let assetVideoTrack = metadata.assetVideoTrack
-            let assetAudioTrack = metadata.assetAudioTrack
-            let duration = metadata.duration
-            
-            
-            // kCMPersistentTrackID_Invalid로 하면 알아서 고유한 트랙 id를 만들어 줌, 직접 설정하는 것도 가능
-            let videoTrack = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-            let audioTrack = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-            
-            
-            try videoTrack?.insertTimeRange(
-                CMTimeRange(start: .zero, duration: duration),
-                of: assetVideoTrack,
-                at: timeRange)
-            
-            try audioTrack?.insertTimeRange(
-                CMTimeRange(start: .zero, duration: duration),
-                of: assetAudioTrack,
-                at: timeRange)
-
-            
-            timeRange = CMTimeAdd(timeRange, duration)
-            
-            
-            // 영상의 끝부분에서는 자기 자신을 숨겨야 하기 때문에 영상 끝부분의 timeRange를 사용함
-            if let videoTrack {
-                let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
-                instruction.setOpacity(0.0, at: timeRange)
-                instructions.append(instruction)
-            }
-        }
-    }
-    
-    private func setInstruction() {
-        zip(instructions, metadataArr).forEach { instruction, metadata in
-            instruction.setTransform(transformAspectFit(metadata: metadata), at: .zero)
-        }
-    }
-    
-    func makePlayerItem() -> AVPlayerItem {
-        let mainInstruction = AVMutableVideoCompositionInstruction()
-        mainInstruction.timeRange = CMTimeRange(start: .zero, duration: mixComposition.duration)
-        mainInstruction.layerInstructions = instructions
-        
-        // 기본적인 비디오 컴포지션 설정
-        let videoComposition = AVMutableVideoComposition()
-        videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
-        videoComposition.renderSize = exportSize // 출력 해상도 설정
-        videoComposition.instructions = [mainInstruction]
-        
-        let item = AVPlayerItem(asset: mixComposition)
-        item.videoComposition = videoComposition
-        
-        return item
-    }
+    private init() {}
     
     // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    func transformAspectFit(metadata: VideoClip.Metadata) -> CGAffineTransform {
+    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize) -> CGAffineTransform {
         // 트랙에서 필요한 요소 뽑아오기
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         
@@ -157,7 +89,7 @@ final class VideoHelper {
         }
     }
     
-    func orientationFromTransform(_ transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
+    private func orientationFromTransform(_ transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
         var assetOrientation = UIImage.Orientation.up
         var isPortrait = false
         let tfA = transform.a
@@ -181,74 +113,3 @@ final class VideoHelper {
     
 
 }
-
-
-
-//func makeMainComposition() async -> AVMutableVideoComposition? {
-//    let mainInstruction = AVMutableVideoCompositionInstruction()
-//    mainInstruction.timeRange = CMTimeRange(start: .zero, duration: mixComposition.duration)
-//    mainInstruction.layerInstructions = instructions
-//    
-//    
-//    guard let filter = CIFilter(name: "CIGaussianBlur") else { return nil }
-//    
-//    
-//    // 기본적인 비디오 컴포지션 설정
-//    let videoComposition = try? await AVMutableVideoComposition.videoComposition(with: mixComposition) { request in
-//        // Clamp to avoid blurring transparent pixels at the image edges.
-//        let source = request.sourceImage.clampedToExtent()
-//        filter.setValue(source, forKey: kCIInputImageKey)
-//                
-//        // Vary filter parameters based on the video timing.
-//        let seconds = CMTimeGetSeconds(request.compositionTime)
-//        filter.setValue(seconds * 10.0, forKey: kCIInputRadiusKey)
-//                
-//        // Crop the blurred output to the bounds of the original image.
-//        if let output = filter.outputImage?.cropped(to: request.sourceImage.extent) {
-//            request.finish(with: output, context: nil)
-//        } else {
-//            
-//        }
-//    }
-//    
-//    videoComposition?.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
-//    videoComposition?.renderSize = exportSize // 출력 해상도 설정
-//
-//    return videoComposition
-//}
-
-//func export() {
-//    let mainInstruction = AVMutableVideoCompositionInstruction()
-//    mainInstruction.timeRange = CMTimeRange(start: .zero, duration: mixComposition.duration)
-//    mainInstruction.layerInstructions = instructions
-//    
-//    // 기본적인 비디오 컴포지션 설정
-//    let videoComposition = AVMutableVideoComposition()
-//    videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
-//    videoComposition.renderSize = exportSize // 출력 해상도 설정
-//    videoComposition.instructions = [mainInstruction]
-//    
-//    
-//    // 11
-//    let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//    let url = documentDirectory.appendingPathComponent("mergeVideo.mov")
-//
-//    // 12
-//    guard let exporter = AVAssetExportSession(
-//        asset: mixComposition,
-//        presetName: AVAssetExportPresetHighestQuality)
-//    else { return }
-//    exporter.outputURL = url
-//    exporter.outputFileType = .mov
-//    exporter.shouldOptimizeForNetworkUse = true
-//    exporter.videoComposition = videoComposition
-//
-//    // 13
-//    exporter.exportAsynchronously {
-//        if exporter.status == .completed {
-//            print("성공")
-//        } else {
-//            print("실패")
-//        }
-//    }
-//}

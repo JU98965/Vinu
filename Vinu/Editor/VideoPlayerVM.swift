@@ -15,7 +15,7 @@ final class VideoPlayerVM {
     struct Input {
         let playerItemIn: Observable<AVPlayerItem>
         let itemStatus: Observable<AVPlayerItem.Status>
-        let timeControllStatus: Observable<AVPlayer.TimeControlStatus>
+        let timeControllStatus: Observable<AVPlayer.TimeControlStatus> // 아직은 안쓰는 중인거 같은데 나중에 정리할 것
         let elapsedTime: Observable<CMTime>
     }
     

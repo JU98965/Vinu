@@ -73,7 +73,7 @@ final class EditorVC: UIViewController {
             .disposed(by: bag)
         
         // 비디오 트랙뷰 데이터 바인딩 (재생시간, 썸네일 이미지 등)
-        output.trackModels
+        output.trackViewData
             .bind(to: videoTrackView.sourceIn)
             .disposed(by: bag)
         
