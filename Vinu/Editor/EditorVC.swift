@@ -16,7 +16,16 @@ final class EditorVC: UIViewController {
     private let bag = DisposeBag()
     
     // MARK: - Components
+    let mainVStack = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.distribution = .fill
+        return sv
+    }()
+    
     let videoPlayerView = VideoPlayerView()
+    
+    let playbackConsoleView = PlaybackConsoleView()
     
     let videoTrackView = VideoTrackView()
 
@@ -37,23 +46,15 @@ final class EditorVC: UIViewController {
     
     // MARK: - Layout
     private func setAutoLayout() {
-        view.addSubview(videoPlayerView)
-        view.addSubview(videoTrackView)
-        view.addSubview(button)
-        
-        videoPlayerView.snp.makeConstraints {
-            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(400)
-        }
-        videoTrackView.snp.makeConstraints {
-            $0.top.equalTo(videoPlayerView.snp.bottom)
-            $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(60)
-        }
-        button.snp.makeConstraints { make in
-            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(50)
-        }
+        view.addSubview(mainVStack)
+        mainVStack.addArrangedSubview(videoPlayerView)
+        mainVStack.addArrangedSubview(playbackConsoleView)
+        mainVStack.addArrangedSubview(videoTrackView)
+        mainVStack.addArrangedSubview(button)
+
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        playbackConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
+        videoTrackView.snp.makeConstraints { $0.height.equalTo(60) }
     }
     
     // MARK: - Binding
@@ -89,7 +90,7 @@ final class EditorVC: UIViewController {
             }
             .disposed(by: bag)
         
-        // 트랙뷰의 스크롤에 따른 비디오 탐색
+        // 트랙뷰의 스크롤에 따라서 비디오 탐색
         output.seekingPoint
             .bind(with: self) { owner, time in
                 let player = owner.videoPlayerView.player
@@ -97,6 +98,11 @@ final class EditorVC: UIViewController {
                 guard player.timeControlStatus == .paused else { return }
                 player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
             }
+            .disposed(by: bag)
+        
+        // 트랙뷰의 콘텐츠 오프셋 변경에 따라서 경과 시간 텍스트 바인딩
+        output.elapsedTimeText
+            .bind(to: playbackConsoleView.elapsedTimeLabel.rx.text)
             .disposed(by: bag)
 
         // MARK: - temp

@@ -23,6 +23,7 @@ final class EditorVM {
         let trackViewData: Observable<[VideoTrackModel]>
         let progress: Observable<Double>
         let seekingPoint: Observable<CMTime>
+        let elapsedTimeText: Observable<String>
     }
     
     let bag = DisposeBag()
@@ -34,6 +35,13 @@ final class EditorVM {
     
     func transform(input: Input) -> Output {
         let videoClips = BehaviorSubject(value: videoClips).asObservable()
+        
+        // 트랙 뷰에 들어갈 데이터 준비
+        let trackViewData = videoClips
+            .map { videoClips in
+                videoClips.map { VideoTrackModel(image: $0.image, duration: $0.metadata.duration) }
+            }
+            .share(replay: 1)
 
         // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
         let playerItem = input.currentTimeRanges
@@ -44,22 +52,39 @@ final class EditorVM {
             }
             .compactMap { $0 }
             .share(replay: 1)
-        
-        // 트랙 뷰에 들어갈 데이터 준비
-        let trackViewData = videoClips
-            .map { videoClips in
-                videoClips.map { VideoTrackModel(image: $0.image, duration: $0.metadata.duration) }
-            }
-            .share(replay: 1)
-        
+
+        // 비디오 플레이어의 진행률
         let progress = input.progress
             .share(replay: 1)
         
+        // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 탐색 시점을 전달
         let seekingPoint = input.scrollProgress
             .withLatestFrom(playerItem) { progress, item in
-                let timePointInFloat = progress * item.duration.seconds
-                return CMTime(seconds: timePointInFloat, preferredTimescale: 30)
+                let timePoint = progress * item.duration.seconds
+                return CMTime(seconds: timePoint, preferredTimescale: 30)
             }
+            .distinctUntilChanged()
+            .share(replay: 1)
+        
+        // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 경과 시간 텍스트 바인딩
+        let elapsedTimeText = input.scrollProgress
+            .withLatestFrom(playerItem) { progress, item -> String? in
+                let duration = item.duration.seconds
+                let timePoint = progress * duration
+                // timePoint의 유효성 확인
+                guard !(timePoint.isNaN || timePoint.isInfinite) else { return nil }
+                
+                // 변수 이름 좀 다시 지어야 할 듯?
+                let roundedDuration = Int(duration.rounded())
+                let durationMinute = roundedDuration.cutMinute
+                let durationSecond = roundedDuration.cutSecond
+                
+                let rounded = Int(timePoint.rounded())
+                let minute = rounded.cutMinute
+                let second = rounded.cutSecond
+                return String(format: "%02d:%02d / %02d:%02d", minute, second, durationMinute, durationSecond)
+            }
+            .compactMap { $0 }
             .distinctUntilChanged()
             .share(replay: 1)
 
@@ -67,7 +92,8 @@ final class EditorVM {
             playerItem: playerItem,
             trackViewData: trackViewData,
             progress: progress,
-            seekingPoint: seekingPoint)
+            seekingPoint: seekingPoint,
+            elapsedTimeText: elapsedTimeText)
     }
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
@@ -134,6 +160,10 @@ final class EditorVM {
         videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
         videoComposition.renderSize = exportSize // 출력 해상도 설정
         videoComposition.instructions = [mainInstruction]
+        // HDR 효과 끄기, 너무 눈뽕임..
+        videoComposition.colorPrimaries = AVVideoColorPrimaries_ITU_R_709_2
+        videoComposition.colorTransferFunction = AVVideoTransferFunction_ITU_R_709_2
+        videoComposition.colorYCbCrMatrix = AVVideoYCbCrMatrix_ITU_R_709_2
         
         let item = AVPlayerItem(asset: mixComposition)
         item.videoComposition = videoComposition

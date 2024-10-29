@@ -28,7 +28,7 @@ final class VideoTrackView: UIView {
 
     let scrollView = {
         let view = UIScrollView()
-        view.backgroundColor = .chuLightGray
+        view.backgroundColor = .white
         view.showsHorizontalScrollIndicator = false
         view.bounces = false // 끝에 부딪혔을 때 일어나는 bounces애니메이션을 비활성화
         return view
