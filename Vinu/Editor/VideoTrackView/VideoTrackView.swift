@@ -33,9 +33,7 @@ final class VideoTrackView: UIView {
         view.bounces = false // 끝에 부딪혔을 때 일어나는 bounces애니메이션을 비활성화
         return view
     }()
-    
-    let contentView = UIView()
-    
+
     let contentSV = {
         let sv = UIStackView()
         sv.axis = .vertical
@@ -295,10 +293,6 @@ final class VideoTrackView: UIView {
         output.scrollProgress
             .bind(to: scrollProgress)
             .disposed(by: bag)
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesMoved(touches, with: event)
     }
 }
 

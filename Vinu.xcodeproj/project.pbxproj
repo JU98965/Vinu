@@ -323,16 +323,10 @@
 		519BF0C02C9AC5940064FE0A /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				5146D55E2CAC529900C407F3 /* PreviewPlayer */,
-				5146D56B2CAC7E2B00C407F3 /* VideoClipCollectionView */,
-				5146D55F2CAC52AE00C407F3 /* SubView */,
+				51E1E1AA2CD0FD3100414BF3 /* VideoTrackView */,
+				51E1E1A92CD0FD0A00414BF3 /* VideoPlayerView */,
 				51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */,
 				51D30D412CA2CE24003B9DF1 /* EditorVM.swift */,
-				51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */,
-				51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */,
-				517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */,
-				517D56C02CC4051700009E23 /* VideoTrackVM.swift */,
-				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
 				513698792CB84E7A004175DE /* VideoHelper.swift */,
 				5146D5622CAC56DB00C407F3 /* VideoClip.swift */,
 			);
@@ -361,6 +355,28 @@
 				51D30D542CA30C22003B9DF1 /* RatioCell.swift */,
 			);
 			path = SubView;
+			sourceTree = "<group>";
+		};
+		51E1E1A92CD0FD0A00414BF3 /* VideoPlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				5146D55E2CAC529900C407F3 /* PreviewPlayer */,
+				51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */,
+				51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */,
+			);
+			path = VideoPlayerView;
+			sourceTree = "<group>";
+		};
+		51E1E1AA2CD0FD3100414BF3 /* VideoTrackView */ = {
+			isa = PBXGroup;
+			children = (
+				5146D56B2CAC7E2B00C407F3 /* VideoClipCollectionView */,
+				5146D55F2CAC52AE00C407F3 /* SubView */,
+				517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */,
+				517D56C02CC4051700009E23 /* VideoTrackVM.swift */,
+				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
+			);
+			path = VideoTrackView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
