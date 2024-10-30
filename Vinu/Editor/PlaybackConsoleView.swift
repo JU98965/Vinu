@@ -54,7 +54,7 @@ final class PlaybackConsoleView: UIView {
     
     let scaleLabel = {
         let label = UILabel()
-        label.text = "1.0x"
+        label.text = "x0.00"
         label.textAlignment = .center
         label.textColor = .black
         return label

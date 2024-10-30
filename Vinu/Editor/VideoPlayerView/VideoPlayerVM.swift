@@ -15,7 +15,7 @@ final class VideoPlayerVM {
     struct Input {
         let playerItemIn: Observable<AVPlayerItem>
         let itemStatus: Observable<AVPlayerItem.Status>
-        let timeControllStatus: Observable<AVPlayer.TimeControlStatus> // 아직은 안쓰는 중인거 같은데 나중에 정리할 것
+        let controlStatus: Observable<AVPlayer.TimeControlStatus>
         let elapsedTime: Observable<CMTime>
     }
     
@@ -23,6 +23,7 @@ final class VideoPlayerVM {
         let playerItem: Observable<AVPlayerItem>
         let configure: Observable<Void>
         let progress: Observable<Double>
+        let controlStatus: Observable<AVPlayer.TimeControlStatus>
     }
     
     private let bag = DisposeBag()
@@ -44,11 +45,17 @@ final class VideoPlayerVM {
                 let elapsed = elapsed.seconds
                 return elapsed / total
             }
+            .startWith(0)
+            .share(replay: 1)
+        
+        // 비디오 플레이어의 재생 상태를 외부에 전달
+        let controlStatus = input.controlStatus
             .share(replay: 1)
                 
         return Output(
             playerItem: playerItem,
             configure: configure,
-            progress: progress)
+            progress: progress,
+            controlStatus: controlStatus)
     }
 }

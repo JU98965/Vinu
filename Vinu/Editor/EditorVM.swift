@@ -16,6 +16,9 @@ final class EditorVM {
         let progress: Observable<Double>
         let currentTimeRanges: Observable<[CMTimeRange]>
         let scrollProgress: Observable<CGFloat>
+        let scaleFactor: Observable<CGFloat>
+        let controlStatus: Observable<AVPlayer.TimeControlStatus>
+        let playbackTap: Observable<Void>
     }
     
     struct Output {
@@ -24,6 +27,8 @@ final class EditorVM {
         let progress: Observable<Double>
         let seekingPoint: Observable<CMTime>
         let elapsedTimeText: Observable<(String, String)>
+        let scaleFactorText: Observable<String>
+        let needPlaying: Observable<Bool>
     }
     
     let bag = DisposeBag()
@@ -35,6 +40,8 @@ final class EditorVM {
     
     func transform(input: Input) -> Output {
         let videoClips = BehaviorSubject(value: videoClips).asObservable()
+        // 재생 상태를 가지는 서브젝트
+        let controlStatus = BehaviorSubject(value: AVPlayer.TimeControlStatus.paused)
         
         // 트랙 뷰에 들어갈 데이터 준비
         let trackViewData = videoClips
@@ -47,7 +54,7 @@ final class EditorVM {
         let playerItem = input.currentTimeRanges
             .withLatestFrom(videoClips) { [weak self] timeRanges, videoClips in
                 let metadataArr = videoClips.map { $0.metadata }
-                let playerItem = self?.makePlayerItem(metadataArr, timeRanges: timeRanges, exportSize: CGSize(width: 1080, height: 1920))
+                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: CGSize(width: 1080, height: 1920))
                 return playerItem
             }
             .compactMap { $0 }
@@ -67,44 +74,58 @@ final class EditorVM {
             .share(replay: 1)
         
         // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 경과 시간 텍스트 바인딩
+        // 스크롤 진행률의 초기값이 있어야 실행 때 값을 방출할 수 있음
         let elapsedTimeText = Observable
-            // 스크롤 진행률의 초기값은 줘야 재시도 할 때 다시 값을 받아올 수 있음
-            .combineLatest(playerItem, input.scrollProgress.startWith(0)) { item, progress -> (String, String)? in
-                let duration = CMTimeGetSeconds(item.duration)
-                let progress = progress * duration
-                // progress의 유효성 확인, 이게 유효하면 duration도 유효하다는 이야기일테니까...?
-                guard !(progress.isNaN || progress.isInfinite) else { return nil }
-                
-                let roundedDuration = Int(duration.rounded())
-                let minuteDuration = roundedDuration.cutMinute
-                let secondDuration = roundedDuration.cutSecond
-                
-                let roundedProgress = Int(progress.rounded())
-                let minuteProgress = roundedProgress.cutMinute
-                let secondProgress = roundedProgress.cutSecond
-                
-                let durationText = String(format: "%02d:%02d", minuteDuration, secondDuration)
-                let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
-                
-                let result = (progressText, durationText)
-                return result
-            }
-            .compactMap { $0 }
-//            .flatMapLatest(getElapsedTimeText(item:progress:))
-            .debug()
-//            .retry()
+            .combineLatest(playerItem, input.scrollProgress.startWith(0))
+            .flatMapLatest(getElapsedTimeText(item:progress:))
             .share(replay: 1)
         
+        // 확대 배율을 텍스트로 바꿔서 콘솔에 전달
+        // 초기값이 있어야 실행 때 값을 방출할 수 있음
+        let scaleFactorText = input.scaleFactor.startWith(1.0)
+            .map { String(format: "x%.2f", $0) }
+            .share(replay: 1)
+        
+        // 플레이어의 재생 상태가 변하면 서브젝트에 업데이트
+        input.controlStatus
+            .bind(to: controlStatus)
+            .disposed(by: bag)
+
+        // 재생 버튼이 눌리면 현재의 재생 상태를 Bool로 전달
+        // 재생을 할지, 말지만 담당
+        let needPlaying = input.playbackTap
+            // 진행률 100퍼면 재생 버튼을 눌러도 의미 없음
+            .withLatestFrom(input.progress)
+            .filter { $0 != 1.0 }
+            .withLatestFrom(controlStatus) { _ ,status -> Bool? in
+                switch status {
+                case .paused:
+                    return false
+                case .playing:
+                    return true
+                default:
+                    return nil
+                }
+            }
+            .share(replay: 1)
+        
+//        let isPlaying =
+#warning("버튼은 재생을 할지, 말지만을 담당, controlStatus의 변화에 따라서 버튼의 이미지는 바뀌여야 함, 즉 재생과 이미지 설정 로직이 독립적이여야 함")
+
+                
         return Output(
             playerItem: playerItem,
             trackViewData: trackViewData,
             progress: progress,
             seekingPoint: seekingPoint,
-            elapsedTimeText: elapsedTimeText)
+            elapsedTimeText: elapsedTimeText,
+            scaleFactorText: scaleFactorText,
+            needPlaying: needPlaying)
     }
     
+    // MARK: - Private methods
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], timeRanges: [CMTimeRange], exportSize: CGSize) -> AVPlayerItem? {
+    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize) -> AVPlayerItem? {
         let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
@@ -183,10 +204,7 @@ final class EditorVM {
             let duration = CMTimeGetSeconds(item.duration)
             let progress = progress * duration
             // progress의 유효성 확인, 이게 유효하면 duration도 유효하다는 이야기일테니까...?
-            guard !(progress.isNaN || progress.isInfinite) else {
-                observer.onError(EditorError.FailToGetElapsedTimeText("아이템의 duration이 유효하지 않음"))
-                return Disposables.create()
-            }
+            guard !(progress.isNaN || progress.isInfinite) else { return Disposables.create() }
             
             let roundedDuration = Int(duration.rounded())
             let minuteDuration = roundedDuration.cutMinute

@@ -33,6 +33,7 @@ final class VideoTrackVM {
         let leftPanInnerOffset: Observable<(CGFloat, IndexPath)> // 셀 내부 컬렉션 뷰 오프셋 변경에 필요
         let currentTimeRanges: Observable<[CMTimeRange]>
         let scrollProgress: Observable<CGFloat>
+        let scaleFactor: Observable<CGFloat>
     }
     
     // 초기화 시점에 데이터 바인딩 해줘야 하는 컴포넌트 하나도 없음
@@ -195,8 +196,15 @@ final class VideoTrackVM {
             .distinctUntilChanged()
             .share(replay: 1)
         
-        // 스크롤 진행률 정도만 제공, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
+        // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
         let scrollProgress = input.scrollProgress
+        
+        // 확대 배율을 외부에 전달
+        let scaleFactor = trackDataArr
+            .map { $0.first?.scale }
+            .compactMap { $0 }
+            .distinctUntilChanged()
+            .share(replay: 1)
 
         
         return Output(
@@ -208,7 +216,8 @@ final class VideoTrackVM {
             drawFocusView: drawFocusView,
             leftPanInnerOffset: leftPanInnerOffset,
             currentTimeRanges: currentTimeRanges,
-            scrollProgress: scrollProgress)
+            scrollProgress: scrollProgress,
+            scaleFactor: scaleFactor)
     }
 }
 

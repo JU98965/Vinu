@@ -18,6 +18,7 @@ final class VideoPlayerView: UIView {
     
     let playerItemIn = PublishSubject<AVPlayerItem>()
     let progress = PublishSubject<Double>()
+    let controlStatus = PublishSubject<AVPlayer.TimeControlStatus>()
     
     // MARK: - Components
     let player = PreviewPlayer()
@@ -36,15 +37,11 @@ final class VideoPlayerView: UIView {
     
     // MARK: - Binding
     private func setBinding() {
-        // 플레이어의 재생 상태(재생, 정지 등) 변화를 뷰모델에 전달
-        let timeControllStatus = player.rx.observeWeakly(AVPlayer.TimeControlStatus.self, "timeControlStatus")
-            .compactMap { $0 }
-            .share(replay: 1)
-        
+
         let input = VideoPlayerVM.Input(
             playerItemIn: playerItemIn.asObservable(),
             itemStatus: player.rx.playerItemStatus,
-            timeControllStatus: timeControllStatus,
+            controlStatus: player.rx.timeControlStatus,
             elapsedTime: player.rx.elapsedTime)
         
         let output = videoPlayerVM.transform(input: input)
@@ -73,6 +70,11 @@ final class VideoPlayerView: UIView {
         // 진행률을 외부에 전달
         output.progress
             .bind(to: progress)
+            .disposed(by: bag)
+        
+        // 비디오 플레이어의 재생 상태를 외부에 전달
+        output.controlStatus
+            .bind(to: controlStatus)
             .disposed(by: bag)
     }
 }

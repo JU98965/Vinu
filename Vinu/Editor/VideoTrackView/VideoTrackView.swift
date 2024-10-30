@@ -20,6 +20,7 @@ final class VideoTrackView: UIView {
     let sourceIn = PublishSubject<[VideoTrackModel]>()
     let currentTimeRanges = PublishSubject<[CMTimeRange]>()
     let scrollProgress = PublishSubject<CGFloat>()
+    let scaleFactor = PublishSubject<CGFloat>()
     
     // MARK: - Components
     let pinchGesture = UIPinchGestureRecognizer()
@@ -292,6 +293,11 @@ final class VideoTrackView: UIView {
         // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
         output.scrollProgress
             .bind(to: scrollProgress)
+            .disposed(by: bag)
+        
+        // 확대 배율을 외부에 전달
+        output.scaleFactor
+            .bind(to: scaleFactor)
             .disposed(by: bag)
     }
 }

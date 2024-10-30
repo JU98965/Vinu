@@ -64,7 +64,10 @@ final class EditorVC: UIViewController {
         let input = EditorVM.Input(
             progress: videoPlayerView.progress.asObservable(),
             currentTimeRanges: videoTrackView.currentTimeRanges.asObservable(),
-            scrollProgress: videoTrackView.scrollProgress.asObservable())
+            scrollProgress: videoTrackView.scrollProgress.asObservable(),
+            scaleFactor: videoTrackView.scaleFactor.asObservable(),
+            controlStatus: videoPlayerView.controlStatus.asObservable(),
+            playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable())
         
         let output = editorVM.transform(input: input)
 
@@ -103,7 +106,6 @@ final class EditorVC: UIViewController {
         // 트랙뷰의 콘텐츠 오프셋 변경에 따라서 경과 시간 텍스트 바인딩
         output.elapsedTimeText
             .bind(with: self, onNext: { owner, texts in
-                print(texts)
                 let console = owner.playbackConsoleView
                 let progress = texts.0
                 let duration = texts.1
@@ -112,17 +114,25 @@ final class EditorVC: UIViewController {
                 console.totalTimeLabel.text = duration
             })
             .disposed(by: bag)
-
-        // MARK: - temp
-        button
-            .rx.tap
-            .bind(with: self) { owner, _ in
-                owner.button.isSelected.toggle()
-                
-                if owner.button.isSelected {
+        
+        // 확대 배율을 텍스트로 바꿔서 콘솔에 전달
+        output.scaleFactorText
+            .bind(to: playbackConsoleView.scaleLabel.rx.text)
+            .disposed(by: bag)
+        
+        // 재생 버튼을 누를 때마다 재생 or 정지
+        output.needPlaying
+            .bind(with: self) { owner, isPlaying in
+                if isPlaying {
                     owner.videoPlayerView.player.play()
+                    // 재생 중일 때 일시정지 버튼이 보여야 함
+                    let image = UIImage(systemName: "pause.fill")
+                    owner.playbackConsoleView.playbackButton.setImage(image, for: .normal)
                 } else {
                     owner.videoPlayerView.player.pause()
+                    // 일지정지 중일 때 재생 버튼이 보여야 함
+                    let image = UIImage(systemName: "play.fill")
+                    owner.playbackConsoleView.playbackButton.setImage(image, for: .normal)
                 }
             }
             .disposed(by: bag)

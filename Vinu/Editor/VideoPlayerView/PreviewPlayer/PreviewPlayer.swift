@@ -61,7 +61,7 @@ final class PreviewPlayer: AVPlayer {
         super.replaceCurrentItem(with: item)
     }
     
-    // 오버라이딩해서 무의미한 seek호출을 막기위한 로직을 추가
+    // 오버라이딩해서 무의미한 seek 호출을 막기위한 로직을 추가
     override func seek(to newChaseTime: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
         guard CMTimeCompare(chaseTime, newChaseTime) != 0 else { return }
         chaseTime = newChaseTime
