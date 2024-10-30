@@ -19,7 +19,23 @@ final class PlaybackConsoleView: UIView {
         return sv
     }()
     
+    let timeLabelHStack = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.distribution = .fillEqually
+        sv.backgroundColor = .lightGray
+        return sv
+    }()
+    
     let elapsedTimeLabel = {
+        let label = UILabel()
+        label.text = "00:00" // temp
+        label.textAlignment = .center
+        label.textColor = .black
+        return label
+    }()
+    
+    let totalTimeLabel = {
         let label = UILabel()
         label.text = "00:00" // temp
         label.textAlignment = .center
@@ -57,9 +73,12 @@ final class PlaybackConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         addSubview(mainHStack)
-        mainHStack.addArrangedSubview(elapsedTimeLabel)
+        mainHStack.addArrangedSubview(timeLabelHStack)
         mainHStack.addArrangedSubview(playbackButton)
         mainHStack.addArrangedSubview(scaleLabel)
+        
+        timeLabelHStack.addArrangedSubview(elapsedTimeLabel)
+        timeLabelHStack.addArrangedSubview(totalTimeLabel)
         
         mainHStack.snp.makeConstraints { $0.edges.equalToSuperview() }
     }

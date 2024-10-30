@@ -102,7 +102,15 @@ final class EditorVC: UIViewController {
         
         // 트랙뷰의 콘텐츠 오프셋 변경에 따라서 경과 시간 텍스트 바인딩
         output.elapsedTimeText
-            .bind(to: playbackConsoleView.elapsedTimeLabel.rx.text)
+            .bind(with: self, onNext: { owner, texts in
+                print(texts)
+                let console = owner.playbackConsoleView
+                let progress = texts.0
+                let duration = texts.1
+
+                console.elapsedTimeLabel.text = progress
+                console.totalTimeLabel.text = duration
+            })
             .disposed(by: bag)
 
         // MARK: - temp

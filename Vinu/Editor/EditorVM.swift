@@ -23,7 +23,7 @@ final class EditorVM {
         let trackViewData: Observable<[VideoTrackModel]>
         let progress: Observable<Double>
         let seekingPoint: Observable<CMTime>
-        let elapsedTimeText: Observable<String>
+        let elapsedTimeText: Observable<(String, String)>
     }
     
     let bag = DisposeBag()
@@ -67,27 +67,34 @@ final class EditorVM {
             .share(replay: 1)
         
         // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 경과 시간 텍스트 바인딩
-        let elapsedTimeText = input.scrollProgress
-            .withLatestFrom(playerItem) { progress, item -> String? in
-                let duration = item.duration.seconds
-                let timePoint = progress * duration
-                // timePoint의 유효성 확인
-                guard !(timePoint.isNaN || timePoint.isInfinite) else { return nil }
+        let elapsedTimeText = Observable
+            // 스크롤 진행률의 초기값은 줘야 재시도 할 때 다시 값을 받아올 수 있음
+            .combineLatest(playerItem, input.scrollProgress.startWith(0)) { item, progress -> (String, String)? in
+                let duration = CMTimeGetSeconds(item.duration)
+                let progress = progress * duration
+                // progress의 유효성 확인, 이게 유효하면 duration도 유효하다는 이야기일테니까...?
+                guard !(progress.isNaN || progress.isInfinite) else { return nil }
                 
-                // 변수 이름 좀 다시 지어야 할 듯?
                 let roundedDuration = Int(duration.rounded())
-                let durationMinute = roundedDuration.cutMinute
-                let durationSecond = roundedDuration.cutSecond
+                let minuteDuration = roundedDuration.cutMinute
+                let secondDuration = roundedDuration.cutSecond
                 
-                let rounded = Int(timePoint.rounded())
-                let minute = rounded.cutMinute
-                let second = rounded.cutSecond
-                return String(format: "%02d:%02d / %02d:%02d", minute, second, durationMinute, durationSecond)
+                let roundedProgress = Int(progress.rounded())
+                let minuteProgress = roundedProgress.cutMinute
+                let secondProgress = roundedProgress.cutSecond
+                
+                let durationText = String(format: "%02d:%02d", minuteDuration, secondDuration)
+                let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
+                
+                let result = (progressText, durationText)
+                return result
             }
             .compactMap { $0 }
-            .distinctUntilChanged()
+//            .flatMapLatest(getElapsedTimeText(item:progress:))
+            .debug()
+//            .retry()
             .share(replay: 1)
-
+        
         return Output(
             playerItem: playerItem,
             trackViewData: trackViewData,
@@ -169,6 +176,34 @@ final class EditorVM {
         item.videoComposition = videoComposition
         
         return item
+    }
+    
+    private func getElapsedTimeText(item: AVPlayerItem, progress: CGFloat) -> Observable<(String, String)> {
+        return Observable.create { observer in
+            let duration = CMTimeGetSeconds(item.duration)
+            let progress = progress * duration
+            // progress의 유효성 확인, 이게 유효하면 duration도 유효하다는 이야기일테니까...?
+            guard !(progress.isNaN || progress.isInfinite) else {
+                observer.onError(EditorError.FailToGetElapsedTimeText("아이템의 duration이 유효하지 않음"))
+                return Disposables.create()
+            }
+            
+            let roundedDuration = Int(duration.rounded())
+            let minuteDuration = roundedDuration.cutMinute
+            let secondDuration = roundedDuration.cutSecond
+            
+            let roundedProgress = Int(progress.rounded())
+            let minuteProgress = roundedProgress.cutMinute
+            let secondProgress = roundedProgress.cutSecond
+            
+            let durationText = String(format: "%02d:%02d", minuteDuration, secondDuration)
+            let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
+            
+            let result = (progressText, durationText)
+            observer.onNext(result)
+            
+            return Disposables.create()
+        }
     }
 }
 
