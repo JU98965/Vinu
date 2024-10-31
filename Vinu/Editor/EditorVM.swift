@@ -28,7 +28,8 @@ final class EditorVM {
         let seekingPoint: Observable<CMTime>
         let elapsedTimeText: Observable<(String, String)>
         let scaleFactorText: Observable<String>
-        let needPlaying: Observable<Bool>
+        let shouldPlay: Observable<Bool>
+        let playbackImage: Observable<UIImage?>
     }
     
     let bag = DisposeBag()
@@ -41,7 +42,7 @@ final class EditorVM {
     func transform(input: Input) -> Output {
         let videoClips = BehaviorSubject(value: videoClips).asObservable()
         // 재생 상태를 가지는 서브젝트
-        let controlStatus = BehaviorSubject(value: AVPlayer.TimeControlStatus.paused)
+        let isPlaying = BehaviorSubject(value: false)
         
         // 트랙 뷰에 들어갈 데이터 준비
         let trackViewData = videoClips
@@ -64,8 +65,13 @@ final class EditorVM {
         let progress = input.progress
             .share(replay: 1)
         
+        // 트랙뷰의 스크롤 진행률, 뷰모델 내부에서만 사용중
+        let scrollProgress = input.scrollProgress
+            .startWith(0)
+            .filter { !($0.isNaN || $0.isInfinite) }
+        
         // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 탐색 시점을 전달
-        let seekingPoint = input.scrollProgress
+        let seekingPoint = scrollProgress
             .withLatestFrom(playerItem) { progress, item in
                 let timePoint = progress * item.duration.seconds
                 return CMTime(seconds: timePoint, preferredTimescale: 30)
@@ -76,7 +82,7 @@ final class EditorVM {
         // 트랙뷰가 스크롤 되거나 콘텐츠 오프셋이 변경되면 경과 시간 텍스트 바인딩
         // 스크롤 진행률의 초기값이 있어야 실행 때 값을 방출할 수 있음
         let elapsedTimeText = Observable
-            .combineLatest(playerItem, input.scrollProgress.startWith(0))
+            .combineLatest(playerItem, scrollProgress)
             .flatMapLatest(getElapsedTimeText(item:progress:))
             .share(replay: 1)
         
@@ -88,16 +94,7 @@ final class EditorVM {
         
         // 플레이어의 재생 상태가 변하면 서브젝트에 업데이트
         input.controlStatus
-            .bind(to: controlStatus)
-            .disposed(by: bag)
-
-        // 재생 버튼이 눌리면 현재의 재생 상태를 Bool로 전달
-        // 재생을 할지, 말지만 담당
-        let needPlaying = input.playbackTap
-            // 진행률 100퍼면 재생 버튼을 눌러도 의미 없음
-            .withLatestFrom(input.progress)
-            .filter { $0 != 1.0 }
-            .withLatestFrom(controlStatus) { _ ,status -> Bool? in
+            .map { status -> Bool? in
                 switch status {
                 case .paused:
                     return false
@@ -107,12 +104,33 @@ final class EditorVM {
                     return nil
                 }
             }
+            .compactMap { $0 }
+            .bind(to: isPlaying)
+            .disposed(by: bag)
+
+        // 재생 버튼을 누를 때마다 재생 or 정지
+        let shouldPlay = input.playbackTap
+            // 진행률 100퍼면 재생 버튼을 눌러도 의미 없음
+            .withLatestFrom(scrollProgress)
+            .filter { $0 <= 1.0 }
+            // 현재 상태를 반전하면 정지 중일 경우엔 재생을, 재생 중일 때는 정지 이벤트 전달
+            .withLatestFrom(isPlaying) { !$1 }
             .share(replay: 1)
         
-//        let isPlaying =
-#warning("버튼은 재생을 할지, 말지만을 담당, controlStatus의 변화에 따라서 버튼의 이미지는 바뀌여야 함, 즉 재생과 이미지 설정 로직이 독립적이여야 함")
-
-                
+        // 재생 상태에 따라 버튼의 이미지를 변경
+        let playbackImage = isPlaying
+            // 최초 가동시 seek를 위한 몇 차례 재생 정지 작업을 무시
+            .skip(3)
+            .map { isPlaying in
+                if isPlaying {
+                    // 재생 중이면 정지 버튼이 보여야 함
+                    return UIImage(systemName: "pause.fill")
+                } else {
+                    // 정지 중이면 재생 버튼이 보여야 함
+                    return UIImage(systemName: "play.fill")
+                }
+            }
+     
         return Output(
             playerItem: playerItem,
             trackViewData: trackViewData,
@@ -120,7 +138,8 @@ final class EditorVM {
             seekingPoint: seekingPoint,
             elapsedTimeText: elapsedTimeText,
             scaleFactorText: scaleFactorText,
-            needPlaying: needPlaying)
+            shouldPlay: shouldPlay,
+            playbackImage: playbackImage)
     }
     
     // MARK: - Private methods

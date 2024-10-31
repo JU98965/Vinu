@@ -28,12 +28,6 @@ final class EditorVC: UIViewController {
     let playbackConsoleView = PlaybackConsoleView()
     
     let videoTrackView = VideoTrackView()
-
-    let button = {
-        let button = UIButton(configuration: .plain())
-        button.setTitle("재생", for: .normal)
-        return button
-    }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -50,9 +44,8 @@ final class EditorVC: UIViewController {
         mainVStack.addArrangedSubview(videoPlayerView)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
-        mainVStack.addArrangedSubview(button)
 
-        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 60)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(60) }
     }
@@ -121,20 +114,19 @@ final class EditorVC: UIViewController {
             .disposed(by: bag)
         
         // 재생 버튼을 누를 때마다 재생 or 정지
-        output.needPlaying
-            .bind(with: self) { owner, isPlaying in
-                if isPlaying {
+        output.shouldPlay
+            .bind(with: self) { owner, shouldPlay in
+                if shouldPlay {
                     owner.videoPlayerView.player.play()
-                    // 재생 중일 때 일시정지 버튼이 보여야 함
-                    let image = UIImage(systemName: "pause.fill")
-                    owner.playbackConsoleView.playbackButton.setImage(image, for: .normal)
                 } else {
                     owner.videoPlayerView.player.pause()
-                    // 일지정지 중일 때 재생 버튼이 보여야 함
-                    let image = UIImage(systemName: "play.fill")
-                    owner.playbackConsoleView.playbackButton.setImage(image, for: .normal)
                 }
             }
+            .disposed(by: bag)
+        
+        // 재생 상태에 따라 버튼의 이미지를 변경
+        output.playbackImage
+            .bind(to: playbackConsoleView.playbackButton.rx.image())
             .disposed(by: bag)
     }
 }
