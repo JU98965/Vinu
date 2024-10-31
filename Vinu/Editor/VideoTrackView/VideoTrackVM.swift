@@ -183,23 +183,23 @@ final class VideoTrackVM {
             }
         
         // MARK: Transfer to outside
-        // 트리밍이 끝난 순간에만 새로운 재생 범위를 외부에 전달
-        let newTimeRanges = input.panState
-            .withLatestFrom(trackDataArr) { state, dataArr in
-                (state, dataArr.map { $0.newTimeRange})
-            }
-            .compactMap { $0.0 == .ended ? $0.1 : nil }
-            .share(replay: 1)
-        
-        // 플레이어를 구성하기 위해 초기 재생 범위를 외부에 전달
+        // 플레이어를 구성하기 위해 초기 재생 범위를 전달
         let firstTimeRanges = trackDataArr
             .map { $0.map { $0.newTimeRange } }
             // 유의미한 배열이 올 때까지 필터링
             .filter { !$0.isEmpty }
             .take(1)
         
-        // 초기 범위와 새로운 범위를 전달하는 스트림을 하나로 묶기
-        let timeRanges = Observable.merge(newTimeRanges, firstTimeRanges)
+        // 트리밍이 끝난 순간에만 새로운 재생 범위를 전달
+        let newTimeRanges = input.panState
+            .withLatestFrom(trackDataArr) { state, dataArr in
+                (state, dataArr.map { $0.newTimeRange})
+            }
+            .compactMap { $0.0 == .ended ? $0.1 : nil }
+            .share(replay: 1)
+
+        // 초기 범위와 새로운 범위의 스트림을 하나로 묶어서 외부에 전달
+        let timeRanges = Observable.merge(firstTimeRanges, newTimeRanges)
             .share(replay: 1)
         
         // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
@@ -214,7 +214,6 @@ final class VideoTrackVM {
             .compactMap { $0 }
             .distinctUntilChanged()
             .share(replay: 1)
-
         
         return Output(
             frameImagesArr: frameImagesArr,

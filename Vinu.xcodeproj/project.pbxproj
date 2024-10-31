@@ -41,6 +41,8 @@
 		518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518408ED2CAA8B9100779D12 /* VideoClipCell.swift */; };
 		519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519421302CA9210500392BF5 /* PreviewPlayer.swift */; };
 		519421332CA92AD600392BF5 /* PreviewPlayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519421322CA92ACF00392BF5 /* PreviewPlayer+Rx.swift */; };
+		51957C2C2CD54EAB001AB554 /* TrackIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51957C2B2CD54EAB001AB554 /* TrackIndicatorView.swift */; };
+		51957C2E2CD575E4001AB554 /* IndicatorPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51957C2D2CD575E4001AB554 /* IndicatorPointView.swift */; };
 		519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A32C9AB7DC0064FE0A /* AppDelegate.swift */; };
 		519BF0A62C9AB7DC0064FE0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A52C9AB7DC0064FE0A /* SceneDelegate.swift */; };
 		519BF0A82C9AB7DC0064FE0A /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A72C9AB7DC0064FE0A /* MainVC.swift */; };
@@ -106,6 +108,8 @@
 		518408ED2CAA8B9100779D12 /* VideoClipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClipCell.swift; sourceTree = "<group>"; };
 		519421302CA9210500392BF5 /* PreviewPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPlayer.swift; sourceTree = "<group>"; };
 		519421322CA92ACF00392BF5 /* PreviewPlayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreviewPlayer+Rx.swift"; sourceTree = "<group>"; };
+		51957C2B2CD54EAB001AB554 /* TrackIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackIndicatorView.swift; sourceTree = "<group>"; };
+		51957C2D2CD575E4001AB554 /* IndicatorPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPointView.swift; sourceTree = "<group>"; };
 		519BF0A02C9AB7DC0064FE0A /* Vinu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vinu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		519BF0A32C9AB7DC0064FE0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		519BF0A52C9AB7DC0064FE0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -232,6 +236,8 @@
 				518408ED2CAA8B9100779D12 /* VideoClipCell.swift */,
 				514DECBA2CAD2E2D0004EA00 /* FrameCell.swift */,
 				51B048E92CBFA39500C9382B /* TrimHandleView.swift */,
+				51957C2B2CD54EAB001AB554 /* TrackIndicatorView.swift */,
+				51957C2D2CD575E4001AB554 /* IndicatorPointView.swift */,
 			);
 			path = SubView;
 			sourceTree = "<group>";
@@ -517,8 +523,10 @@
 				519BF0AE2C9AB7DC0064FE0A /* Vinu.xcdatamodeld in Sources */,
 				5146D5662CAC79C500C407F3 /* VideoClipCollectionView.swift in Sources */,
 				514DECBB2CAD2E2D0004EA00 /* FrameCell.swift in Sources */,
+				51957C2E2CD575E4001AB554 /* IndicatorPointView.swift in Sources */,
 				519BF0D52C9AEDE70064FE0A /* PickerVM.swift in Sources */,
 				5141F4072CA47F4E00839239 /* LoadingVM.swift in Sources */,
+				51957C2C2CD54EAB001AB554 /* TrackIndicatorView.swift in Sources */,
 				51D30D4B2CA2F96B003B9DF1 /* ConfigureVM.swift in Sources */,
 				5141F3F52CA4082100839239 /* ProjectDataManager.swift in Sources */,
 				5146D54B2CAC3AD800C407F3 /* Int.swift in Sources */,

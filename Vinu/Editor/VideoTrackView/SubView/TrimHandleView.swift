@@ -15,8 +15,6 @@ final class TrimHandleView: UIView {
     // MARK: - Components
     let contentView = UIView()
     
-    let handleView = UIView()
-    
     // MARK: - Life Cycle
     init(strokeWidth: CGFloat, radius: CGFloat) {
         self.width = strokeWidth

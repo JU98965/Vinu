@@ -56,7 +56,7 @@ final class EditorVC: UIViewController {
 
         let input = EditorVM.Input(
             progress: videoPlayerView.progress.asObservable(),
-            currentTimeRanges: videoTrackView.currentTimeRanges.asObservable(),
+            timeRanges: videoTrackView.timeRanges.asObservable(),
             scrollProgress: videoTrackView.scrollProgress.asObservable(),
             scaleFactor: videoTrackView.scaleFactor.asObservable(),
             controlStatus: videoPlayerView.controlStatus.asObservable(),

@@ -14,7 +14,7 @@ final class EditorVM {
     
     struct Input {
         let progress: Observable<Double>
-        let currentTimeRanges: Observable<[CMTimeRange]>
+        let timeRanges: Observable<[CMTimeRange]>
         let scrollProgress: Observable<CGFloat>
         let scaleFactor: Observable<CGFloat>
         let controlStatus: Observable<AVPlayer.TimeControlStatus>
@@ -52,7 +52,7 @@ final class EditorVM {
             .share(replay: 1)
 
         // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
-        let playerItem = input.currentTimeRanges
+        let playerItem = input.timeRanges
             .withLatestFrom(videoClips) { [weak self] timeRanges, videoClips in
                 let metadataArr = videoClips.map { $0.metadata }
                 let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: CGSize(width: 1080, height: 1920))

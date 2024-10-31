@@ -17,8 +17,13 @@ final class VideoTrackView: UIView {
     private let bag = DisposeBag()
     private var isSet = false
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
-    let sourceIn = PublishSubject<[VideoTrackModel]>()
-    let currentTimeRanges = PublishSubject<[CMTimeRange]>()
+//    let sourceIn = PublishSubject<[VideoTrackModel]>()
+    let sourceIn = BehaviorSubject<[VideoTrackModel]>(value: [
+        .init(image: UIImage(systemName: "macwindow")!, duration: CMTime(seconds: 5, preferredTimescale: 30)),
+        .init(image: UIImage(systemName: "macpro.gen2.fill")!, duration: CMTime(seconds: 7, preferredTimescale: 30)),
+    ])
+
+    let timeRanges = PublishSubject<[CMTimeRange]>()
     let scrollProgress = PublishSubject<CGFloat>()
     let scaleFactor = PublishSubject<CGFloat>()
     
@@ -35,13 +40,15 @@ final class VideoTrackView: UIView {
         return view
     }()
 
-    let contentSV = {
+    let contentVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
         sv.distribution = .fill
         sv.spacing = .zero
         return sv
     }()
+    
+    let trackIndicator = TrackIndicatorView()
     
     let videoClipCV = {
         let cv = VideoClipCollectionView(frame: .zero, collectionViewLayout: .init())
@@ -99,20 +106,23 @@ final class VideoTrackView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(scrollView)
-        scrollView.addSubview(contentSV)
-        contentSV.addArrangedSubview(videoClipCV)
+        scrollView.addSubview(contentVStack)
+        contentVStack.addArrangedSubview(trackIndicator)
+        contentVStack.addArrangedSubview(videoClipCV)
         scrollView.addSubview(leftHandle)
         scrollView.addSubview(rightHandle)
         
         scrollView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(60)
+            $0.height.equalTo(70)
         }
-        contentSV.snp.makeConstraints {
+        contentVStack.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalToSuperview()
         }
+        trackIndicator.snp.makeConstraints { $0.height.equalTo(10) }
+        videoClipCV.snp.makeConstraints { $0.height.equalTo(60) }
     }
     
     // 스크롤뷰의 컨텐츠 Inset설정
@@ -288,7 +298,7 @@ final class VideoTrackView: UIView {
         
         // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
         output.timeRanges
-            .bind(to: currentTimeRanges)
+            .bind(to: timeRanges)
             .disposed(by: bag)
         
         // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
