@@ -18,7 +18,7 @@ final class VideoTrackVM {
         let pinchScale: Observable<CGFloat>
         let focusedIndexPath: Observable<IndexPath>
         let leftPanTranslation: Observable<CGPoint>
-        let leftPanStatus: Observable<UIGestureRecognizer.State>
+        let panState: Observable<UIGestureRecognizer.State>
         let rightPanTranslation: Observable<CGPoint>
         let scrollProgress: Observable<CGFloat>
     }
@@ -31,15 +31,10 @@ final class VideoTrackVM {
         let needUpdateClipCVWidth: Observable<Void>
         let drawFocusView: Observable<IndexPath>
         let leftPanInnerOffset: Observable<(CGFloat, IndexPath)> // 셀 내부 컬렉션 뷰 오프셋 변경에 필요
-        let currentTimeRanges: Observable<[CMTimeRange]>
+        let timeRanges: Observable<[CMTimeRange]>
         let scrollProgress: Observable<CGFloat>
         let scaleFactor: Observable<CGFloat>
     }
-    
-    // 초기화 시점에 데이터 바인딩 해줘야 하는 컴포넌트 하나도 없음
-    // 다들 나중에 바인딩해주는 편, 즉 일단 임시 값 같은걸로 대충 바인딩 해주고 외부에서 input으로 데이터 넘겨줘서
-    // 이벤트가 발생했을 때 뒤늦게 초기화 할 수 있게끔 로직을 수정할 필요가 있음
-    // 이거 컴포넌트지 뷰로 취급하면 안될 듯
     
     private let bag = DisposeBag()
     
@@ -86,11 +81,10 @@ final class VideoTrackVM {
             .bind(to: trackDataArr)
             .disposed(by: bag)
         
-        // 특정 셀을 포커싱, 왼쪽 핸들 조작 중 포커스가 바뀌지 않는 로직도 추가
+        // 특정 셀을 포커싱, 핸들 조작 중 포커스가 바뀌지 않는 로직도 추가
         let focusedIndexPath = input.focusedIndexPath
-            .withLatestFrom(input.leftPanStatus) { ($0, $1) }
-            .filter { $0.1 != .changed }
-            .map { $0.0 }
+            .withLatestFrom(input.panState) { ($0, $1) }
+            .compactMap { $1 != .changed ? $0 : nil }
             .share(replay: 1)
         
         // 왼쪽 핸들을 조작해 특정 셀의 넓이(시작 지점)를 변경
@@ -188,16 +182,31 @@ final class VideoTrackVM {
                 $0.flatMap { $0 }.count == $1.flatMap { $0 }.count
             }
         
-        // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
-        let currentTimeRanges = trackDataArr
-            .map { dataArr in
-                dataArr.map { $0.newTimeRange }
+        // MARK: Transfer to outside
+        // 트리밍이 끝난 순간에만 새로운 재생 범위를 외부에 전달
+        let newTimeRanges = input.panState
+            .withLatestFrom(trackDataArr) { state, dataArr in
+                (state, dataArr.map { $0.newTimeRange})
             }
-            .distinctUntilChanged()
+            .compactMap { $0.0 == .ended ? $0.1 : nil }
+            .share(replay: 1)
+        
+        // 플레이어를 구성하기 위해 초기 재생 범위를 외부에 전달
+        let firstTimeRanges = trackDataArr
+            .map { $0.map { $0.newTimeRange } }
+            // 유의미한 배열이 올 때까지 필터링
+            .filter { !$0.isEmpty }
+            .take(1)
+        
+        // 초기 범위와 새로운 범위를 전달하는 스트림을 하나로 묶기
+        let timeRanges = Observable.merge(newTimeRanges, firstTimeRanges)
             .share(replay: 1)
         
         // 스크롤 진행률을 외부에 전달, 총 재생시간에 대해 seek 작업은 상위 뷰에서 처리
+        // 단, 트리밍 중에는 전달하지 않음
         let scrollProgress = input.scrollProgress
+            .withLatestFrom(input.panState) { ($0, $1) }
+            .compactMap { $1 != .changed ? $0 : nil }
         
         // 확대 배율을 외부에 전달
         let scaleFactor = trackDataArr
@@ -215,7 +224,7 @@ final class VideoTrackVM {
             needUpdateClipCVWidth: needUpdateClipCVWidth,
             drawFocusView: drawFocusView,
             leftPanInnerOffset: leftPanInnerOffset,
-            currentTimeRanges: currentTimeRanges,
+            timeRanges: timeRanges,
             scrollProgress: scrollProgress,
             scaleFactor: scaleFactor)
     }

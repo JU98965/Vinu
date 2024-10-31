@@ -171,13 +171,14 @@ final class VideoTrackView: UIView {
             .distinctUntilChanged()
             .share(replay: 1)
         
-        // 왼쪽 팬 제스처의 상태만 뷰모델에 전달, 초기값이 있어야 포커스 표시 가능
-        let leftPanStatus = panGestureLeft
-            .rx.event
-            .map { $0.state }
-            .distinctUntilChanged()
+        // 양 쪽 팬 제스처의 상태를 뷰모델에 전달, 초기값이 있어야 포커스 표시 가능
+        let panState = Observable.merge(
+            panGestureLeft.rx.event.map { $0.state },
+            panGestureRight.rx.event.map { $0.state })
             .startWith(.possible)
+            .distinctUntilChanged()
             .share(replay: 1)
+        
         
         // 오른쪽 팬 제스처를 가공해서 뷰모델에 전달
         let rightPanTranslation = panGestureRight
@@ -211,7 +212,7 @@ final class VideoTrackView: UIView {
             pinchScale: pinchScale,
             focusedIndexPath: focusedIndexPath,
             leftPanTranslation: leftPanTranslation,
-            leftPanStatus: leftPanStatus,
+            panState: panState,
             rightPanTranslation: rightPanTranslation,
             scrollProgress: scrollProgress_)
         
@@ -286,7 +287,7 @@ final class VideoTrackView: UIView {
             .disposed(by: bag)
         
         // 트랙 뷰 조작에 의해 변경된 시간 범위를 외부에 전달
-        output.currentTimeRanges
+        output.timeRanges
             .bind(to: currentTimeRanges)
             .disposed(by: bag)
         
