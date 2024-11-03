@@ -80,9 +80,11 @@ final class EditorVC: UIViewController {
                 let trackScrollView = owner.videoTrackView.scrollView
                 
                 let width = trackScrollView.contentSize.width
-                let inset = trackScrollView.contentInset.left // 인셋도 계산에 반영
+                let horizontalSpacerWidth = owner.view.window?.windowScene?.screen.bounds.width ?? .zero
+                // 스페이서 만큼의 넓이를 제외해야 실질적인 콘텐츠 사이즈를 얻을 수 있음
+                let actualWidth = width - horizontalSpacerWidth
 
-                trackScrollView.contentOffset.x = width * progress - inset
+                trackScrollView.contentOffset.x = actualWidth * progress
             }
             .disposed(by: bag)
         

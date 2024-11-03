@@ -17,12 +17,7 @@ final class VideoTrackView: UIView {
     private let bag = DisposeBag()
     private var isSet = false
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
-//    let sourceIn = PublishSubject<[VideoTrackModel]>()
-    let sourceIn = BehaviorSubject<[VideoTrackModel]>(value: [
-        .init(image: UIImage(systemName: "macwindow")!, duration: CMTime(seconds: 5, preferredTimescale: 30)),
-        .init(image: UIImage(systemName: "macpro.gen2.fill")!, duration: CMTime(seconds: 7, preferredTimescale: 30)),
-    ])
-
+    let sourceIn = PublishSubject<[VideoTrackModel]>()
     let timeRanges = PublishSubject<[CMTimeRange]>()
     let scrollProgress = PublishSubject<CGFloat>()
     let scaleFactor = PublishSubject<CGFloat>()
@@ -50,6 +45,15 @@ final class VideoTrackView: UIView {
     
     let trackIndicator = TrackIndicatorView()
     
+    let clipHStack = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.distribution = .fill
+        return sv
+    }()
+    
+    let leftSpacer = UIView()
+    
     let videoClipCV = {
         let cv = VideoClipCollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(VideoClipCell.self, forCellWithReuseIdentifier: VideoClipCell.identifier)
@@ -59,6 +63,8 @@ final class VideoTrackView: UIView {
         return cv
     }()
     
+    let rightSpacer = UIView()
+
     let leftHandle = {
         let view = UIView()
         view.layer.cornerRadius = 4
@@ -94,8 +100,9 @@ final class VideoTrackView: UIView {
         if !isSet {
             isSet.toggle()
             self.layoutIfNeeded()
-            setScrollViewInset()
+            setSpacerWidths()
             setVideoClipCVLayout()
+            setTrackIndicatorView()
         }
     }
     
@@ -108,7 +115,10 @@ final class VideoTrackView: UIView {
         self.addSubview(scrollView)
         scrollView.addSubview(contentVStack)
         contentVStack.addArrangedSubview(trackIndicator)
-        contentVStack.addArrangedSubview(videoClipCV)
+        contentVStack.addArrangedSubview(clipHStack)
+        clipHStack.addArrangedSubview(leftSpacer)
+        clipHStack.addArrangedSubview(videoClipCV)
+        clipHStack.addArrangedSubview(rightSpacer)
         scrollView.addSubview(leftHandle)
         scrollView.addSubview(rightHandle)
         
@@ -125,10 +135,12 @@ final class VideoTrackView: UIView {
         videoClipCV.snp.makeConstraints { $0.height.equalTo(60) }
     }
     
-    // 스크롤뷰의 컨텐츠 Inset설정
-    private func setScrollViewInset() {
+    // 스크롤뷰의 양쪽 스페이서 넓이 설정
+    private func setSpacerWidths() {
         let width = window?.windowScene?.screen.bounds.width ?? .zero
-        scrollView.contentInset = UIEdgeInsets(horizontal: width / 2)
+        leftSpacer.snp.makeConstraints { $0.width.equalTo(width / 2) }
+        rightSpacer.snp.makeConstraints { $0.width.equalTo(width / 2) }
+        
     }
     
     // 클립 컬렉션뷰와 플로우 레이아웃 마저 설정
@@ -137,6 +149,12 @@ final class VideoTrackView: UIView {
         videoClipCV.setSinglelineLayout(spacing: .zero, width: 60, height: 60)
         let width = videoClipCV.collectionViewLayout.collectionViewContentSize.width
         videoClipCV.snp.makeConstraints { $0.width.equalTo(width) }
+    }
+    
+    private func setTrackIndicatorView() {
+        let width = window?.windowScene?.screen.bounds.width ?? .zero
+        let count = (width / 10).int
+        trackIndicator.pointCount.onNext(count)
     }
     
     // MARK: - Binding
@@ -209,12 +227,14 @@ final class VideoTrackView: UIView {
             .map { [weak self] offset -> CGFloat? in
                 guard let self else { return nil }
                 let contentWidth = self.scrollView.contentSize.width
-                let leftInset = self.scrollView.contentInset.left
-                // 인셋을 계산에 넣어줘야 함
-                let actualOffset = offset.x + leftInset
-                return actualOffset / contentWidth
+                let horizontalSpacerWidth = window?.windowScene?.screen.bounds.width ?? .zero
+                // 스페이서 만큼의 넓이를 제외해야 실질적인 콘텐츠 사이즈를 얻을 수 있음
+                let actualWidth = contentWidth - horizontalSpacerWidth
+                
+                return offset.x / actualWidth
             }
             .compactMap { $0 }
+            .debug()
             .share(replay: 1)
         
         let input = VideoTrackVM.Input(
@@ -284,9 +304,12 @@ final class VideoTrackView: UIView {
         output.drawFocusView
             .bind(with: self) { owner, path in
                 guard let attributes = owner.videoClipCV.layoutAttributesForItem(at: path) else { return }
+                // 왼쪽 스페이서 넓이만큼 오프셋 필요함
+                let spacerWidth = owner.leftSpacer.frame.width
+                
                 // attributes의 프레임 정보를 바탕으로 포커스 뷰 그려주기 (오토레이아웃 필요 없음)
-                let leftOrigin = CGPoint(x: attributes.frame.minX + 10, y: attributes.frame.minY + 10)
-                let rightOrigin = CGPoint(x: attributes.frame.maxX - 18 - 4, y: attributes.frame.minY + 10)
+                let leftOrigin = CGPoint(x: attributes.frame.minX + spacerWidth + 10, y: attributes.frame.minY + 20)
+                let rightOrigin = CGPoint(x: attributes.frame.maxX + spacerWidth - 18 - 4, y: attributes.frame.minY + 20)
                 
                 let leftSize = CGSize(width: 8, height: attributes.frame.height - 20)
                 let rightSize = CGSize(width: 8, height: attributes.frame.height - 20)

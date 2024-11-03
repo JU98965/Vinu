@@ -13,6 +13,7 @@ import RxCocoa
 final class TrackIndicatorView: UIView {
     
     private let bag = DisposeBag()
+    // 초기 값 10, 특별히 이유는 없음
     let pointCount = BehaviorSubject(value: 10)
     
     // MARK: - Components
