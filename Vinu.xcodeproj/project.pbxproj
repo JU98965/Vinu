@@ -36,6 +36,9 @@
 		51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A032C9C823700E06B99 /* PaddingUILabel.swift */; };
 		51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A052C9CA66D00E06B99 /* PendingCell.swift */; };
 		516976292CBEE178008A69BF /* ProjectData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516976282CBEE178008A69BF /* ProjectData.swift */; };
+		517320DF2CD90AFB003D685C /* SplashyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320DE2CD90AFB003D685C /* SplashyView.swift */; };
+		517320E12CD91B10003D685C /* EntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320E02CD91B10003D685C /* EntryView.swift */; };
+		517320E72CD937D4003D685C /* ShadowButtonBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320E62CD937D4003D685C /* ShadowButtonBase.swift */; };
 		517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */; };
 		517D56C12CC4051A00009E23 /* VideoTrackVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D56C02CC4051700009E23 /* VideoTrackVM.swift */; };
 		518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518408ED2CAA8B9100779D12 /* VideoClipCell.swift */; };
@@ -103,6 +106,9 @@
 		51688A052C9CA66D00E06B99 /* PendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCell.swift; sourceTree = "<group>"; };
 		51688A072C9CB2AA00E06B99 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		516976282CBEE178008A69BF /* ProjectData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectData.swift; sourceTree = "<group>"; };
+		517320DE2CD90AFB003D685C /* SplashyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashyView.swift; sourceTree = "<group>"; };
+		517320E02CD91B10003D685C /* EntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryView.swift; sourceTree = "<group>"; };
+		517320E62CD937D4003D685C /* ShadowButtonBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowButtonBase.swift; sourceTree = "<group>"; };
 		517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackView.swift; sourceTree = "<group>"; };
 		517D56C02CC4051700009E23 /* VideoTrackVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackVM.swift; sourceTree = "<group>"; };
 		518408ED2CAA8B9100779D12 /* VideoClipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClipCell.swift; sourceTree = "<group>"; };
@@ -195,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				51688A032C9C823700E06B99 /* PaddingUILabel.swift */,
+				517320E62CD937D4003D685C /* ShadowButtonBase.swift */,
 				516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */,
 				51D30D512CA30320003B9DF1 /* DivideView.swift */,
 			);
@@ -250,9 +257,27 @@
 			path = VideoClipCollectionView;
 			sourceTree = "<group>";
 		};
+		517320E22CD91C81003D685C /* SplashyView */ = {
+			isa = PBXGroup;
+			children = (
+				517320DE2CD90AFB003D685C /* SplashyView.swift */,
+			);
+			path = SplashyView;
+			sourceTree = "<group>";
+		};
+		517320E52CD91CA3003D685C /* EntryView */ = {
+			isa = PBXGroup;
+			children = (
+				517320E02CD91B10003D685C /* EntryView.swift */,
+			);
+			path = EntryView;
+			sourceTree = "<group>";
+		};
 		518408F42CAB214600779D12 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				517320E22CD91C81003D685C /* SplashyView */,
+				517320E52CD91CA3003D685C /* EntryView */,
 				519BF0A72C9AB7DC0064FE0A /* MainVC.swift */,
 				519BF0C52C9AC5CF0064FE0A /* MainVM.swift */,
 			);
@@ -491,6 +516,7 @@
 				51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */,
 				5146D5472CAC3A9F00C407F3 /* UIEdgeInsets.swift in Sources */,
 				51B048EA2CBFA39500C9382B /* TrimHandleView.swift in Sources */,
+				517320DF2CD90AFB003D685C /* SplashyView.swift in Sources */,
 				5146D5632CAC56DB00C407F3 /* VideoClip.swift in Sources */,
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
 				5146D5432CAC3A6700C407F3 /* UICollectionView.swift in Sources */,
@@ -503,6 +529,7 @@
 				513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */,
 				51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */,
 				519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */,
+				517320E72CD937D4003D685C /* ShadowButtonBase.swift in Sources */,
 				5146D5412CAC3A4400C407F3 /* UIViewController.swift in Sources */,
 				51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */,
 				51D30D552CA30C22003B9DF1 /* RatioCell.swift in Sources */,
@@ -522,6 +549,7 @@
 				5141F4032CA4611100839239 /* VideoCoreData+CoreDataProperties.swift in Sources */,
 				519BF0AE2C9AB7DC0064FE0A /* Vinu.xcdatamodeld in Sources */,
 				5146D5662CAC79C500C407F3 /* VideoClipCollectionView.swift in Sources */,
+				517320E12CD91B10003D685C /* EntryView.swift in Sources */,
 				514DECBB2CAD2E2D0004EA00 /* FrameCell.swift in Sources */,
 				51957C2E2CD575E4001AB554 /* IndicatorPointView.swift in Sources */,
 				519BF0D52C9AEDE70064FE0A /* PickerVM.swift in Sources */,

@@ -24,6 +24,26 @@ extension UIColor {
         UIColor(hex: 0xB5E8F0)
     }
     
+    static var backWhite: UIColor {
+        UIColor(hex: 0xF8F8F8)
+    }
+    
+    static var textGray: UIColor {
+        UIColor(hex: 0x767A80)
+    }
+    
+    static var tintOrange: UIColor {
+        UIColor(hex: 0xEF960E)
+    }
+    
+    static var tintSoda: UIColor {
+        UIColor(hex: 0x99C6DA)
+    }
+    
+    static var tintIvory: UIColor {
+        UIColor(hex: 0xE0C6A6)
+    }
+    
     static var chuColorPalette: [UIColor] {
         let array: [UIColor] = [
             .init(hex: 0xd4b8a6),

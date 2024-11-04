@@ -15,49 +15,42 @@ final class MainVC: UIViewController {
     private let bag = DisposeBag()
     
     // MARK: - Componets
-    let titleLabel = {
-        let label = UILabel()
-        label.text = String(localized: "대시보드")
-        label.font = .boldSystemFont(ofSize: 20)
-        label.textColor = .black
-        return label
+    let mainVStack = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.distribution = .fill
+        return sv
     }()
     
-    let newProjectButton = {
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .black
-        config.baseForegroundColor = .white
-        config.title = String(localized: "새 프로젝트")
-        let button = UIButton(configuration: config)
-        button.layer.cornerRadius = .chu16
-        button.layer.cornerCurve = .continuous
-        button.clipsToBounds = true
-        return button
-    }()
+    let splashyView = SplashyView()
+    
+    let entryView = EntryView()
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        setNavigationBar(
-            leftBarButtonItems: [UIBarButtonItem(customView: titleLabel)])
-        setAutoLayout()
+        view.backgroundColor = .backWhite
+        setAutoLayout()	
         setBinding()
     }
 
     // MARK: - Layout
     private func setAutoLayout() {
-        view.addSubview(newProjectButton)
+        view.addSubview(mainVStack)
+        mainVStack.addArrangedSubview(splashyView)
+        mainVStack.addArrangedSubview(entryView)
         
-        newProjectButton.snp.makeConstraints {
-            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide).inset(25)
-            $0.height.equalTo(50)
+        
+        mainVStack.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(50)
         }
+        splashyView.snp.makeConstraints { $0.height.equalToSuperview().multipliedBy(0.7) }
     }
     
     // MARK: - Binding
     private func setBinding() {
-        let input = MainVM.Input(tapNewProjectButton: newProjectButton.rx.tap.asObservable())
+        let input = MainVM.Input(tapNewProjectButton: entryView.mergeButton.button.rx.tap.asObservable())
         let output = mainVM.transform(input: input)
         
         // 비디오 피커 띄우기
