@@ -27,33 +27,31 @@ final class EntryView: UIView {
     }()
     
     let mergeButton = {
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintSoda
+        var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .white
-        config.title = String(localized: "비디오 병합")
+        config.attributedTitle = AttributedString(
+            String(localized: "비디오 병합"),
+            attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
         config.image = UIImage(systemName: "arrow.trianglehead.merge")?.resizeImage(newWidth: 50).withTintColor(.white)
         config.imagePlacement = .top
-        config.imagePadding = 5
-        let button = UIButton(configuration: config)
-        button.layer.cornerRadius = 5
-        button.layer.cornerCurve = .continuous
-        button.clipsToBounds = true
-        return ShadowButtonBase(button)
+        config.imagePadding = .chu16
+        let button = GradientButton(configuration: config)
+        button.backgroundColor = .tintSoda
+        return button
     }()
     
     let extractButton = {
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintIvory
+        var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .white
-        config.title = String(localized: "음원 추출")
+        config.attributedTitle = AttributedString(
+            String(localized: "음원 추출"),
+            attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
         config.image = UIImage(systemName: "square.and.arrow.up.fill")?.resizeImage(newWidth: 50).withTintColor(.white)
         config.imagePlacement = .top
-        config.imagePadding = 5
-        let button = UIButton(configuration: config)
-        button.layer.cornerRadius = 5
-        button.layer.cornerCurve = .continuous
-        button.clipsToBounds = true
-        return ShadowButtonBase(button)
+        config.imagePadding = .chu16
+        let button = GradientButton(configuration: config)
+        button.backgroundColor = .tintIvory
+        return button
     }()
     
     // MARK: - Life Cycle

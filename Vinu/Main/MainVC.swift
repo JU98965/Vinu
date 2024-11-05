@@ -33,6 +33,16 @@ final class MainVC: UIViewController {
         setAutoLayout()	
         setBinding()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // 영상 선택창에서 다시 돌아올 때 네비게이션 바를 숨김
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        // 다른 창으로 넘어갈 때 숨겼던 네비게이션 바를 표시
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     // MARK: - Layout
     private func setAutoLayout() {
@@ -50,7 +60,7 @@ final class MainVC: UIViewController {
     
     // MARK: - Binding
     private func setBinding() {
-        let input = MainVM.Input(tapNewProjectButton: entryView.mergeButton.button.rx.tap.asObservable())
+        let input = MainVM.Input(tapNewProjectButton: entryView.mergeButton.rx.tap.asObservable())
         let output = mainVM.transform(input: input)
         
         // 비디오 피커 띄우기

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47D72CD9F35100D479D2 /* GradientButton.swift */; };
 		511D399A2CB6EA18006A178B /* LoadingVM+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511D39992CB6EA0A006A178B /* LoadingVM+Concurrency.swift */; };
 		513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698772CB8442F004175DE /* LoadigVM+Old.swift */; };
 		5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698792CB84E7A004175DE /* VideoHelper.swift */; };
@@ -76,6 +77,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		510C47D72CD9F35100D479D2 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
 		511D39992CB6EA0A006A178B /* LoadingVM+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadingVM+Concurrency.swift"; sourceTree = "<group>"; };
 		513698772CB8442F004175DE /* LoadigVM+Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadigVM+Old.swift"; sourceTree = "<group>"; };
 		513698792CB84E7A004175DE /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				51D30D3D2CA2B124003B9DF1 /* VideoData.swift */,
 				5141F3F42CA4081A00839239 /* ProjectDataManager.swift */,
 				513698772CB8442F004175DE /* LoadigVM+Old.swift */,
+				517320E62CD937D4003D685C /* ShadowButtonBase.swift */,
 			);
 			path = Trash;
 			sourceTree = "<group>";
@@ -201,7 +204,7 @@
 			isa = PBXGroup;
 			children = (
 				51688A032C9C823700E06B99 /* PaddingUILabel.swift */,
-				517320E62CD937D4003D685C /* ShadowButtonBase.swift */,
+				510C47D72CD9F35100D479D2 /* GradientButton.swift */,
 				516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */,
 				51D30D512CA30320003B9DF1 /* DivideView.swift */,
 			);
@@ -508,6 +511,7 @@
 				51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */,
 				5146D5452CAC3A7D00C407F3 /* PHAsset.swift in Sources */,
 				518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */,
+				510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */,
 				51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */,
 				5146D54D2CAC3AEB00C407F3 /* Array+ThumbnailData.swift in Sources */,
 				516976292CBEE178008A69BF /* ProjectData.swift in Sources */,
