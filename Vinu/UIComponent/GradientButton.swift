@@ -8,7 +8,7 @@
 import UIKit
 
 final class GradientButton: UIButton {
-    private var isSet = false
+    private let once = OnlyOnce()
     
     // MARK: - Components
     let gradientLayer = CAGradientLayer()
@@ -20,23 +20,22 @@ final class GradientButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if !isSet {
-            isSet.toggle()
-            setGradient()
-        }
+        once.excute { setGradient() }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // 그라디언트 설정
+    // MARK: - Layer
     private func setGradient() {
         let colors = [
             UIColor.white.withAlphaComponent(0.0).cgColor,
             UIColor.white.withAlphaComponent(0.3).cgColor,
         ]
         
+        // 추후 그라디언트 객체에 접근하기 위해 이름 붙여주기
+        gradientLayer.name = "gradientLayer"
         gradientLayer.type = .radial
         gradientLayer.frame = self.bounds
         gradientLayer.colors = colors
@@ -47,8 +46,33 @@ final class GradientButton: UIButton {
         self.layer.addSublayer(gradientLayer)
     }
     
+    // clipsToBounds 안쓰고 모서리 둥글게 만들기 위한 눈물의 x꼬쇼
+    var cornerRadius: CGFloat? { didSet { setCornerRadius() } } // 저장 속성이긴 한데 일단 메서드 관점에서 배치
+    override var bounds: CGRect { didSet { setCornerRadius() } }
+    
+    private func setCornerRadius() {
+        guard let cornerRadius, bounds != .zero else { return }
+        
+        // UIBezierPath의 곡선은 기본적으로 Continuous 곡선를 사용한다고 함
+        let path = UIBezierPath(roundedRect: self.bounds, cornerRadius: cornerRadius)
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+
+        if let sublayers = self.layer.sublayers,
+           let gradientLayer = sublayers.first(where: { $0.name == "gradientLayer" }) {
+            // 서브레이어가 이미 등록 되었고, gradientLayer 객체에 접근 가능하다면 둥근 모서리 마스크를 적용
+            gradientLayer.mask = maskLayer
+        } else {
+            // 서브레이어가 아직 등록 전이고, gradientLayer 객체에 바로 접근해서 둥근 모서리 마스크를 적용
+            self.gradientLayer.mask = maskLayer
+        }
+        
+        // 일반 레이어에도 둥근 모서리 적용
+        self.layer.cornerRadius = cornerRadius
+        self.layer.cornerCurve = .continuous
+    }
 }
 
 #Preview {
-    UINavigationController(rootViewController: MainVC())
+    ThumbnailCell()
 }

@@ -51,6 +51,7 @@ final class InnerStrokeView: UIView {
             y: width,
             width: view.bounds.width - width * 2,
             height: view.bounds.height - width * 2)
+        // UIBezierPath의 곡선은 기본적으로 Continuous 곡선를 사용한다고 함
         let innerPath = UIBezierPath(roundedRect: innerRect, cornerRadius: radius - width)
 
         totalPath.append(outerPath)

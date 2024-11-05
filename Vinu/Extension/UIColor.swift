@@ -44,6 +44,10 @@ extension UIColor {
         UIColor(hex: 0xE0C6A6)
     }
     
+    static var tintBlack: UIColor {
+        UIColor(hex: 0x202020)
+    }
+    
     static var chuColorPalette: [UIColor] {
         let array: [UIColor] = [
             .init(hex: 0xd4b8a6),

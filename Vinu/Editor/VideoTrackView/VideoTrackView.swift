@@ -15,7 +15,7 @@ final class VideoTrackView: UIView {
     private let videoTrackVM = VideoTrackVM()
     
     private let bag = DisposeBag()
-    private var isSet = false
+    private let once = OnlyOnce()
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
     let sourceIn = PublishSubject<[VideoTrackModel]>()
     let timeRanges = PublishSubject<[CMTimeRange]>()
@@ -96,9 +96,7 @@ final class VideoTrackView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        // 최초로 1번만 실행되게끔 조건 걸어주기
-        if !isSet {
-            isSet.toggle()
+        once.excute {
             self.layoutIfNeeded()
             setSpacerWidths()
             setVideoClipCVLayout()
