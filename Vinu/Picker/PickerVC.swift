@@ -14,63 +14,68 @@ import RxDataSources
 final class PickerVC: UIViewController {
     private let pickerVM = PickerVM()
     private let bag = DisposeBag()
+    private let once = OnlyOnce()
     
     // MARK: - Componets
+    let mainVStack = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        return sv
+    }()
+    
     let thumbnailCV = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(ThumbnailCell.self, forCellWithReuseIdentifier: ThumbnailCell.identifier)
         cv.allowsMultipleSelection = true
-        cv.backgroundColor = .chuLightGray
+        cv.backgroundColor = .clear
         return cv
     }()
     
-    let bottomSV = {
-        let sv = UIStackView()
-        sv.axis = .vertical
-        sv.spacing = .chu16
-        sv.distribution = .fill
-        sv.backgroundColor = .white
-        sv.isLayoutMarginsRelativeArrangement = true
-        sv.directionalLayoutMargins = .init(top: .chu16, leading: .chu16, trailing: .chu16)
-        return sv
-    }()
-    
     let clipLabel = {
-        let label = UILabel()
+        let label = PaddingUILabel(padding: .init(edges: 15))
+        label.font = .boldSystemFont(ofSize: 14)
         label.text = "0개 클립 선택됨" // temp
-        label.textColor = .lightGray
-        label.font = .systemFont(ofSize: 14)
+        label.textColor = .textGray
+        label.backgroundColor = .backWhite
+        label.dropShadow(radius: 1, opacity: 0.05, offset: .init(width: 0, height: -2))
         return label
     }()
     
     let pendingCV = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(PendingCell.self, forCellWithReuseIdentifier: PendingCell.identifier)
-        cv.allowsSelection = true
+        cv.setSinglelineLayout(
+            spacing: 15,
+            itemSize: .init(width: 64, height: 64),
+            sectionInset: .init(horizontal: 15))
         cv.showsHorizontalScrollIndicator = false
+        cv.allowsSelection = true
         cv.backgroundColor = .clear
-        cv.layer.cornerRadius = 8
-        cv.layer.cornerCurve = .continuous
-        cv.clipsToBounds = true
         return cv
+    }()
+    
+    let nextButtonShadowView = {
+        let sv = UIStackView()
+        sv.dropShadow(radius: 2.5, opacity: 0.1)
+        return sv
     }()
     
     let nextButton = {
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .black
+        config.baseBackgroundColor = .tintSoda
         config.baseForegroundColor = .white
         config.title = String(localized: "다음")
         
-        let button = UIButton(configuration: config)
-        button.layer.cornerRadius = .chu16
-        button.layer.cornerCurve = .continuous
+        let button = GradientButton(configuration: config)
         button.clipsToBounds = true
+        button.smoothCorner(radius: 21.33)
         return button
     }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .backWhite
         setNavigationBar(title: String(localized: "비디오 선택하기"))
         setAutoLayout()
         setBinding()
@@ -78,32 +83,37 @@ final class PickerVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setCollectionViewLayout()
+        // 버튼 레이아웃 잡기 전에 layoutIfNeeded 호출하면 그라데이션이 풀려버림..
+        once.excute {
+            setNextButtonLayout()
+            view.layoutIfNeeded()
+            setCollectionViewLayout()
+        }
     }
     
     // MARK: - Layout
     private func setAutoLayout() {
-        view.addSubview(thumbnailCV)
-        view.addSubview(bottomSV)
-        bottomSV.addArrangedSubview(clipLabel)
-        bottomSV.addArrangedSubview(pendingCV)
-        bottomSV.addArrangedSubview(nextButton)
+        view.addSubview(mainVStack)
+        view.addSubview(nextButtonShadowView)
+        mainVStack.addArrangedSubview(thumbnailCV)
+        mainVStack.addArrangedSubview(clipLabel)
+        mainVStack.addArrangedSubview(pendingCV)
+        nextButtonShadowView.addArrangedSubview(nextButton)
         
-        thumbnailCV.snp.makeConstraints {
-            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalTo(bottomSV.snp.top)
-        }
-        bottomSV.snp.makeConstraints {
-            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalToSuperview()
-        }
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
         pendingCV.snp.makeConstraints { $0.height.equalTo(64) }
-        nextButton.snp.makeConstraints { $0.height.equalTo(50) }
     }
     
     private func setCollectionViewLayout() {
-        thumbnailCV.setMultilineLayout(spacing: 16, itemCount: 3, sectionInset: .init(edges: 16))
-        pendingCV.setSinglelineLayout(spacing: 4, width: 64, height: 64)
+        thumbnailCV.setMultilineLayout(spacing: 15, itemCount: 3, sectionInset: .init(edges: 15))
+    }
+    
+    private func setNextButtonLayout() {
+        nextButtonShadowView.snp.makeConstraints {
+            $0.trailing.equalToSuperview().multipliedBy(0.9)
+            $0.centerY.equalTo(thumbnailCV.snp.bottom)
+            $0.size.equalTo(64)
+        }
     }
     
     // MARK: - Binding

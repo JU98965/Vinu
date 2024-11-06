@@ -28,7 +28,7 @@ final class VideoClipCell: UICollectionViewCell {
         cv.clipsToBounds = true
         cv.backgroundColor = .chuTint
         // 모든 수치가 정해져 있어 layoutsubview 시점에 초기화 시켜줄 필요 없음
-        cv.setSinglelineLayout(spacing: .zero, width: 60, height: 60)
+        cv.setSinglelineLayout(spacing: .zero, itemSize: .init(width: 64, height: 64))
         return cv
     }()
     

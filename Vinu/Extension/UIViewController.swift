@@ -14,27 +14,27 @@ extension UIViewController {
         leftBarButtonItems: [UIBarButtonItem]? = nil,
         rightBarButtonItems: [UIBarButtonItem]? = nil,
         title: String? = nil) {
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .chuLightGray
-        navigationBarAppearance.shadowColor = .clear // 그림자 없애기
-        
-        if let title { // 타이틀 설정
-            navigationBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black] // 타이틀 색깔
-            self.navigationController?.navigationBar.tintColor = .black
-            self.title = title
+            let navigationBarAppearance = UINavigationBarAppearance()
+            navigationBarAppearance.configureWithOpaqueBackground()
+            navigationBarAppearance.backgroundColor = .backWhite
+            navigationBarAppearance.shadowColor = .clear // 그림자 없애기
+            
+            if let title { // 타이틀 설정
+                navigationBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.textGray] // 타이틀 색깔
+                self.navigationController?.navigationBar.tintColor = .textGray
+                self.title = title
+            }
+            if let leftBarButtonItems {
+                navigationItem.leftBarButtonItems = leftBarButtonItems
+            }
+            if let rightBarButtonItems {
+                navigationItem.rightBarButtonItems = rightBarButtonItems
+            }
+            
+            navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+            navigationController?.navigationBar.compactAppearance = navigationBarAppearance
+            navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         }
-        if let leftBarButtonItems {
-            navigationItem.leftBarButtonItems = leftBarButtonItems
-        }
-        if let rightBarButtonItems {
-            navigationItem.rightBarButtonItems = rightBarButtonItems
-        }
-        
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-    }
     
     func presentAlert(
         title: String,

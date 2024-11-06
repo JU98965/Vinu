@@ -1,13 +1,13 @@
 //
-//  GradientButton.swift
+//  GradientView.swift
 //  Vinu
 //
-//  Created by 신정욱 on 11/5/24.
+//  Created by 신정욱 on 11/7/24.
 //
 
 import UIKit
 
-final class GradientButton: UIButton {
+final class GradientView: UIView {
     private let once = OnlyOnce()
     
     // MARK: - Components
@@ -43,8 +43,4 @@ final class GradientButton: UIButton {
         
         self.layer.addSublayer(gradientLayer)
     }
-}
-
-#Preview {
-    ThumbnailCell()
 }

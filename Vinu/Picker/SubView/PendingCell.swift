@@ -16,8 +16,6 @@ final class PendingCell: UICollectionViewCell {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.backgroundColor = .chuLightGray
-        view.layer.cornerRadius = 8
-        view.layer.cornerCurve = .continuous
         view.clipsToBounds = true
         return view
     }()
@@ -26,6 +24,8 @@ final class PendingCell: UICollectionViewCell {
         let view = UIImageView()
         view.image = UIImage(systemName: "multiply.circle.fill")
         view.tintColor = .white
+        view.layer.compositingFilter = "hardLightBlendMode"
+        view.dropShadow(radius: 1, opacity: 0.1)
         return view
     }()
     
@@ -33,7 +33,15 @@ final class PendingCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
+        contentView.dropShadow(radius: 1.5, opacity: 0.1)
+        
         setAutoLayout()
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        contentView.smoothCorner(radius: contentView.bounds.height / 3)
+        imageView.smoothCorner(radius: imageView.bounds.height / 3)
     }
     
     required init?(coder: NSCoder) {
@@ -45,9 +53,13 @@ final class PendingCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(removeImageView)
         
+        contentView.snp.makeConstraints {
+            $0.size.equalToSuperview()
+            $0.center.equalToSuperview()
+        }
         imageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         removeImageView.snp.makeConstraints {
-            $0.top.trailing.equalToSuperview().inset(4)
+            $0.top.trailing.equalToSuperview()
             $0.size.equalTo(16)
         }
     }

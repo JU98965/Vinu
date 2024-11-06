@@ -144,7 +144,7 @@ final class VideoTrackView: UIView {
     // 클립 컬렉션뷰와 플로우 레이아웃 마저 설정
     private func setVideoClipCVLayout() {
         // 어떤 길이의 영상이 들어올지 모르기 때문에 width는 60으로 설정 후 바인딩 과정에서 초기화
-        videoClipCV.setSinglelineLayout(spacing: .zero, width: 60, height: 60)
+        videoClipCV.setSinglelineLayout(spacing: .zero, itemSize: .init(width: 60, height: 60))
         let width = videoClipCV.collectionViewLayout.collectionViewContentSize.width
         videoClipCV.snp.makeConstraints { $0.width.equalTo(width) }
     }

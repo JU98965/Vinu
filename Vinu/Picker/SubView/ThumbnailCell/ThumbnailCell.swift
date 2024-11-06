@@ -14,23 +14,29 @@ final class ThumbnailCell: UICollectionViewCell {
     // MARK: - Components
     let imageView = {
         let view = UIImageView()
-        // view.image = UIImage(named: "main_view_image")
+        view.image = UIImage(named: "main_view_image")
         view.contentMode = .scaleAspectFill
         return view
     }()
     
     let selectBack = {
-        let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialLight))
+        let view = UIView()
+        view.backgroundColor = .white.withAlphaComponent(0.5)
         view.isHidden = true
         return view
     }()
     
+    let numberTagBackShadow = {
+        let sv = UIStackView()
+        sv.dropShadow(radius: 1.5, opacity: 0.15)
+        return sv
+    }()
+    
     let numberTagBack = {
-        let view = GradientButton() as UIView
+        let view = GradientView()
         view.backgroundColor = .tintSoda
-        let container = ShadowContainerView(containing: view, radius: 5, opacity: 0.1)
-        container.isHidden = true
-        return container
+        view.clipsToBounds = true
+        return view
     }()
     
     let numberTagLabel = {
@@ -39,17 +45,23 @@ final class ThumbnailCell: UICollectionViewCell {
         label.font = .boldSystemFont(ofSize: 72)
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
-        label.textColor = .white
-        label.isHidden = true
+        label.textColor = .backWhite
         return label
     }()
     
+    let durationLabelBackShadow = {
+        let sv = UIStackView()
+        sv.dropShadow(radius: 1.5, opacity: 0.15)
+        // sv.layer.compositingFilter = "hardLightBlendMode"
+        return sv
+    }()
+    
     let durationLabelBack = {
-        let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialLight))
+        let view = UIView()
+        view.backgroundColor = .backWhite
         view.smoothCorner(radius: 5)
-        let container = ShadowContainerView(containing: view, radius: 5, opacity: 0.1)
-        container.layer.compositingFilter = "hardLightBlendMode"
-        return container
+        view.clipsToBounds = true
+        return view
     }()
     
     let durationLabel = {
@@ -66,7 +78,7 @@ final class ThumbnailCell: UICollectionViewCell {
         super.init(frame: frame)
         self.contentView.backgroundColor = .chuLightGray
         self.contentView.clipsToBounds = true
-        self.dropShadow(radius: 1.5, opacity: 0.25)
+        self.dropShadow(radius: 1.5, opacity: 0.1)
         
         setAutoLayout()
     }
@@ -77,8 +89,7 @@ final class ThumbnailCell: UICollectionViewCell {
         durationLabel.text = ""
         numberTagLabel.text = ""
         selectBack.isHidden = true
-        numberTagBack.isHidden = true
-        numberTagLabel.isHidden = true
+        setCornerRadiuses()
     }
     
     override func draw(_ rect: CGRect) {
@@ -94,20 +105,24 @@ final class ThumbnailCell: UICollectionViewCell {
     // MARK: - Layout
     private func setAutoLayout() {
         contentView.addSubview(imageView)
-        contentView.addSubview(durationLabelBack)
         imageView.addSubview(selectBack)
-        selectBack.contentView.addSubview(numberTagBack)
+        selectBack.addSubview(numberTagBackShadow)
+        numberTagBackShadow.addArrangedSubview(numberTagBack)
         numberTagBack.addSubview(numberTagLabel)
+        
+        contentView.addSubview(durationLabelBackShadow)
+        durationLabelBackShadow.addArrangedSubview(durationLabelBack)
         durationLabelBack.addSubview(durationLabel)
 
         imageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         selectBack.snp.makeConstraints { $0.edges.equalToSuperview() }
-        numberTagBack.snp.makeConstraints {
+        numberTagBackShadow.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.size.equalToSuperview().multipliedBy(0.33)
+            $0.size.equalToSuperview().multipliedBy(0.4)
         }
         numberTagLabel.snp.makeConstraints { $0.edges.equalToSuperview().inset(5) }
-        durationLabelBack.snp.makeConstraints {
+        
+        durationLabelBackShadow.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(5)
         }
@@ -116,8 +131,8 @@ final class ThumbnailCell: UICollectionViewCell {
     
     // 각 뷰들의 모서리 곡률을 뷰의 넓이에 맞춰서 처리
     private func setCornerRadiuses() {
-        self.contentView.smoothCorner(radius: self.bounds.width / 4)
-        numberTagBack.smoothCornerRadius = numberTagBack.frame.width / 2
+        self.contentView.smoothCorner(radius: self.bounds.width / 3)
+        numberTagBack.smoothCorner(radius: numberTagBackShadow.bounds.width / 2)
     }
     
     // MARK: - Configure Components
