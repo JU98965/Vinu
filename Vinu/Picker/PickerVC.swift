@@ -102,7 +102,7 @@ final class PickerVC: UIViewController {
     }
     
     private func setCollectionViewLayout() {
-        thumbnailCV.setMultilineLayout(spacing: 4, itemCount: 4, sectionInset: .init(edges: 4))
+        thumbnailCV.setMultilineLayout(spacing: 16, itemCount: 3, sectionInset: .init(edges: 16))
         pendingCV.setSinglelineLayout(spacing: 4, width: 64, height: 64)
     }
     

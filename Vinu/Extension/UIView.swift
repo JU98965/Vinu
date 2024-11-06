@@ -8,15 +8,15 @@
 import UIKit
 
 extension UIView {
-    func setFaintShadowTemplate(radius: CGFloat = 10) {
+    func dropShadow(radius: CGFloat, opacity: Float) {
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0.25
+        self.layer.shadowOpacity = opacity
         self.layer.shadowOffset = .zero
         self.layer.shadowRadius = radius
     }
     
-    func setSmoothCornerTemplate(value: CGFloat) {
-        self.layer.cornerRadius = value
+    func smoothCorner(radius: CGFloat) {
+        self.layer.cornerRadius = radius
         self.layer.cornerCurve = .continuous
     }
 }

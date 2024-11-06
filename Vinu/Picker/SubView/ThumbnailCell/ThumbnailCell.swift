@@ -22,17 +22,15 @@ final class ThumbnailCell: UICollectionViewCell {
     let selectBack = {
         let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialLight))
         view.isHidden = true
-        // view.layer.compositingFilter = "screenBlendMode"
         return view
     }()
     
     let numberTagBack = {
-        let view = GradientButton()
-        view.isUserInteractionEnabled = false
+        let view = GradientButton() as UIView
         view.backgroundColor = .tintSoda
-        view.setFaintShadowTemplate(radius: 10)
-        view.isHidden = true
-        return view
+        let container = ShadowContainerView(containing: view, radius: 5, opacity: 0.1)
+        container.isHidden = true
+        return container
     }()
     
     let numberTagLabel = {
@@ -47,12 +45,11 @@ final class ThumbnailCell: UICollectionViewCell {
     }()
     
     let durationLabelBack = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 5
-        view.layer.cornerCurve = .continuous
-        view.clipsToBounds = true
-        return view
+        let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialLight))
+        view.smoothCorner(radius: 5)
+        let container = ShadowContainerView(containing: view, radius: 5, opacity: 0.1)
+        container.layer.compositingFilter = "hardLightBlendMode"
+        return container
     }()
     
     let durationLabel = {
@@ -67,10 +64,9 @@ final class ThumbnailCell: UICollectionViewCell {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.contentView.layer.cornerRadius = 5
-        self.contentView.layer.cornerCurve = .continuous
-        self.contentView.clipsToBounds = true
         self.contentView.backgroundColor = .chuLightGray
+        self.contentView.clipsToBounds = true
+        self.dropShadow(radius: 1.5, opacity: 0.25)
         
         setAutoLayout()
     }
@@ -87,7 +83,8 @@ final class ThumbnailCell: UICollectionViewCell {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        setNumberTagRadius()
+        // cell들은 이 시점에 그려주는게 좋은 듯
+        setCornerRadiuses()
     }
     
     required init?(coder: NSCoder) {
@@ -110,12 +107,17 @@ final class ThumbnailCell: UICollectionViewCell {
             $0.size.equalToSuperview().multipliedBy(0.33)
         }
         numberTagLabel.snp.makeConstraints { $0.edges.equalToSuperview().inset(5) }
-        durationLabelBack.snp.makeConstraints { $0.trailing.bottom.equalToSuperview().inset(5) }
-        durationLabel.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 5, vertical: 2.5)) }
+        durationLabelBack.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(5)
+        }
+        durationLabel.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 2.5, vertical: 1.25)) }
     }
     
-    private func setNumberTagRadius() {
-        numberTagBack.cornerRadius = numberTagBack.frame.width / 2
+    // 각 뷰들의 모서리 곡률을 뷰의 넓이에 맞춰서 처리
+    private func setCornerRadiuses() {
+        self.contentView.smoothCorner(radius: self.bounds.width / 4)
+        numberTagBack.smoothCornerRadius = numberTagBack.frame.width / 2
     }
     
     // MARK: - Configure Components
