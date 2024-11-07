@@ -11,7 +11,6 @@ import RxCocoa
 import Photos
 
 final class PickerVM {
-    private let bag = DisposeBag()
     
     struct Input {
         let selectThumbnail: Observable<IndexPath>
@@ -24,7 +23,10 @@ final class PickerVM {
         let pendingItems: Observable<[ThumbnailSectionData]>
         let selectItemsCount: Observable<Int>
         let assets: Observable<[PHAsset]>
+        let nextButtonEnabling: Observable<Bool>
     }
+    
+    private let bag = DisposeBag()
     
     func transform(input: Input) -> Output {
         // 썸네일 셀 아이템 상태를 저장하는 서브젝트
@@ -118,11 +120,16 @@ final class PickerVM {
             }
             .share(replay: 1)
         
+        // 선택한 아이템이 있어야 다음 버튼을 활성화
+        let nextButtonEnabling = numberTagIndexPaths
+            .map { !$0.isEmpty }
+        
         return Output(
             thumbnailItems: thumbnailItems.asObservable(),
             pendingItems: pendingItems,
             selectItemsCount: selectItemsCount,
-            assets: assets)
+            assets: assets,
+            nextButtonEnabling: nextButtonEnabling)
     }
     
     // 메타데이터를 가져와서, 셀에 들어갈 데이터를 생성

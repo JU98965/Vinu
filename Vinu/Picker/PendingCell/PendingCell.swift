@@ -17,6 +17,7 @@ final class PendingCell: UICollectionViewCell {
         view.contentMode = .scaleAspectFill
         view.backgroundColor = .chuLightGray
         view.clipsToBounds = true
+        view.smoothCorner(radius: 5)
         return view
     }()
     
@@ -34,14 +35,15 @@ final class PendingCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
         contentView.dropShadow(radius: 1.5, opacity: 0.1)
+        contentView.smoothCorner(radius: 5)
         
         setAutoLayout()
     }
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        contentView.smoothCorner(radius: contentView.bounds.height / 3)
-        imageView.smoothCorner(radius: imageView.bounds.height / 3)
+//        contentView.smoothCorner(radius: contentView.bounds.height / 3)
+//        imageView.smoothCorner(radius: imageView.bounds.height / 3)
     }
     
     required init?(coder: NSCoder) {

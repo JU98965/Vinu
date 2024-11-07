@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 final class ConfigureVC: UIViewController {
-    var configureVM: ConfigureVM!
+    var configureVM: ConfigureVM? = ConfigureVM([])
     private let bag = DisposeBag()
     
     // MARK: - Components
@@ -74,15 +74,16 @@ final class ConfigureVC: UIViewController {
         return cv
     }()
     
+    
+    
     let createButton = {
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .black
+        config.baseBackgroundColor = .tintSoda
         config.baseForegroundColor = .white
         config.title = String(localized: "프로젝트 만들기")
         
-        let button = UIButton(configuration: config)
-        button.layer.cornerRadius = .chu16
-        button.layer.cornerCurve = .continuous
+        let button = GradientButton(configuration: config)
+        button.smoothCorner(radius: 25)
         button.clipsToBounds = true
         return button
     }()
@@ -126,6 +127,8 @@ final class ConfigureVC: UIViewController {
     
     // MARK: - Binding
     private func setBinding() {
+        guard let configureVM else { return }
+        
         let input = ConfigureVM.Input(
             titleText: titleTF.rx.text.asObservable(),
             tapCreateButton: createButton.rx.tap.asObservable())

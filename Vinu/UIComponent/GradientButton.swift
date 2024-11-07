@@ -31,7 +31,7 @@ final class GradientButton: UIButton {
     private func setGradient() {
         let colors = [
             UIColor.white.withAlphaComponent(0.0).cgColor,
-            UIColor.white.withAlphaComponent(0.3).cgColor,
+            UIColor.white.withAlphaComponent(0.24).cgColor,
         ]
         
         gradientLayer.type = .radial

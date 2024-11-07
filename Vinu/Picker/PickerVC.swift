@@ -31,13 +31,19 @@ final class PickerVC: UIViewController {
         return cv
     }()
     
+    let bottomVStack = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.backgroundColor = .backWhite
+        sv.dropShadow(radius: 8, opacity: 0.05, offset: CGSize(width: 0, height: -8))
+        return sv
+    }()
+    
     let clipLabel = {
         let label = PaddingUILabel(padding: .init(edges: 15))
         label.font = .boldSystemFont(ofSize: 14)
-        label.text = "0개 클립 선택됨" // temp
+        label.text = String(localized: "0개 클립 선택됨") // temp
         label.textColor = .textGray
-        label.backgroundColor = .backWhite
-        label.dropShadow(radius: 1, opacity: 0.05, offset: .init(width: 0, height: -2))
         return label
     }()
     
@@ -45,7 +51,7 @@ final class PickerVC: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(PendingCell.self, forCellWithReuseIdentifier: PendingCell.identifier)
         cv.setSinglelineLayout(
-            spacing: 15,
+            spacing: 10,
             itemSize: .init(width: 64, height: 64),
             sectionInset: .init(horizontal: 15))
         cv.showsHorizontalScrollIndicator = false
@@ -54,9 +60,17 @@ final class PickerVC: UIViewController {
         return cv
     }()
     
+    let bottomShadowMaskView = {
+        let view = UIView()
+        view.backgroundColor = .backWhite
+        return view
+    }()
+    
     let nextButtonShadowView = {
         let sv = UIStackView()
-        sv.dropShadow(radius: 2.5, opacity: 0.1)
+        sv.backgroundColor = .backWhite
+        sv.clipsToBounds = true
+        sv.smoothCorner(radius: 32)
         return sv
     }()
     
@@ -64,11 +78,11 @@ final class PickerVC: UIViewController {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .tintSoda
         config.baseForegroundColor = .white
-        config.title = String(localized: "다음")
-        
+        config.attributedTitle = AttributedString(
+            String(localized: "다음"),
+            attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
         let button = GradientButton(configuration: config)
-        button.clipsToBounds = true
-        button.smoothCorner(radius: 21.33)
+        button.isEnabled = false
         return button
     }()
     
@@ -85,30 +99,34 @@ final class PickerVC: UIViewController {
         super.viewDidLayoutSubviews()
         // 버튼 레이아웃 잡기 전에 layoutIfNeeded 호출하면 그라데이션이 풀려버림..
         once.excute {
-            setNextButtonLayout()
+            setLazyAutoLayout()
             view.layoutIfNeeded()
-            setCollectionViewLayout()
+            setThumbnailCVLayout()
         }
     }
     
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
-        view.addSubview(nextButtonShadowView)
         mainVStack.addArrangedSubview(thumbnailCV)
-        mainVStack.addArrangedSubview(clipLabel)
-        mainVStack.addArrangedSubview(pendingCV)
+        mainVStack.addArrangedSubview(bottomVStack)
+        mainVStack.addArrangedSubview(bottomShadowMaskView)
+        bottomVStack.addArrangedSubview(clipLabel)
+        bottomVStack.addArrangedSubview(pendingCV)
+        bottomVStack.addSubview(nextButtonShadowView)
         nextButtonShadowView.addArrangedSubview(nextButton)
         
-        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
+        mainVStack.snp.makeConstraints {
+            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalToSuperview()
+        }
         pendingCV.snp.makeConstraints { $0.height.equalTo(64) }
     }
-    
-    private func setCollectionViewLayout() {
-        thumbnailCV.setMultilineLayout(spacing: 15, itemCount: 3, sectionInset: .init(edges: 15))
-    }
-    
-    private func setNextButtonLayout() {
+
+    private func setLazyAutoLayout() {
+        bottomShadowMaskView.snp.makeConstraints {
+            $0.height.equalTo(view.safeAreaInsets.bottom)
+        }
         nextButtonShadowView.snp.makeConstraints {
             $0.trailing.equalToSuperview().multipliedBy(0.9)
             $0.centerY.equalTo(thumbnailCV.snp.bottom)
@@ -116,8 +134,18 @@ final class PickerVC: UIViewController {
         }
     }
     
+    private func setThumbnailCVLayout() {
+        thumbnailCV.setMultilineLayout(
+            spacing: 3,
+            itemCount: 4,
+            sectionInset: .init(edges: 3),
+            insetOffset: .init(bottom: 32))
+    }
+    
     // MARK: - Binding
     private func setBinding() {
+//        guard false else { return }
+        
         let input = PickerVM.Input(
             selectThumbnail: thumbnailCV.rx.itemSelected.asObservable(),
             selectPending: pendingCV.rx.itemSelected.asObservable(),
@@ -149,6 +177,10 @@ final class PickerVC: UIViewController {
                 vc.configureVM = ConfigureVM(assets)
                 owner.navigationController?.pushViewController(vc, animated: true)
             }
+            .disposed(by: bag)
+        
+        output.nextButtonEnabling
+            .bind(to: nextButton.rx.isEnabled)
             .disposed(by: bag)
     }
     
