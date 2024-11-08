@@ -31,48 +31,7 @@ final class PickerVC: UIViewController {
         return cv
     }()
     
-    let bottomVStack = {
-        let sv = UIStackView()
-        sv.axis = .vertical
-        sv.backgroundColor = .backWhite
-        sv.dropShadow(radius: 8, opacity: 0.05, offset: CGSize(width: 0, height: -8))
-        return sv
-    }()
-    
-    let clipLabel = {
-        let label = PaddingUILabel(padding: .init(edges: 15))
-        label.font = .boldSystemFont(ofSize: 14)
-        label.text = String(localized: "0개 클립 선택됨") // temp
-        label.textColor = .textGray
-        return label
-    }()
-    
-    let pendingCV = {
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
-        cv.register(PendingCell.self, forCellWithReuseIdentifier: PendingCell.identifier)
-        cv.setSinglelineLayout(
-            spacing: 10,
-            itemSize: .init(width: 64, height: 64),
-            sectionInset: .init(horizontal: 15))
-        cv.showsHorizontalScrollIndicator = false
-        cv.allowsSelection = true
-        cv.backgroundColor = .clear
-        return cv
-    }()
-    
-    let bottomShadowMaskView = {
-        let view = UIView()
-        view.backgroundColor = .backWhite
-        return view
-    }()
-    
-    let nextButtonShadowView = {
-        let sv = UIStackView()
-        sv.backgroundColor = .backWhite
-        sv.clipsToBounds = true
-        sv.smoothCorner(radius: 32)
-        return sv
-    }()
+    let pendingItemView = PendingItemView()
     
     let nextButton = {
         var config = UIButton.Configuration.filled()
@@ -82,7 +41,8 @@ final class PickerVC: UIViewController {
             String(localized: "다음"),
             attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
         let button = GradientButton(configuration: config)
-        button.isEnabled = false
+        button.smoothCorner(radius: 64 / 3)
+        button.clipsToBounds = true
         return button
     }()
     
@@ -97,10 +57,9 @@ final class PickerVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // 버튼 레이아웃 잡기 전에 layoutIfNeeded 호출하면 그라데이션이 풀려버림..
         once.excute {
-            setLazyAutoLayout()
             view.layoutIfNeeded()
+            setLazyAutoLayout()
             setThumbnailCVLayout()
         }
     }
@@ -109,46 +68,30 @@ final class PickerVC: UIViewController {
     private func setAutoLayout() {
         view.addSubview(mainVStack)
         mainVStack.addArrangedSubview(thumbnailCV)
-        mainVStack.addArrangedSubview(bottomVStack)
-        mainVStack.addArrangedSubview(bottomShadowMaskView)
-        bottomVStack.addArrangedSubview(clipLabel)
-        bottomVStack.addArrangedSubview(pendingCV)
-        bottomVStack.addSubview(nextButtonShadowView)
-        nextButtonShadowView.addArrangedSubview(nextButton)
+        mainVStack.addArrangedSubview(pendingItemView)
+        mainVStack.addSubview(nextButton)
         
-        mainVStack.snp.makeConstraints {
-            $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalToSuperview()
-        }
-        pendingCV.snp.makeConstraints { $0.height.equalTo(64) }
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
     }
 
     private func setLazyAutoLayout() {
-        bottomShadowMaskView.snp.makeConstraints {
-            $0.height.equalTo(view.safeAreaInsets.bottom)
-        }
-        nextButtonShadowView.snp.makeConstraints {
-            $0.trailing.equalToSuperview().multipliedBy(0.9)
-            $0.centerY.equalTo(thumbnailCV.snp.bottom)
-            $0.size.equalTo(64)
-        }
+        nextButton.snp.makeConstraints { $0.edges.equalTo(pendingItemView.nextButtonBack) }
     }
     
     private func setThumbnailCVLayout() {
         thumbnailCV.setMultilineLayout(
             spacing: 3,
             itemCount: 4,
-            sectionInset: .init(edges: 3),
-            insetOffset: .init(bottom: 32))
+            sectionInset: UIEdgeInsets(edges: 3),
+            insetOffset: UIEdgeInsets(bottom: 64))
     }
     
     // MARK: - Binding
     private func setBinding() {
 //        guard false else { return }
-        
         let input = PickerVM.Input(
             selectThumbnail: thumbnailCV.rx.itemSelected.asObservable(),
-            selectPending: pendingCV.rx.itemSelected.asObservable(),
+            selectPending: pendingItemView.pendingCV.rx.itemSelected.asObservable(),
             tapNextButton: nextButton.rx.tap.asObservable())
         
         let output = pickerVM.transform(input: input)
@@ -160,13 +103,13 @@ final class PickerVC: UIViewController {
         
         // 계류 컬렉션 뷰 바인딩
         output.pendingItems
-            .bind(to: pendingCV.rx.items(dataSource: bindPendingData()))
+            .bind(to: pendingItemView.pendingCV.rx.items(dataSource: bindPendingData()))
             .disposed(by: bag)
         
         // 클립 선택 텍스트 바인딩
         output.selectItemsCount
             .bind(with: self) { owner, count in
-                owner.clipLabel.text = String(localized: "\(count)개 클립 선택됨")
+                owner.pendingItemView.clipLabel.text = String(localized: "\(count)개 클립 선택됨")
             }
             .disposed(by: bag)
         

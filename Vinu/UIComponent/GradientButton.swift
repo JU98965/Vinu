@@ -18,8 +18,8 @@ final class GradientButton: UIButton {
         super.init(frame: frame)
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
         once.excute { setGradient() }
     }
     
@@ -43,8 +43,4 @@ final class GradientButton: UIButton {
         
         self.layer.addSublayer(gradientLayer)
     }
-}
-
-#Preview {
-    ThumbnailCell()
 }

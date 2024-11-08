@@ -37,7 +37,7 @@ final class ThumbnailCell: UICollectionViewCell {
         let label = PaddingUILabel(padding: inset)
         label.font = .systemFont(ofSize: 10, weight: .semibold)
         label.text = "12:34" // temp
-        label.smoothCorner(radius: 5)
+        label.smoothCorner(radius: 3)
         label.clipsToBounds = true
         label.textColor = .textGray
         label.backgroundColor = .white
