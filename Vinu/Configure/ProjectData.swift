@@ -11,5 +11,6 @@ import Photos
 struct ProjectData {
     let title: String
     let phAssets: [PHAsset]
+    let exportSize: CGSize
     let date: Date
 }

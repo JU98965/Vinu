@@ -28,8 +28,8 @@ final class ConfigureVM {
     let phAssets: [PHAsset]
     // 비율 선택 컬렉션 뷰에 들어가는 데이터
     private let ratioItems: [RatioCell.ItemData] = [
-        .init(image: UIImage(systemName: "1.square"), label: "16:9"),
-        .init(image: UIImage(systemName: "2.square"), label: "9:16"),
+        .init(image: UIImage(systemName: "1.square"), label: "9:16", exportSize: CGSize(width: 1080, height: 1920)),
+        .init(image: UIImage(systemName: "2.square"), label: "16:9", exportSize: CGSize(width: 1920, height: 1080)),
     ]
     
     init(_ phAssets: [PHAsset]) {
@@ -79,13 +79,20 @@ final class ConfigureVM {
 
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
-            .withLatestFrom(Observable.combineLatest(titleText, phAssets))
+            .withLatestFrom(Observable.combineLatest(titleText, phAssets, ratioItems))
             .map { combined in
-                let (title, assets) = combined
+                let (title, assets, ratioItems) = combined
+                
+                // 선택한 사이즈(비율) 가져오기
+                let ratio = ratioItems.first { $0.isSelected }
+                print("exportSize", ratio?.exportSize)
+                let exportSize = ratio?.exportSize ?? CGSize(width: 1080, height: 1920)
+                
+                let result = ProjectData(title: title, phAssets: assets, exportSize: exportSize, date: Date())
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 
-                return ProjectData(title: title, phAssets: assets, date: Date())
+                return result
             }
         
         return Output(

@@ -11,6 +11,7 @@ extension RatioCell {
     struct ItemData {
         let image: UIImage?
         let label: String
+        let exportSize: CGSize
         var isSelected = false
     }
 }

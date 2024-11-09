@@ -146,15 +146,19 @@ final class ConfigureVC: UIViewController {
         guard let configureVM else { return }
         
         // text는 입력하기 전까지 이벤트를 내보내지 않는 걸로 알고 있어서 초기값 부여
-        let titleText = titleTF
-            .rx.text
+        let titleText = titleTF.rx.text
             .startWith("")
+            .share(replay: 1)
+        
+        // 첫번째 셀이 선택되어있도록 초기값 부여
+        let selectedRatioPath = ratioCV.rx.itemSelected
+            .startWith(IndexPath(row: 0, section: 0))
             .share(replay: 1)
         
         let input = ConfigureVM.Input(
             titleText: titleText,
             tapCreateButton: createButton.rx.tap.asObservable(),
-            selectedRatioPath: ratioCV.rx.itemSelected.asObservable())
+            selectedRatioPath: selectedRatioPath)
         
         let output = configureVM.transform(input: input)
         
