@@ -13,8 +13,8 @@ import Photos
 final class PickerVM {
     
     struct Input {
-        let selectThumbnail: Observable<IndexPath>
-        let selectPending: Observable<IndexPath>
+        let selectedThumbnailPath: Observable<IndexPath>
+        let selectedPendingPath: Observable<IndexPath>
         let tapNextButton: Observable<Void>
     }
     
@@ -35,7 +35,7 @@ final class PickerVM {
         let numberTagIndexPaths = BehaviorSubject<[IndexPath]>(value: [])
         
         // 썸네일 셀을 탭하면 선택 or 선택 해제
-        input.selectThumbnail
+        input.selectedThumbnailPath
             .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailItems)) {
                 let selectPath = $0
                 var numberTagPaths = $1.0
@@ -68,7 +68,7 @@ final class PickerVM {
             .disposed(by: bag)
         
         // 계류 셀 탭하면 선택 해제
-        input.selectPending
+        input.selectedPendingPath
             .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailItems)) {
                 let selectPath = $0
                 var numberTagPaths = $1.0

@@ -78,6 +78,7 @@
 		51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D566D42CDBF50A00F93E82 /* GradientView.swift */; };
 		51E1E1AC2CD11B8B00414BF3 /* PlaybackConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */; };
 		51EBA9202CBC242D0025E432 /* LoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBA91F2CBC242D0025E432 /* LoadingError.swift */; };
+		51F738D32CDE8C47003E036B /* ItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D22CDE8C3B003E036B /* ItemData.swift */; };
 		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
 		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
@@ -154,6 +155,7 @@
 		51D566D42CDBF50A00F93E82 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackConsoleView.swift; sourceTree = "<group>"; };
 		51EBA91F2CBC242D0025E432 /* LoadingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingError.swift; sourceTree = "<group>"; };
+		51F738D22CDE8C3B003E036B /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
 		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -423,6 +425,7 @@
 		51D30D532CA30BCA003B9DF1 /* RatioCell */ = {
 			isa = PBXGroup;
 			children = (
+				51F738D12CDE8C30003E036B /* ItemData */,
 				51D30D542CA30C22003B9DF1 /* RatioCell.swift */,
 			);
 			path = RatioCell;
@@ -448,6 +451,14 @@
 				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
 			);
 			path = VideoTrackView;
+			sourceTree = "<group>";
+		};
+		51F738D12CDE8C30003E036B /* ItemData */ = {
+			isa = PBXGroup;
+			children = (
+				51F738D22CDE8C3B003E036B /* ItemData.swift */,
+			);
+			path = ItemData;
 			sourceTree = "<group>";
 		};
 		51FE51EC2CD38471008C15B9 /* PlaybackConsoleView */ = {
@@ -569,6 +580,7 @@
 				519421332CA92AD600392BF5 /* PreviewPlayer+Rx.swift in Sources */,
 				513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */,
 				51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */,
+				51F738D32CDE8C47003E036B /* ItemData.swift in Sources */,
 				519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */,
 				510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */,
 				510C47DE2CDA4FA000D479D2 /* CustomIntensityVisualEffectView.swift in Sources */,

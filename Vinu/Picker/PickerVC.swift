@@ -90,8 +90,8 @@ final class PickerVC: UIViewController {
     private func setBinding() {
 //        guard false else { return }
         let input = PickerVM.Input(
-            selectThumbnail: thumbnailCV.rx.itemSelected.asObservable(),
-            selectPending: pendingItemView.pendingCV.rx.itemSelected.asObservable(),
+            selectedThumbnailPath: thumbnailCV.rx.itemSelected.asObservable(),
+            selectedPendingPath: pendingItemView.pendingCV.rx.itemSelected.asObservable(),
             tapNextButton: nextButton.rx.tap.asObservable())
         
         let output = pickerVM.transform(input: input)

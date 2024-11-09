@@ -13,6 +13,7 @@ import RxCocoa
 final class ConfigureVC: UIViewController {
     var configureVM: ConfigureVM? = ConfigureVM([])
     private let bag = DisposeBag()
+    private let once = OnlyOnce()
     
     // MARK: - Components
     let overallSV = {
@@ -71,10 +72,16 @@ final class ConfigureVC: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(RatioCell.self, forCellWithReuseIdentifier: RatioCell.identifier)
         cv.allowsSelection = true
+        cv.backgroundColor = .clear
+        cv.clipsToBounds = false
         return cv
     }()
     
-    
+    let createButtonShadow = {
+        let sv = UIStackView()
+        sv.dropShadow(radius: 8, opacity: 0.1, offset: CGSize(width: 0, height: 0))
+        return sv
+    }()
     
     let createButton = {
         var config = UIButton.Configuration.filled()
@@ -83,7 +90,7 @@ final class ConfigureVC: UIViewController {
         config.title = String(localized: "프로젝트 만들기")
         
         let button = GradientButton(configuration: config)
-        button.smoothCorner(radius: 25)
+        button.smoothCorner(radius: 64 / 3)
         button.clipsToBounds = true
         return button
     }()
@@ -91,7 +98,7 @@ final class ConfigureVC: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .backWhite
         setNavigationBar(title: String(localized: "프로젝트 구성하기"))
         setAutoLaout()
         setBinding()
@@ -99,45 +106,61 @@ final class ConfigureVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setCollectionViewLayout()
+        once.excute {
+            view.layoutIfNeeded()
+            setCollectionViewLayout()
+        }
     }
     
     // MARK: - Layout
     private func setAutoLaout() {
         view.addSubview(overallSV)
+        view.addSubview(createButtonShadow)
         overallSV.addArrangedSubview(titleContainer)
         overallSV.addArrangedSubview(divider0)
         overallSV.addArrangedSubview(ratioContainer)
-        overallSV.addArrangedSubview(createButton)
         titleContainer.addArrangedSubview(titleLabel)
         titleContainer.addArrangedSubview(titleTF)
         ratioContainer.addArrangedSubview(ratioLabel)
         ratioContainer.addArrangedSubview(ratioCV)
+        createButtonShadow.addArrangedSubview(createButton)
         
         titleLabel.setContentHuggingPriority(.init(251), for: .vertical)
         
-        overallSV.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
-        createButton.snp.makeConstraints { $0.height.equalTo(50) }
+        overallSV.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
+        ratioCV.snp.makeConstraints { $0.height.equalTo(96) }
+        createButtonShadow.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(64)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(32)
+            $0.height.equalTo(64)
+        }
+        
     }
 
     private func setCollectionViewLayout() {
-        view.layoutIfNeeded()
-        ratioCV.setMultilineLayout(spacing: .chu16, itemCount: 2)
+        ratioCV.setSinglelineLayout(spacing: 15, itemSize: CGSize(width: 64, height: 96))
     }
     
     // MARK: - Binding
     private func setBinding() {
         guard let configureVM else { return }
         
+        // text는 입력하기 전까지 이벤트를 내보내지 않는 걸로 알고 있어서 초기값 부여
+        let titleText = titleTF
+            .rx.text
+            .startWith("")
+            .share(replay: 1)
+        
         let input = ConfigureVM.Input(
-            titleText: titleTF.rx.text.asObservable(),
-            tapCreateButton: createButton.rx.tap.asObservable())
+            titleText: titleText,
+            tapCreateButton: createButton.rx.tap.asObservable(),
+            selectedRatioPath: ratioCV.rx.itemSelected.asObservable())
+        
         let output = configureVM.transform(input: input)
         
-        output.ratioData
+        output.ratioItems
             .bind(to: ratioCV.rx.items(cellIdentifier: RatioCell.identifier, cellType: RatioCell.self)) { index, item, cell in
-                cell.imageView.image = item.0
-                cell.ratioLabel.text = item.1
+                cell.configure(itemData: item)
             }
             .disposed(by: bag)
         

@@ -12,24 +12,27 @@ final class RatioCell: UICollectionViewCell {
     static let identifier = "RatioCell"
     
     // MARK: - Components
-    let stackView = {
+    let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
+        sv.smoothCorner(radius: 64 / 4)
+        sv.clipsToBounds = true
         return sv
     }()
     
     let imageView = {
         let view = UIImageView()
-        view.tintColor = .darkGray
+        view.tintColor = .textGray
         view.contentMode = .scaleAspectFit
+        view.image = UIImage(systemName: "2.square")
         return view
     }()
     
     let ratioLabel = {
         let label = UILabel()
         label.text = "16:9" // temp
-        label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .textGray
+        label.font = .boldSystemFont(ofSize: 14)
         label.textAlignment = .center
         return label
     }()
@@ -37,18 +40,11 @@ final class RatioCell: UICollectionViewCell {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .chuLightGray
-        contentView.layer.cornerRadius = .chu16
-        contentView.layer.cornerCurve = .continuous
-        contentView.clipsToBounds = true
+        
         setAutoLayout()
     }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.image = nil
-        ratioLabel.text = ""
-    }
+
+    // 이미, 모든 구성 요소를 즉시 초기화시키고 있기 때문에 prepareForReuse는 필요 없을지도?
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -56,15 +52,37 @@ final class RatioCell: UICollectionViewCell {
     
     // MARK: - Layout
     private func setAutoLayout() {
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(ratioLabel)
+        contentView.addSubview(mainVStack)
+        mainVStack.addArrangedSubview(imageView)
+        mainVStack.addArrangedSubview(ratioLabel)
             
-        stackView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        ratioLabel.snp.makeConstraints { $0.height.equalTo(50) }
+        mainVStack.snp.makeConstraints { $0.edges.equalToSuperview() }
+        ratioLabel.snp.makeConstraints { $0.height.equalTo(32) }
+    }
+    
+    // MARK: - Configure Components
+    func configure(itemData: RatioCell.ItemData) {
+        imageView.image = itemData.image
+        ratioLabel.text = itemData.label
+        
+        // 선택 여부에 따라 이펙트를 그리거나 지우기
+        if itemData.isSelected {
+            imageView.tintColor = .tintSoda
+            ratioLabel.textColor = .tintSoda
+            
+            mainVStack.backgroundColor = .white
+            contentView.dropShadow(radius: 8, opacity: 0.01)
+        } else {
+            imageView.tintColor = .textGray
+            ratioLabel.textColor = .textGray
+            
+            mainVStack.backgroundColor = .clear
+            contentView.layer.shadowOpacity = 0
+        }
     }
 }
 
-#Preview(traits: .fixedLayout(width: 128, height: 128)) {
-    RatioCell()
+#Preview(traits: .fixedLayout(width: 64, height: 96)) {
+    UINavigationController(rootViewController: ConfigureVC())
+//    RatioCell()
 }
