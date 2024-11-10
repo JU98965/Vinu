@@ -30,14 +30,24 @@ final class VideoHelper {
             
             // exportSize정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
             // 세로로 찍었더라도 영상의 naturalSize는 가로모드 기준으로 나오기 때문에 width와 height를 서로 뒤바꿔서 계산해야함
-            let scaleToFitRatio = exportSize.width / naturalSize.height
+            let scaleToWidth = exportSize.width / naturalSize.height
+            let scaleToHeight = exportSize.height / naturalSize.width
+            
+            // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
+            let scaleToFitRatio = min(scaleToWidth, scaleToHeight)
             // 배율을 적용할 아핀 변환 만들어주기
             let scaleFactor = CGAffineTransform(scaleX: scaleToFitRatio, y: scaleToFitRatio)
             
+            // Portrait라도 가로가 길쭉한 영상이 있을 수 있어서 좌표를 x,y축 모두 잡아줘야 함
+            let xFix = exportSize.width / 2 - (naturalSize.height * scaleToFitRatio / 2)
+            let yFix = exportSize.height / 2 - (naturalSize.width * scaleToFitRatio / 2)
+
+            let centerFix = CGAffineTransform(translationX: xFix, y: 0)
             
             // 새로운 배율을 적용한 아핀변환 만들어주기
             let concat = transform
                 .concatenating(scaleFactor)
+                .concatenating(centerFix)
             
             
             return concat
@@ -46,16 +56,23 @@ final class VideoHelper {
             
             // exportSize정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
             // naturalSize가 이미 가로모드 기준이기 때문에 그대로 갖다쓰면 됨
-            let scaleToFitRatio = exportSize.width / naturalSize.width
+            let scaleToWidth = exportSize.width / naturalSize.width
+            let scaleToHeight = exportSize.height / naturalSize.height
+            
+            // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
+            let scaleToFitRatio = min(scaleToWidth, scaleToHeight)
             // 배율을 적용할 아핀 변환 만들어주기
             let scaleFactor = CGAffineTransform(scaleX: scaleToFitRatio, y: scaleToFitRatio)
             
             
             // 영상의 중심점은 좌측상단
             // 내보내는 영상 사이즈 높이의 절반까지 이동시킨 후, 크기 조정된 영상 높이의 절반만큼 후퇴하면 y축의 중심에 배치 가능
+            // Landscape라도 세로가 길쭉한 영상이 있을 수 있어서 좌표를 x,y축 모두 잡아줘야 함
+            let xFix = exportSize.width / 2 - (naturalSize.width * scaleToFitRatio / 2)
             let yFix = exportSize.height / 2 - (naturalSize.height * scaleToFitRatio / 2)
+
             //  위치 보정할 아핀 변환 만들기
-            let centerFix = CGAffineTransform(translationX: 0, y: yFix)
+            let centerFix = CGAffineTransform(translationX: xFix, y: yFix)
             
             
             // 배율 및 위치이동을 적용한 아핀 변환 만들어주기

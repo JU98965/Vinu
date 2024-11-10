@@ -232,7 +232,6 @@ final class VideoTrackView: UIView {
                 return offset.x / actualWidth
             }
             .compactMap { $0 }
-            .debug()
             .share(replay: 1)
         
         let input = VideoTrackVM.Input(

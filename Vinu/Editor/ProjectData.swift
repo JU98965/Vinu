@@ -5,7 +5,7 @@
 //  Created by 신정욱 on 10/16/24.
 //
 
-import Foundation
+import UIKit
 import Photos
 
 struct ProjectData {
@@ -13,4 +13,10 @@ struct ProjectData {
     let phAssets: [PHAsset]
     let exportSize: CGSize
     let date: Date
+}
+
+struct NewProjectData {
+    let title: String
+    let exportSize: CGSize
+    let videoClips: [VideoClip]
 }

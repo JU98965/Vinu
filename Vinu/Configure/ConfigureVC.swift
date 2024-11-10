@@ -87,11 +87,14 @@ final class ConfigureVC: UIViewController {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .tintSoda
         config.baseForegroundColor = .white
-        config.title = String(localized: "프로젝트 만들기")
+        config.title = String(localized: "데이터를 불러오고 있어요.")
+        config.showsActivityIndicator = true
+        config.imagePadding = 15
         
         let button = GradientButton(configuration: config)
         button.smoothCorner(radius: 64 / 3)
         button.clipsToBounds = true
+        button.isEnabled = false
         return button
     }()
     
@@ -172,11 +175,28 @@ final class ConfigureVC: UIViewController {
             .bind(to: titleTF.rx.placeholder)
             .disposed(by: bag)
         
+        output.isCreateButtonEnabled
+            .bind(with: self, onNext: { owner, isEnabled in
+                owner.createButton.isEnabled = isEnabled
+                owner.createButton.configuration?.showsActivityIndicator = !isEnabled
+            })
+            .disposed(by: bag)
+        
+        output.createButtonTitle
+            .bind(to: createButton.rx.title())
+            .disposed(by: bag)
+        
+        // 모든 데이터 로딩이 끝나면 EditorVC로 화면전환
         output.presentLoadingVC
-            .bind(with: self) { owner, projectData in
-                let vc = LoadingVC()
-                vc.loadingVM = LoadingVM(projectData)
-                owner.navigationController?.pushViewController(vc, animated: true)
+            .bind(with: self) { owner, editors in
+                // 화면전환은 window layer가 담당하므로 거기에 트랜지션 효과 추가
+                let vc = EditorVC()
+                vc.editorVM = EditorVM(editors)
+                vc.modalPresentationStyle = .fullScreen
+                owner.present(vc, animated: false) {
+                    // 네비게이션 스택 모두 닫아주기
+                    owner.navigationController?.popToRootViewController(animated: false)
+                }
             }
             .disposed(by: bag)
 

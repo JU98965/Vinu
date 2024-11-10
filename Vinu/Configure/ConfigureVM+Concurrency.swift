@@ -1,8 +1,8 @@
 //
-//  LoadingVM+Concurrency.swift
+//  ConfigureVM+Concurrency.swift
 //  Vinu
 //
-//  Created by 신정욱 on 10/10/24.
+//  Created by 신정욱 on 11/10/24.
 //
 
 import UIKit
@@ -11,13 +11,13 @@ import RxCocoa
 import AVFoundation
 import Photos
 
-extension LoadingVM {
+extension ConfigureVM {
     func fetchVideoClips(_ phAssets: [PHAsset]) async -> Result<[VideoClip], LoadingError> {
         let avAssets = await fetchAVAssets(phAssets)
         
         async let metadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
         async let images = fetchImages(phAssets).compactMap { $0 }
-        
+        await print("metadataArr.count", metadataArr.count, "images.count", images.count)
         if await metadataArr.count == images.count {
             let result = await zip(metadataArr, images).map { (metadata, image) in
                 VideoClip(metadata: metadata, image: image)
@@ -90,22 +90,34 @@ extension LoadingVM {
     }
     
     private func fetchMetaData(_ avAsset: AVAsset?) async -> VideoClip.Metadata? {
-        guard
-            let avAsset,
-            let assetVideoTrack = try? await avAsset.loadTracks(withMediaType: .video).first,
-            let assetAudioTrack = try? await avAsset.loadTracks(withMediaType: .audio).first,
-            let duration = try? await avAsset.load(.duration),
-            let naturalSize = try? await assetVideoTrack.load(.naturalSize),
-            let preferredTransform = try? await assetVideoTrack.load(.preferredTransform)
-        else { return nil }
+        guard let avAsset else { return nil }
+        
+        do {
+            let assetVideoTrack = try await avAsset.loadTracks(withMediaType: .video).first
+            let assetAudioTrack = try await avAsset.loadTracks(withMediaType: .audio).first
+            let duration = try await avAsset.load(.duration)
+            let naturalSize = try await assetVideoTrack?.load(.naturalSize)
+            let preferredTransform = try await assetVideoTrack?.load(.preferredTransform)
             
-        return VideoClip.Metadata(
-            asset: avAsset,
-            assetVideoTrack: assetVideoTrack,
-            assetAudioTrack: assetAudioTrack,
-            duration: duration,
-            naturalSize: naturalSize,
-            preferredTransform: preferredTransform)
+            // 오디오 트랙이 없는 영상이 있을 수도 있어서 오디오 트랙은 nil 허용
+            guard
+                let assetVideoTrack,
+                let naturalSize,
+                let preferredTransform
+            else { return nil }
+            
+            
+            return VideoClip.Metadata(
+                asset: avAsset,
+                assetVideoTrack: assetVideoTrack,
+                assetAudioTrack: assetAudioTrack,
+                duration: duration,
+                naturalSize: naturalSize,
+                preferredTransform: preferredTransform)
+        } catch {
+            print(error)
+            return nil
+        }
     }
     
     // MARK: - fetchImages

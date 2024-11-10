@@ -21,7 +21,9 @@ final class ConfigureVM {
     struct Output {
         let placeHolder: Observable<String>
         let ratioItems: Observable<[RatioCell.ItemData]>
-        let presentLoadingVC: Observable<ProjectData>
+        let isCreateButtonEnabled: Observable<Bool>
+        let createButtonTitle: Observable<String>
+        let presentLoadingVC: Observable<NewProjectData>
     }
     
     private let bag = DisposeBag()
@@ -77,18 +79,58 @@ final class ConfigureVM {
         // 비율 선택 컬렉션 뷰에 사용하는 데이터
         let ratioItems = ratioItems_.asObservable()
 
+        // 선택한 사이즈(비율) 가져오기
+        let exportSize = ratioItems
+            .map { items in
+                let ratio = items.first { $0.isSelected }
+                let exportSize = ratio?.exportSize ?? CGSize(width: 1080, height: 1920)
+                return exportSize
+            }
+        
+        // 비디오 에디터에 필요한 데이터 미리 로드
+        let videoClips = phAssets
+            .flatMapLatest { phAssets in
+                return Observable.create { observer in
+                    let task = Task { @MainActor in
+                        let result = await self.fetchVideoClips(phAssets)
+                        
+                        switch result {
+                        case .success(let data):
+                            observer.onNext(data)
+                        case .failure(let error):
+                            print(error)
+                        }
+                        
+                        observer.onCompleted()
+                    }
+                    
+                    return Disposables.create {
+                        // 로드 중에 이전화면으로 넘어가는 경우 작업 취소
+                        task.cancel()
+                    }
+                }
+            }
+            .share(replay: 1)
+        
+        let isCreateButtonEnabled = videoClips
+            .map { !$0.isEmpty }
+        
+        let createButtonTitle = isCreateButtonEnabled
+            .map {
+                if $0 {
+                    "프로젝트 시작하기"
+                } else {
+                    "데이터를 불러오고 있어요."
+                }
+            }
+        
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
-            .withLatestFrom(Observable.combineLatest(titleText, phAssets, ratioItems))
+            .withLatestFrom(Observable.combineLatest(titleText, exportSize, videoClips))
             .map { combined in
-                let (title, assets, ratioItems) = combined
+                let (titleText, exportSize, videoClips) = combined
                 
-                // 선택한 사이즈(비율) 가져오기
-                let ratio = ratioItems.first { $0.isSelected }
-                print("exportSize", ratio?.exportSize)
-                let exportSize = ratio?.exportSize ?? CGSize(width: 1080, height: 1920)
-                
-                let result = ProjectData(title: title, phAssets: assets, exportSize: exportSize, date: Date())
+                let result = NewProjectData(title: titleText, exportSize: exportSize, videoClips: videoClips)
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 
@@ -98,6 +140,8 @@ final class ConfigureVM {
         return Output(
             placeHolder: placeHolder,
             ratioItems: ratioItems,
+            isCreateButtonEnabled: isCreateButtonEnabled,
+            createButtonTitle: createButtonTitle,
             presentLoadingVC: presentLoadingVC)
     }
 }

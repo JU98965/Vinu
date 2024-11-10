@@ -33,29 +33,32 @@ final class EditorVM {
     }
     
     let bag = DisposeBag()
-    let videoClips: [VideoClip]
+    let projectData: NewProjectData
 
-    init(_ videoClips: [VideoClip]) {
-        self.videoClips = videoClips
+    init(_ projectData: NewProjectData) {
+        self.projectData = projectData
     }
     
     func transform(input: Input) -> Output {
-        let videoClips = BehaviorSubject(value: videoClips).asObservable()
+        let projectData = BehaviorSubject(value: projectData).asObservable()
+            .share(replay: 1)
+        
         // 재생 상태를 가지는 서브젝트
         let isPlaying = BehaviorSubject(value: false)
         
         // 트랙 뷰에 들어갈 데이터 준비
-        let trackViewData = videoClips
-            .map { videoClips in
-                videoClips.map { VideoTrackModel(image: $0.image, duration: $0.metadata.duration) }
+        let trackViewData = projectData
+            .map { projectData in
+                projectData.videoClips.map { VideoTrackModel(image: $0.image, duration: $0.metadata.duration) }
             }
             .share(replay: 1)
 
         // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
         let playerItem = input.timeRanges
-            .withLatestFrom(videoClips) { [weak self] timeRanges, videoClips in
-                let metadataArr = videoClips.map { $0.metadata }
-                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: CGSize(width: 1080, height: 1920))
+            .withLatestFrom(projectData) { [weak self] timeRanges, projectData in
+                let metadataArr = projectData.videoClips.map { $0.metadata }
+                let exportSize = projectData.exportSize
+                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize)
                 return playerItem
             }
             .compactMap { $0 }
@@ -168,10 +171,13 @@ final class EditorVM {
                     of: assetVideoTrack,
                     at: accumulatedTime)
                 
-                try audioTrack?.insertTimeRange(
-                    timeRange,
-                    of: assetAudioTrack,
-                    at: accumulatedTime)
+                // 오디오 트랙이 없으면, 없는대로 만들어야지 머..
+                if let assetAudioTrack {
+                    try audioTrack?.insertTimeRange(
+                        timeRange,
+                        of: assetAudioTrack,
+                        at: accumulatedTime)
+                }
             } catch {
                 return nil
             }
