@@ -13,7 +13,6 @@ import RxCocoa
 final class ConfigureVC: UIViewController {
     var configureVM: ConfigureVM? = ConfigureVM([])
     private let bag = DisposeBag()
-    private let once = OnlyOnce()
     
     // MARK: - Components
     let overallSV = {
@@ -70,7 +69,33 @@ final class ConfigureVC: UIViewController {
 
     let ratioCV = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
-        cv.register(RatioCell.self, forCellWithReuseIdentifier: RatioCell.identifier)
+        cv.register(ConfigureCardCell.self, forCellWithReuseIdentifier: ConfigureCardCell.identifier)
+        cv.setSinglelineLayout(spacing: 15, itemSize: CGSize(width: 64, height: 96))
+        cv.allowsSelection = true
+        cv.backgroundColor = .clear
+        cv.clipsToBounds = false
+        return cv
+    }()
+    
+    let placementContainer = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 8
+        return sv
+    }()
+    
+    let placementLabel = {
+        let label = UILabel()
+        label.text = String(localized: "영상 배치")
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        return label
+    }()
+
+    let placementCV = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
+        cv.register(ConfigureCardCell.self, forCellWithReuseIdentifier: ConfigureCardCell.identifier)
+        cv.setSinglelineLayout(spacing: 15, itemSize: CGSize(width: 64, height: 96))
         cv.allowsSelection = true
         cv.backgroundColor = .clear
         cv.clipsToBounds = false
@@ -107,14 +132,6 @@ final class ConfigureVC: UIViewController {
         setBinding()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        once.excute {
-            view.layoutIfNeeded()
-            setCollectionViewLayout()
-        }
-    }
-    
     // MARK: - Layout
     private func setAutoLaout() {
         view.addSubview(overallSV)
@@ -122,26 +139,26 @@ final class ConfigureVC: UIViewController {
         overallSV.addArrangedSubview(titleContainer)
         overallSV.addArrangedSubview(divider0)
         overallSV.addArrangedSubview(ratioContainer)
+        overallSV.addArrangedSubview(placementContainer)
         titleContainer.addArrangedSubview(titleLabel)
         titleContainer.addArrangedSubview(titleTF)
         ratioContainer.addArrangedSubview(ratioLabel)
         ratioContainer.addArrangedSubview(ratioCV)
+        placementContainer.addArrangedSubview(placementLabel)
+        placementContainer.addArrangedSubview(placementCV)
         createButtonShadow.addArrangedSubview(createButton)
         
         titleLabel.setContentHuggingPriority(.init(251), for: .vertical)
         
         overallSV.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
         ratioCV.snp.makeConstraints { $0.height.equalTo(96) }
+        placementCV.snp.makeConstraints { $0.height.equalTo(96) }
         createButtonShadow.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(64)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(32)
             $0.height.equalTo(64)
         }
         
-    }
-
-    private func setCollectionViewLayout() {
-        ratioCV.setSinglelineLayout(spacing: 15, itemSize: CGSize(width: 64, height: 96))
     }
     
     // MARK: - Binding
@@ -158,15 +175,26 @@ final class ConfigureVC: UIViewController {
             .startWith(IndexPath(row: 0, section: 0))
             .share(replay: 1)
         
+        let selectedPlacementPath = placementCV.rx.itemSelected
+            .startWith(IndexPath(row: 0, section: 0))
+            .share(replay: 1)
+        
         let input = ConfigureVM.Input(
             titleText: titleText,
             tapCreateButton: createButton.rx.tap.asObservable(),
-            selectedRatioPath: selectedRatioPath)
+            selectedRatioPath: selectedRatioPath,
+            selectedPlacementPath: selectedPlacementPath)
         
         let output = configureVM.transform(input: input)
         
         output.ratioItems
-            .bind(to: ratioCV.rx.items(cellIdentifier: RatioCell.identifier, cellType: RatioCell.self)) { index, item, cell in
+            .bind(to: ratioCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
+                cell.configure(itemData: item)
+            }
+            .disposed(by: bag)
+        
+        output.placementItems
+            .bind(to: placementCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
                 cell.configure(itemData: item)
             }
             .disposed(by: bag)

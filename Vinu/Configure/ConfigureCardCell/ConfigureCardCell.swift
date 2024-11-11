@@ -1,5 +1,5 @@
 //
-//  RatioCell.swift
+//  ConfigureCardCell.swift
 //  Vinu
 //
 //  Created by 신정욱 on 9/25/24.
@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-final class RatioCell: UICollectionViewCell {
-    static let identifier = "RatioCell"
+final class ConfigureCardCell: UICollectionViewCell {
+    static let identifier = "ConfigureCardCell"
     
     // MARK: - Components
     let mainVStack = {
@@ -61,9 +61,9 @@ final class RatioCell: UICollectionViewCell {
     }
     
     // MARK: - Configure Components
-    func configure(itemData: RatioCell.ItemData) {
+    func configure(itemData: ConfigureCardCellData) {
         imageView.image = itemData.image
-        ratioLabel.text = itemData.label
+        ratioLabel.text = itemData.title
         
         // 선택 여부에 따라 이펙트를 그리거나 지우기
         if itemData.isSelected {
@@ -84,5 +84,5 @@ final class RatioCell: UICollectionViewCell {
 
 #Preview(traits: .fixedLayout(width: 64, height: 96)) {
     UINavigationController(rootViewController: ConfigureVC())
-//    RatioCell()
+//    ConfigureCardCell()
 }
