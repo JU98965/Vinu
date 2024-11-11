@@ -8,7 +8,7 @@
 import UIKit
 
 struct ConfigureData {
-    enum Placement {
+    enum VideoPlacement {
         case aspectFit
         case aspectFill
     }

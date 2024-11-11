@@ -25,6 +25,6 @@ extension ConfigureCardCell {
         let image: UIImage?
         let title: String
         var isSelected = false
-        let placement: ConfigureData.Placement
+        let placement: ConfigureData.VideoPlacement
     }
 }

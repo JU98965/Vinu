@@ -25,7 +25,7 @@ final class ConfigureVM {
         let placementItems: Observable<[ConfigureCardCell.PlacementData]>
         let isCreateButtonEnabled: Observable<Bool>
         let createButtonTitle: Observable<String>
-        let presentLoadingVC: Observable<NewProjectData>
+        let presentLoadingVC: Observable<ProjectData>
     }
     
     private let bag = DisposeBag()
@@ -161,11 +161,11 @@ final class ConfigureVM {
         
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
-            .withLatestFrom(Observable.combineLatest(titleText, exportSize, videoClips))
+            .withLatestFrom(Observable.combineLatest(titleText, exportSize, placement, videoClips))
             .map { combined in
-                let (titleText, exportSize, videoClips) = combined
+                let (titleText, exportSize, placement, videoClips) = combined
                 
-                let result = NewProjectData(title: titleText, exportSize: exportSize, videoClips: videoClips)
+                let result = ProjectData(title: titleText, exportSize: exportSize, placement: placement, videoClips: videoClips)
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 

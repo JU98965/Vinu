@@ -12,7 +12,7 @@ import AVFoundation
 import Photos
 
 extension ConfigureVM {
-    func fetchVideoClips(_ phAssets: [PHAsset]) async -> Result<[VideoClip], LoadingError> {
+    func fetchVideoClips(_ phAssets: [PHAsset]) async -> Result<[VideoClip], ConfigureError> {
         let avAssets = await fetchAVAssets(phAssets)
         
         async let metadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
@@ -24,7 +24,7 @@ extension ConfigureVM {
             }
             return Result.success(result)
         } else {
-            return Result.failure(LoadingError.FailToInitVideoClips("메타데이터와 이미지의 갯수가 일치하지 않음."))
+            return Result.failure(ConfigureError.FailToInitVideoClips("메타데이터와 이미지의 갯수가 일치하지 않음."))
         }
     }
 

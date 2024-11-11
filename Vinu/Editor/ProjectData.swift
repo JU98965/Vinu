@@ -10,13 +10,7 @@ import Photos
 
 struct ProjectData {
     let title: String
-    let phAssets: [PHAsset]
     let exportSize: CGSize
-    let date: Date
-}
-
-struct NewProjectData {
-    let title: String
-    let exportSize: CGSize
+    let placement: ConfigureData.VideoPlacement
     let videoClips: [VideoClip]
 }

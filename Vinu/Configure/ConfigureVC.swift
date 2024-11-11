@@ -15,7 +15,7 @@ final class ConfigureVC: UIViewController {
     private let bag = DisposeBag()
     
     // MARK: - Components
-    let overallSV = {
+    let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
         sv.spacing = .chu16
@@ -134,12 +134,12 @@ final class ConfigureVC: UIViewController {
     
     // MARK: - Layout
     private func setAutoLaout() {
-        view.addSubview(overallSV)
+        view.addSubview(mainVStack)
         view.addSubview(createButtonShadow)
-        overallSV.addArrangedSubview(titleContainer)
-        overallSV.addArrangedSubview(divider0)
-        overallSV.addArrangedSubview(ratioContainer)
-        overallSV.addArrangedSubview(placementContainer)
+        mainVStack.addArrangedSubview(titleContainer)
+        mainVStack.addArrangedSubview(divider0)
+        mainVStack.addArrangedSubview(ratioContainer)
+        mainVStack.addArrangedSubview(placementContainer)
         titleContainer.addArrangedSubview(titleLabel)
         titleContainer.addArrangedSubview(titleTF)
         ratioContainer.addArrangedSubview(ratioLabel)
@@ -150,7 +150,7 @@ final class ConfigureVC: UIViewController {
         
         titleLabel.setContentHuggingPriority(.init(251), for: .vertical)
         
-        overallSV.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
+        mainVStack.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
         ratioCV.snp.makeConstraints { $0.height.equalTo(96) }
         placementCV.snp.makeConstraints { $0.height.equalTo(96) }
         createButtonShadow.snp.makeConstraints {

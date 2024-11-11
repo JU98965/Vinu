@@ -33,9 +33,9 @@ final class EditorVM {
     }
     
     let bag = DisposeBag()
-    let projectData: NewProjectData
+    let projectData: ProjectData
 
-    init(_ projectData: NewProjectData) {
+    init(_ projectData: ProjectData) {
         self.projectData = projectData
     }
     
@@ -58,7 +58,8 @@ final class EditorVM {
             .withLatestFrom(projectData) { [weak self] timeRanges, projectData in
                 let metadataArr = projectData.videoClips.map { $0.metadata }
                 let exportSize = projectData.exportSize
-                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize)
+                let placement = projectData.placement
+                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize, placement: placement)
                 return playerItem
             }
             .compactMap { $0 }
@@ -147,7 +148,7 @@ final class EditorVM {
     
     // MARK: - Private methods
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize) -> AVPlayerItem? {
+    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: ConfigureData.VideoPlacement) -> AVPlayerItem? {
         let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
@@ -198,7 +199,7 @@ final class EditorVM {
         
         // 각 비디오의 사이즈를 정렬하는 로직, 아핀 배열을 변경하는 instruction을 추가
         zip(instructions, metadataArr).forEach { instruction, metadata in
-            let transform = VideoHelper.shared.transformAspectFit(metadata: metadata, exportSize: exportSize)
+            let transform = VideoHelper.shared.transformAspectFit(metadata: metadata, exportSize: exportSize, placement: placement)
             instruction.setTransform(transform, at: .zero)
         }
         

@@ -15,7 +15,7 @@ final class VideoHelper {
     private init() {}
     
     // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize) -> CGAffineTransform {
+    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize, placement: ConfigureData.VideoPlacement) -> CGAffineTransform {
         // 트랙에서 필요한 요소 뽑아오기
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         
@@ -34,7 +34,15 @@ final class VideoHelper {
             let scaleToHeight = exportSize.height / naturalSize.width
             
             // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
-            let scaleToFitRatio = min(scaleToWidth, scaleToHeight)
+            let scaleToFitRatio = {
+                switch placement {
+                case .aspectFit:
+                    min(scaleToWidth, scaleToHeight)
+                case .aspectFill:
+                    max(scaleToWidth, scaleToHeight)
+                }
+            }()
+            
             // 배율을 적용할 아핀 변환 만들어주기
             let scaleFactor = CGAffineTransform(scaleX: scaleToFitRatio, y: scaleToFitRatio)
             
@@ -42,7 +50,7 @@ final class VideoHelper {
             let xFix = exportSize.width / 2 - (naturalSize.height * scaleToFitRatio / 2)
             let yFix = exportSize.height / 2 - (naturalSize.width * scaleToFitRatio / 2)
 
-            let centerFix = CGAffineTransform(translationX: xFix, y: 0)
+            let centerFix = CGAffineTransform(translationX: xFix, y: yFix)
             
             // 새로운 배율을 적용한 아핀변환 만들어주기
             let concat = transform
@@ -60,7 +68,15 @@ final class VideoHelper {
             let scaleToHeight = exportSize.height / naturalSize.height
             
             // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
-            let scaleToFitRatio = min(scaleToWidth, scaleToHeight)
+            let scaleToFitRatio = {
+                switch placement {
+                case .aspectFit:
+                    min(scaleToWidth, scaleToHeight)
+                case .aspectFill:
+                    max(scaleToWidth, scaleToHeight)
+                }
+            }()
+            
             // 배율을 적용할 아핀 변환 만들어주기
             let scaleFactor = CGAffineTransform(scaleX: scaleToFitRatio, y: scaleToFitRatio)
             

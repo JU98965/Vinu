@@ -1,5 +1,5 @@
 //
-//  LoadingError.swift
+//  ConfigureError.swift
 //  Vinu
 //
 //  Created by 신정욱 on 10/14/24.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum LoadingError: Error {
+enum ConfigureError: Error {
     case FailToInitVideoClips(String)
 }
