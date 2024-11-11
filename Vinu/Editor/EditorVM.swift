@@ -19,6 +19,7 @@ final class EditorVM {
         let scaleFactor: Observable<CGFloat>
         let controlStatus: Observable<AVPlayer.TimeControlStatus>
         let playbackTap: Observable<Void>
+        let exportTap: Observable<Void>
     }
     
     struct Output {
@@ -59,7 +60,7 @@ final class EditorVM {
                 let metadataArr = projectData.videoClips.map { $0.metadata }
                 let exportSize = projectData.exportSize
                 let placement = projectData.placement
-                let playerItem = self?.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize, placement: placement)
+                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize, placement: placement)
                 return playerItem
             }
             .compactMap { $0 }
@@ -134,6 +135,10 @@ final class EditorVM {
                     return UIImage(systemName: "play.fill")
                 }
             }
+        
+        input.exportTap
+            .bind(onNext: { VideoHelper.shared.export() })
+            .disposed(by: bag)
      
         return Output(
             playerItem: playerItem,

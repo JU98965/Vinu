@@ -23,6 +23,14 @@ final class EditorVC: UIViewController {
         return sv
     }()
     
+    let navigationHStack = UIStackView()
+    
+    let exportButton = {
+        let button = UIButton(configuration: .filled())
+        button.setTitle("내보내기", for: .normal)
+        return button
+    }()
+    
     let videoPlayerView = VideoPlayerView()
     
     let playbackConsoleView = PlaybackConsoleView()
@@ -41,9 +49,11 @@ final class EditorVC: UIViewController {
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
+        mainVStack.addArrangedSubview(navigationHStack)
         mainVStack.addArrangedSubview(videoPlayerView)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
+        navigationHStack.addArrangedSubview(exportButton)
 
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 60)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
@@ -60,7 +70,8 @@ final class EditorVC: UIViewController {
             scrollProgress: videoTrackView.scrollProgress.asObservable(),
             scaleFactor: videoTrackView.scaleFactor.asObservable(),
             controlStatus: videoPlayerView.controlStatus.asObservable(),
-            playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable())
+            playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable(),
+            exportTap: exportButton.rx.tap.asObservable())
         
         let output = editorVM.transform(input: input)
 
@@ -130,6 +141,7 @@ final class EditorVC: UIViewController {
         output.playbackImage
             .bind(to: playbackConsoleView.playbackButton.rx.image())
             .disposed(by: bag)
+        
     }
 }
 
