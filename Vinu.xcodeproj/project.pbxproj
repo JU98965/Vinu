@@ -78,6 +78,7 @@
 		51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */; };
 		51F738D62CDFD568003E036B /* ConfigureVM+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */; };
 		51F738DB2CE1E687003E036B /* ConfigureData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738DA2CE1E674003E036B /* ConfigureData.swift */; };
+		51F738E02CE26214003E036B /* ExporterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738DF2CE26214003E036B /* ExporterVC.swift */; };
 		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
 		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
@@ -154,6 +155,7 @@
 		51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureCardCellData.swift; sourceTree = "<group>"; };
 		51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigureVM+Concurrency.swift"; sourceTree = "<group>"; };
 		51F738DA2CE1E674003E036B /* ConfigureData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureData.swift; sourceTree = "<group>"; };
+		51F738DF2CE26214003E036B /* ExporterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterVC.swift; sourceTree = "<group>"; };
 		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -359,6 +361,7 @@
 				518408F52CAB216500779D12 /* Picker */,
 				518408F62CAB21B100779D12 /* Configure */,
 				519BF0C02C9AC5940064FE0A /* Editor */,
+				51F738DE2CE26174003E036B /* Exporter */,
 				519BF0C22C9AC5AE0064FE0A /* Model */,
 				5146D53D2CAC39F800C407F3 /* Extension */,
 				5146D5522CAC3B9A00C407F3 /* UIComponent */,
@@ -440,6 +443,14 @@
 				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
 			);
 			path = VideoTrackView;
+			sourceTree = "<group>";
+		};
+		51F738DE2CE26174003E036B /* Exporter */ = {
+			isa = PBXGroup;
+			children = (
+				51F738DF2CE26214003E036B /* ExporterVC.swift */,
+			);
+			path = Exporter;
 			sourceTree = "<group>";
 		};
 		51FE51EC2CD38471008C15B9 /* PlaybackConsoleView */ = {
@@ -579,6 +590,7 @@
 				5141F4002CA4611100839239 /* ProjectCoreData+CoreDataClass.swift in Sources */,
 				5146D5512CAC3B7100C407F3 /* UIImage.swift in Sources */,
 				5141F4012CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift in Sources */,
+				51F738E02CE26214003E036B /* ExporterVC.swift in Sources */,
 				51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */,
 				5141F4022CA4611100839239 /* VideoCoreData+CoreDataClass.swift in Sources */,
 				5141F4032CA4611100839239 /* VideoCoreData+CoreDataProperties.swift in Sources */,

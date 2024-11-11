@@ -226,44 +226,14 @@ final class VideoHelper {
         }
         return (assetOrientation, isPortrait)
     }
-    
-//    func export() {
-//        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .long
-//        dateFormatter.timeStyle = .short
-//        let date = dateFormatter.string(from: Date())
-//        let url = documentDirectory.appendingPathComponent("mergeVideo-\(date).mov")
-//        
-//        // 12 합쳐진 비디오를 render하고 export 해야 한다. 먼저 AVAssetExportSession을 만들어
-//        //export 설정과 함께 content 을 transcode 한다. 이전에 AVMutableVideoComposition을 설정해놨기 때문에 exporter 에 assign만 하면 된다.
-//        guard let exporter = AVAssetExportSession(
-//            asset: composition,
-//            presetName: AVAssetExportPresetHighestQuality)
-//        else { return }
-//        exporter.outputURL = url
-//        exporter.outputFileType = AVFileType.mov
-//        exporter.shouldOptimizeForNetworkUse = true
-//        exporter.videoComposition = videoComposition
-//
-//        // 13 export session을 초기화 한 뒤 exportAsynchrously()를 통해 export 작업을 시작할 수 있다.
-//        // 비동기적으로 동작하기 때문에 함수는 바로 리턴한다. completion handler를 통해 성공/실패를 전닫ㄹ한다.
-//        exporter.exportAsynchronously {}
-//    }
-    
+        
     func export() {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        // 앨범에 저장할거라 결과물은 임시디렉토리에 저장해놓고 url만 끌어다 씀
+        let documentsDirectory = FileManager.default.temporaryDirectory
         let videoID = UUID().uuidString
+        // outputFileType을 따로 지정해도 .mov라고 확장자는 적어줘야 함
         let videofileName = "\(videoID).mov"
-        
         let outputURL = documentsDirectory.appendingPathComponent(videofileName)
-        
-        if FileManager.default.fileExists(atPath: outputURL.path) {
-            do {
-                try FileManager.default.removeItem(at: outputURL)
-            }
-            catch {}
-        }
         
         let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)!
         exporter.outputFileType = .mov
@@ -272,13 +242,17 @@ final class VideoHelper {
         // Timerange를 수정한 경우 따로 exporter에 Timerange를 등록하지 않으면 에러가 발생함, 왠지는 모르겠음
         exporter.timeRange = CMTimeRange(start: .zero, duration: composition.duration)
         
-        exporter.exportAsynchronously{
+        exporter.exportAsynchronously {
             switch exporter.status {
             case .failed:
                 print("Export failed \(exporter.error!)")
             case .completed:
-//                UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, #selector(video(_:didFinishSavingWithError:contextInfo:)), nil)
-                print("completed")
+                if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
+                    print("completed")
+                } else {
+                    print("not completed")
+                }
             default:
                 break
             }
