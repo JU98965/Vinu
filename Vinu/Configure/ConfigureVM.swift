@@ -25,7 +25,7 @@ final class ConfigureVM {
         let placementItems: Observable<[PlacementCardData]>
         let isCreateButtonEnabled: Observable<Bool>
         let createButtonTitle: Observable<String>
-        let presentLoadingVC: Observable<ProjectData>
+        let presentEditorVC: Observable<EditorConfiguration>
     }
     
     let phAssets: [PHAsset]
@@ -157,12 +157,12 @@ final class ConfigureVM {
             }
         
         // 생성 버튼을 누르면 프로젝트 데이터 생성
-        let presentLoadingVC = input.tapCreateButton
+        let presentEditorVC = input.tapCreateButton
             .withLatestFrom(Observable.combineLatest(titleText, size, placement, metadataArr))
             .map { combined in
                 let (titleText, size, placement, metadataArr) = combined
                 
-                let result = ProjectData(title: titleText, size: size, placement: placement, metadataArr: metadataArr)
+                let result = EditorConfiguration(title: titleText, size: size, placement: placement, metadataArr: metadataArr)
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 
@@ -175,6 +175,6 @@ final class ConfigureVM {
             placementItems: placementItems.asObservable(),
             isCreateButtonEnabled: isCreateButtonEnabled,
             createButtonTitle: createButtonTitle,
-            presentLoadingVC: presentLoadingVC)
+            presentEditorVC: presentEditorVC)
     }
 }

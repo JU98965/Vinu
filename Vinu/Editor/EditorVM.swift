@@ -33,33 +33,33 @@ final class EditorVM {
         let playbackImage: Observable<UIImage?>
     }
     
+    let configuration: EditorConfiguration
     let bag = DisposeBag()
-    let projectData: ProjectData
 
-    init(_ projectData: ProjectData) {
-        self.projectData = projectData
+    init(_ configuration: EditorConfiguration) {
+        self.configuration = configuration
     }
     
     func transform(input: Input) -> Output {
-        let projectData = BehaviorSubject(value: projectData).asObservable()
+        let configData = BehaviorSubject(value: configuration).asObservable()
             .share(replay: 1)
         
         // 재생 상태를 가지는 서브젝트
         let isPlaying = BehaviorSubject(value: false)
         
         // 트랙 뷰에 들어갈 데이터 준비
-        let trackViewData = projectData
-            .map { projectData in
-                projectData.metadataArr.map { VideoTrackModel(image: $0.image, duration: $0.duration) }
+        let trackViewData = configData
+            .map { configData in
+                configData.metadataArr.map { VideoTrackModel(image: $0.image, duration: $0.duration) }
             }
             .share(replay: 1)
 
         // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
         let playerItem = input.timeRanges
-            .withLatestFrom(projectData) { timeRanges, projectData in
-                let metadataArr = projectData.metadataArr
-                let size = projectData.size
-                let placement = projectData.placement
+            .withLatestFrom(configData) { timeRanges, configData in
+                let metadataArr = configData.metadataArr
+                let size = configData.size
+                let placement = configData.placement
                 let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, size: size.cgSize, placement: placement)
                 return playerItem
             }

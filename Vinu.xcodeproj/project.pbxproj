@@ -37,7 +37,7 @@
 		51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */; };
 		51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A032C9C823700E06B99 /* PaddingUILabel.swift */; };
 		51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A052C9CA66D00E06B99 /* PendingCell.swift */; };
-		516976292CBEE178008A69BF /* ProjectData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516976282CBEE178008A69BF /* ProjectData.swift */; };
+		516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516976282CBEE178008A69BF /* EditorConfiguration.swift */; };
 		517320DF2CD90AFB003D685C /* SplashyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320DE2CD90AFB003D685C /* SplashyView.swift */; };
 		517320E12CD91B10003D685C /* EntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320E02CD91B10003D685C /* EntryView.swift */; };
 		517320E72CD937D4003D685C /* ShadowButtonBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320E62CD937D4003D685C /* ShadowButtonBase.swift */; };
@@ -117,7 +117,7 @@
 		51688A032C9C823700E06B99 /* PaddingUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingUILabel.swift; sourceTree = "<group>"; };
 		51688A052C9CA66D00E06B99 /* PendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCell.swift; sourceTree = "<group>"; };
 		51688A072C9CB2AA00E06B99 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		516976282CBEE178008A69BF /* ProjectData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectData.swift; sourceTree = "<group>"; };
+		516976282CBEE178008A69BF /* EditorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorConfiguration.swift; sourceTree = "<group>"; };
 		517320DE2CD90AFB003D685C /* SplashyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashyView.swift; sourceTree = "<group>"; };
 		517320E02CD91B10003D685C /* EntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryView.swift; sourceTree = "<group>"; };
 		517320E62CD937D4003D685C /* ShadowButtonBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowButtonBase.swift; sourceTree = "<group>"; };
@@ -394,8 +394,8 @@
 			children = (
 				51F738E72CE3B5C5003E036B /* VideoSize.swift */,
 				51F738E52CE3B5BE003E036B /* VideoPlacement.swift */,
-				516976282CBEE178008A69BF /* ProjectData.swift */,
 				5146D5622CAC56DB00C407F3 /* VideoMetadata.swift */,
+				516976282CBEE178008A69BF /* EditorConfiguration.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -559,7 +559,7 @@
 				510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */,
 				51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */,
 				5146D54D2CAC3AEB00C407F3 /* Array+ThumbnailData.swift in Sources */,
-				516976292CBEE178008A69BF /* ProjectData.swift in Sources */,
+				516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */,
 				5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */,
 				51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */,
 				5146D5472CAC3A9F00C407F3 /* UIEdgeInsets.swift in Sources */,
