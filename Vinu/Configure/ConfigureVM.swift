@@ -15,13 +15,13 @@ final class ConfigureVM {
     struct Input {
         let titleText: Observable<String?>
         let tapCreateButton: Observable<Void>
-        let selectedRatioPath: Observable<IndexPath>
+        let selectedSizePath: Observable<IndexPath>
         let selectedPlacementPath: Observable<IndexPath>
     }
     
     struct Output {
         let placeHolder: Observable<String>
-        let ratioItems: Observable<[RatioCardData]>
+        let sizeItems: Observable<[SizeCardData]>
         let placementItems: Observable<[PlacementCardData]>
         let isCreateButtonEnabled: Observable<Bool>
         let createButtonTitle: Observable<String>
@@ -36,15 +36,15 @@ final class ConfigureVM {
     }
     
     func transform(input: Input) -> Output {
-        let ratioItemsSource = VideoSize.allCases.map {
-            RatioCardData.init(image: $0.image, title: $0.rawValue, size: $0)
+        let sizeItemsSource = VideoSize.allCases.map {
+            SizeCardData.init(image: $0.image, title: $0.rawValue, size: $0)
         }
         let placementItemsSource = VideoPlacement.allCases.map {
             PlacementCardData(image: $0.image, title: $0.localizedString, placement: $0)
         }
         
         let phAssets = Observable.just(phAssets)
-        let ratioItems = BehaviorSubject(value: ratioItemsSource)
+        let sizeItems = BehaviorSubject(value: sizeItemsSource)
         let placementItems = BehaviorSubject(value: placementItemsSource)
         
         // 텍스트 필드 플레이스홀더 설정
@@ -64,8 +64,8 @@ final class ConfigureVM {
             }
         
         // 비율을 하나만 선택하도록 하는 로직
-        input.selectedRatioPath
-            .withLatestFrom(ratioItems) { path, items in
+        input.selectedSizePath
+            .withLatestFrom(sizeItems) { path, items in
                 return items.enumerated().map {
                     var (i, item) = $0
                     
@@ -78,11 +78,11 @@ final class ConfigureVM {
                     return item
                 }
             }
-            .bind(to: ratioItems)
+            .bind(to: sizeItems)
             .disposed(by: bag)
         
         // 선택한 사이즈(비율) 가져오기
-        let size = ratioItems
+        let size = sizeItems
             .map { items in
                 let selectedItem = items.first { $0.isSelected }
                 let size = selectedItem?.size ?? .portrait1080x1920
@@ -171,7 +171,7 @@ final class ConfigureVM {
         
         return Output(
             placeHolder: placeHolder,
-            ratioItems: ratioItems.asObservable(),
+            sizeItems: sizeItems.asObservable(),
             placementItems: placementItems.asObservable(),
             isCreateButtonEnabled: isCreateButtonEnabled,
             createButtonTitle: createButtonTitle,

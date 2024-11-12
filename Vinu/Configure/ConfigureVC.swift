@@ -52,14 +52,14 @@ final class ConfigureVC: UIViewController {
     
     let divider0 = DivideView(lineWidth: 1, lineColor: .chuLightGray)
     
-    let ratioContainer = {
+    let sizeContainer = {
         let sv = UIStackView()
         sv.axis = .vertical
         sv.spacing = 8
         return sv
     }()
     
-    let ratioLabel = {
+    let sizeLabel = {
         let label = UILabel()
         label.text = String(localized: "화면 비율")
         label.textColor = .darkGray
@@ -67,7 +67,7 @@ final class ConfigureVC: UIViewController {
         return label
     }()
 
-    let ratioCV = {
+    let sizeCV = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: .init())
         cv.register(ConfigureCardCell.self, forCellWithReuseIdentifier: ConfigureCardCell.identifier)
         cv.setSinglelineLayout(spacing: 15, itemSize: CGSize(width: 64, height: 96))
@@ -138,12 +138,12 @@ final class ConfigureVC: UIViewController {
         view.addSubview(createButtonShadow)
         mainVStack.addArrangedSubview(titleContainer)
         mainVStack.addArrangedSubview(divider0)
-        mainVStack.addArrangedSubview(ratioContainer)
+        mainVStack.addArrangedSubview(sizeContainer)
         mainVStack.addArrangedSubview(placementContainer)
         titleContainer.addArrangedSubview(titleLabel)
         titleContainer.addArrangedSubview(titleTF)
-        ratioContainer.addArrangedSubview(ratioLabel)
-        ratioContainer.addArrangedSubview(ratioCV)
+        sizeContainer.addArrangedSubview(sizeLabel)
+        sizeContainer.addArrangedSubview(sizeCV)
         placementContainer.addArrangedSubview(placementLabel)
         placementContainer.addArrangedSubview(placementCV)
         createButtonShadow.addArrangedSubview(createButton)
@@ -151,7 +151,7 @@ final class ConfigureVC: UIViewController {
         titleLabel.setContentHuggingPriority(.init(251), for: .vertical)
         
         mainVStack.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
-        ratioCV.snp.makeConstraints { $0.height.equalTo(96) }
+        sizeCV.snp.makeConstraints { $0.height.equalTo(96) }
         placementCV.snp.makeConstraints { $0.height.equalTo(96) }
         createButtonShadow.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(64)
@@ -171,7 +171,7 @@ final class ConfigureVC: UIViewController {
             .share(replay: 1)
         
         // 첫번째 셀이 선택되어있도록 초기값 부여
-        let selectedRatioPath = ratioCV.rx.itemSelected
+        let selectedSizePath = sizeCV.rx.itemSelected
             .startWith(IndexPath(row: 0, section: 0))
             .share(replay: 1)
         
@@ -182,13 +182,13 @@ final class ConfigureVC: UIViewController {
         let input = ConfigureVM.Input(
             titleText: titleText,
             tapCreateButton: createButton.rx.tap.asObservable(),
-            selectedRatioPath: selectedRatioPath,
+            selectedSizePath: selectedSizePath,
             selectedPlacementPath: selectedPlacementPath)
         
         let output = configureVM.transform(input: input)
         
-        output.ratioItems
-            .bind(to: ratioCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
+        output.sizeItems
+            .bind(to: sizeCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
                 cell.configure(itemData: item)
             }
             .disposed(by: bag)

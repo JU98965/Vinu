@@ -28,7 +28,7 @@ final class ConfigureCardCell: UICollectionViewCell {
         return view
     }()
     
-    let ratioLabel = {
+    let sizeLabel = {
         let label = UILabel()
         label.text = "16:9" // temp
         label.textColor = .textGray
@@ -54,27 +54,27 @@ final class ConfigureCardCell: UICollectionViewCell {
     private func setAutoLayout() {
         contentView.addSubview(mainVStack)
         mainVStack.addArrangedSubview(imageView)
-        mainVStack.addArrangedSubview(ratioLabel)
+        mainVStack.addArrangedSubview(sizeLabel)
             
         mainVStack.snp.makeConstraints { $0.edges.equalToSuperview() }
-        ratioLabel.snp.makeConstraints { $0.height.equalTo(32) }
+        sizeLabel.snp.makeConstraints { $0.height.equalTo(32) }
     }
     
     // MARK: - Configure Components
     func configure(itemData: ConfigureCardCellData) {
         imageView.image = itemData.image
-        ratioLabel.text = itemData.title
+        sizeLabel.text = itemData.title
         
         // 선택 여부에 따라 이펙트를 그리거나 지우기
         if itemData.isSelected {
             imageView.tintColor = .tintSoda
-            ratioLabel.textColor = .tintSoda
+            sizeLabel.textColor = .tintSoda
             
             mainVStack.backgroundColor = .white
             contentView.dropShadow(radius: 8, opacity: 0.01)
         } else {
             imageView.tintColor = .textGray
-            ratioLabel.textColor = .textGray
+            sizeLabel.textColor = .textGray
             
             mainVStack.backgroundColor = .clear
             contentView.layer.shadowOpacity = 0

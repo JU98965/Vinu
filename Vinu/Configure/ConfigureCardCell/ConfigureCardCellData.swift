@@ -13,7 +13,7 @@ protocol ConfigureCardCellData {
     var isSelected: Bool { get set }
 }
 
-struct RatioCardData: ConfigureCardCellData {
+struct SizeCardData: ConfigureCardCellData {
     let image: UIImage?
     let title: String
     var isSelected = false

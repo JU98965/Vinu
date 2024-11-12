@@ -22,3 +22,13 @@ struct VideoClip {
     let metadata: Metadata
     let image: UIImage
 }
+
+struct VideoMetadata {
+    let asset: AVAsset
+    let assetVideoTrack: AVAssetTrack
+    let assetAudioTrack: AVAssetTrack?
+    let duration: CMTime
+    let naturalSize: CGSize
+    let preferredTransform: CGAffineTransform
+    var image: UIImage?
+}
