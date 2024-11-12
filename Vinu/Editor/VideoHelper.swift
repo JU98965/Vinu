@@ -18,7 +18,7 @@ final class VideoHelper {
     private init() {}
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: ConfigureData.VideoPlacement) -> AVPlayerItem? {
+    func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: VideoContentMode) -> AVPlayerItem? {
 //        let mixComposition = AVMutableComposition()        
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
@@ -98,7 +98,7 @@ final class VideoHelper {
     }
     
     // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize, placement: ConfigureData.VideoPlacement) -> CGAffineTransform {
+    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize, placement: VideoContentMode) -> CGAffineTransform {
         // 트랙에서 필요한 요소 뽑아오기
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         

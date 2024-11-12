@@ -77,8 +77,10 @@
 		51EBA9202CBC242D0025E432 /* ConfigureError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBA91F2CBC242D0025E432 /* ConfigureError.swift */; };
 		51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */; };
 		51F738D62CDFD568003E036B /* ConfigureVM+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */; };
-		51F738DB2CE1E687003E036B /* ConfigureData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738DA2CE1E674003E036B /* ConfigureData.swift */; };
 		51F738E02CE26214003E036B /* ExporterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738DF2CE26214003E036B /* ExporterVC.swift */; };
+		51F738E22CE3816B003E036B /* ExporterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E12CE3815D003E036B /* ExporterVM.swift */; };
+		51F738E62CE3B5BE003E036B /* VideoContentMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E52CE3B5BE003E036B /* VideoContentMode.swift */; };
+		51F738E82CE3B5C5003E036B /* VideoResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E72CE3B5C5003E036B /* VideoResolution.swift */; };
 		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
 		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
@@ -154,8 +156,10 @@
 		51EBA91F2CBC242D0025E432 /* ConfigureError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureError.swift; sourceTree = "<group>"; };
 		51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureCardCellData.swift; sourceTree = "<group>"; };
 		51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigureVM+Concurrency.swift"; sourceTree = "<group>"; };
-		51F738DA2CE1E674003E036B /* ConfigureData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureData.swift; sourceTree = "<group>"; };
 		51F738DF2CE26214003E036B /* ExporterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterVC.swift; sourceTree = "<group>"; };
+		51F738E12CE3815D003E036B /* ExporterVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterVM.swift; sourceTree = "<group>"; };
+		51F738E52CE3B5BE003E036B /* VideoContentMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoContentMode.swift; sourceTree = "<group>"; };
+		51F738E72CE3B5C5003E036B /* VideoResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoResolution.swift; sourceTree = "<group>"; };
 		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -331,7 +335,6 @@
 				51D30D4A2CA2F969003B9DF1 /* ConfigureVM.swift */,
 				51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */,
 				51EBA91F2CBC242D0025E432 /* ConfigureError.swift */,
-				51F738DA2CE1E674003E036B /* ConfigureData.swift */,
 			);
 			path = Configure;
 			sourceTree = "<group>";
@@ -391,6 +394,8 @@
 		519BF0C22C9AC5AE0064FE0A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				51F738E72CE3B5C5003E036B /* VideoResolution.swift */,
+				51F738E52CE3B5BE003E036B /* VideoContentMode.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -449,6 +454,7 @@
 			isa = PBXGroup;
 			children = (
 				51F738DF2CE26214003E036B /* ExporterVC.swift */,
+				51F738E12CE3815D003E036B /* ExporterVM.swift */,
 			);
 			path = Exporter;
 			sourceTree = "<group>";
@@ -542,6 +548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				510C47E02CDA59D400D479D2 /* UIView.swift in Sources */,
+				51F738E62CE3B5BE003E036B /* VideoContentMode.swift in Sources */,
 				519BF0A82C9AB7DC0064FE0A /* MainVC.swift in Sources */,
 				519BF0C62C9AC5CF0064FE0A /* MainVM.swift in Sources */,
 				51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */,
@@ -558,6 +565,7 @@
 				5146D5472CAC3A9F00C407F3 /* UIEdgeInsets.swift in Sources */,
 				51B048EA2CBFA39500C9382B /* TrimHandleView.swift in Sources */,
 				517320DF2CD90AFB003D685C /* SplashyView.swift in Sources */,
+				51F738E22CE3816B003E036B /* ExporterVM.swift in Sources */,
 				5146D5632CAC56DB00C407F3 /* VideoClip.swift in Sources */,
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
 				5146D5432CAC3A6700C407F3 /* UICollectionView.swift in Sources */,
@@ -596,8 +604,8 @@
 				5141F4032CA4611100839239 /* VideoCoreData+CoreDataProperties.swift in Sources */,
 				519BF0AE2C9AB7DC0064FE0A /* Vinu.xcdatamodeld in Sources */,
 				5146D5662CAC79C500C407F3 /* VideoClipCollectionView.swift in Sources */,
-				51F738DB2CE1E687003E036B /* ConfigureData.swift in Sources */,
 				517320E12CD91B10003D685C /* EntryView.swift in Sources */,
+				51F738E82CE3B5C5003E036B /* VideoResolution.swift in Sources */,
 				514DECBB2CAD2E2D0004EA00 /* FrameCell.swift in Sources */,
 				51957C2E2CD575E4001AB554 /* IndicatorPointView.swift in Sources */,
 				519BF0D52C9AEDE70064FE0A /* PickerVM.swift in Sources */,
@@ -760,11 +768,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 앨범에 접근할 수 있도록 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -794,11 +802,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 앨범에 접근할 수 있도록 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

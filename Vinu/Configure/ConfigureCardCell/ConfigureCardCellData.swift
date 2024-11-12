@@ -13,18 +13,16 @@ protocol ConfigureCardCellData {
     var isSelected: Bool { get set }
 }
 
-extension ConfigureCardCell {
-    struct RatioData: ConfigureCardCellData {
-        let image: UIImage?
-        let title: String
-        var isSelected = false
-        let exportSize: CGSize
-    }
-    
-    struct PlacementData: ConfigureCardCellData {
-        let image: UIImage?
-        let title: String
-        var isSelected = false
-        let placement: ConfigureData.VideoPlacement
-    }
+struct RatioCardData: ConfigureCardCellData {
+    let image: UIImage?
+    let title: String
+    var isSelected = false
+    let resolution: VideoResolution
+}
+
+struct PlacementCardData: ConfigureCardCellData {
+    let image: UIImage?
+    let title: String
+    var isSelected = false
+    let placement: VideoContentMode
 }

@@ -60,7 +60,7 @@ final class EditorVM {
                 let metadataArr = projectData.videoClips.map { $0.metadata }
                 let exportSize = projectData.exportSize
                 let placement = projectData.placement
-                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize, placement: placement)
+                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize.cgSize, placement: placement)
                 return playerItem
             }
             .compactMap { $0 }
@@ -153,7 +153,7 @@ final class EditorVM {
     
     // MARK: - Private methods
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: ConfigureData.VideoPlacement) -> AVPlayerItem? {
+    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: VideoContentMode) -> AVPlayerItem? {
         let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 

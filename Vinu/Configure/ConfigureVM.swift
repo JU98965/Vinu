@@ -21,34 +21,31 @@ final class ConfigureVM {
     
     struct Output {
         let placeHolder: Observable<String>
-        let ratioItems: Observable<[ConfigureCardCell.RatioData]>
-        let placementItems: Observable<[ConfigureCardCell.PlacementData]>
+        let ratioItems: Observable<[RatioCardData]>
+        let placementItems: Observable<[PlacementCardData]>
         let isCreateButtonEnabled: Observable<Bool>
         let createButtonTitle: Observable<String>
         let presentLoadingVC: Observable<ProjectData>
     }
     
-    private let bag = DisposeBag()
     let phAssets: [PHAsset]
-    // 비율 선택 컬렉션 뷰에 들어가는 데이터
-    private let ratioItems: [ConfigureCardCell.RatioData] = [
-        .init(image: UIImage(systemName: "1.square"), title: "9:16", exportSize: CGSize(width: 1080, height: 1920)),
-        .init(image: UIImage(systemName: "2.square"), title: "16:9", exportSize: CGSize(width: 1920, height: 1080)),
-    ]
-    
-    private let placementItems: [ConfigureCardCell.PlacementData] = [
-        .init(image: UIImage(systemName: "3.square"), title: "끼움", placement: .aspectFit),
-        .init(image: UIImage(systemName: "4.square"), title: "채움", placement: .aspectFill),
-    ]
+    private let bag = DisposeBag()
     
     init(_ phAssets: [PHAsset]) {
         self.phAssets = phAssets
     }
     
     func transform(input: Input) -> Output {
+        let ratioItemsSource = VideoResolution.allCases.map {
+            RatioCardData.init(image: UIImage(systemName: "1.square"), title: $0.rawValue, resolution: $0)
+        }
+        let placementItemsSource = VideoContentMode.allCases.map {
+            PlacementCardData(image: UIImage(systemName: "1.square"), title: $0.localizedString, placement: $0)
+        }
+        
         let phAssets = Observable.just(phAssets)
-        let ratioItems = BehaviorSubject(value: ratioItems)
-        let placementItems = BehaviorSubject(value: placementItems)
+        let ratioItems = BehaviorSubject(value: ratioItemsSource)
+        let placementItems = BehaviorSubject(value: placementItemsSource)
         
         // 텍스트 필드 플레이스홀더 설정
         let placeHolder = Observable
@@ -88,7 +85,7 @@ final class ConfigureVM {
         let exportSize = ratioItems
             .map { items in
                 let selectedItem = items.first { $0.isSelected }
-                let exportSize = selectedItem?.exportSize ?? CGSize(width: 1080, height: 1920)
+                let exportSize = selectedItem?.resolution ?? .portrait1080x1920
                 return exportSize
             }
         

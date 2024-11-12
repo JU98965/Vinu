@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 final class ConfigureVC: UIViewController {
-    var configureVM: ConfigureVM? = ConfigureVM([])
+    var configureVM: ConfigureVM?
     private let bag = DisposeBag()
     
     // MARK: - Components
@@ -232,5 +232,7 @@ final class ConfigureVC: UIViewController {
 }
 
 #Preview {
-    UINavigationController(rootViewController: ConfigureVC())
+    var vc = ConfigureVC()
+    vc.configureVM = ConfigureVM([])
+    return UINavigationController(rootViewController: vc)
 }

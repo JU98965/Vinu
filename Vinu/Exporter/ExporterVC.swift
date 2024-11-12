@@ -11,12 +11,24 @@ import RxSwift
 import RxCocoa
 
 final class ExporterVC: UIViewController {
+    let exporterVM: ExporterVM? = ExporterVM()
+    private let bag = DisposeBag()
     
     // MARK: - Components
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
+        sv.spacing = 15
         return sv
+    }()
+    
+    let estimatedFileSizeLabel = {
+        let label = UILabel()
+        label.text = String(localized: "예상 크기: 12MB")
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textAlignment = .center
+        return label
     }()
     
     let resultLabel = {
@@ -26,6 +38,12 @@ final class ExporterVC: UIViewController {
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .center
         return label
+    }()
+    
+    let exportButton = {
+        let button = UIButton(configuration: .filled())
+        button.setTitle("내보내기", for: .normal)
+        return button
     }()
     
     // MARK: - Life Cylce
@@ -38,11 +56,23 @@ final class ExporterVC: UIViewController {
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
+        mainVStack.addArrangedSubview(estimatedFileSizeLabel)
         mainVStack.addArrangedSubview(resultLabel)
+        mainVStack.addArrangedSubview(exportButton)
         
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        exportButton.snp.makeConstraints { $0.height.equalTo(64) }
     }
-
+    
+    // MARK: - Binding
+    private func setBinding() {
+        guard let exporterVM else { return }
+        
+        let input = ExporterVM.Input(
+            exportButtonTap: exportButton.rx.tap.asObservable())
+        
+        let output = exporterVM.transform(input: input)
+    }
 }
 
 #Preview {
