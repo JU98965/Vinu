@@ -12,5 +12,5 @@ struct ProjectData {
     let title: String
     let size: VideoSize
     let placement: VideoPlacement
-    let videoClips: [VideoClip]
+    let metadataArr: [VideoMetadata]
 }

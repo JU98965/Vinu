@@ -9,5 +9,5 @@
 import Foundation
 
 enum ConfigureError: Error {
-    case FailToInitVideoClips(String)
+    case FailToInitVideoMetadataArr(String)
 }

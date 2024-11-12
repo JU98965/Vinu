@@ -50,14 +50,14 @@ final class EditorVM {
         // 트랙 뷰에 들어갈 데이터 준비
         let trackViewData = projectData
             .map { projectData in
-                projectData.videoClips.map { VideoTrackModel(image: $0.image, duration: $0.metadata.duration) }
+                projectData.metadataArr.map { VideoTrackModel(image: $0.image, duration: $0.duration) }
             }
             .share(replay: 1)
 
         // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
         let playerItem = input.timeRanges
-            .withLatestFrom(projectData) { [weak self] timeRanges, projectData in
-                let metadataArr = projectData.videoClips.map { $0.metadata }
+            .withLatestFrom(projectData) { timeRanges, projectData in
+                let metadataArr = projectData.metadataArr
                 let size = projectData.size
                 let placement = projectData.placement
                 let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, size: size.cgSize, placement: placement)
@@ -153,7 +153,7 @@ final class EditorVM {
     
     // MARK: - Private methods
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
+    private func makePlayerItem(_ metadataArr: [VideoMetadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
         let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 

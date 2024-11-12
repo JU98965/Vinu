@@ -18,8 +18,8 @@ final class VideoHelper {
     private init() {}
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
-//        let mixComposition = AVMutableComposition()        
+    func makePlayerItem(_ metadataArr: [VideoMetadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
+//        let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
 
@@ -98,7 +98,7 @@ final class VideoHelper {
     }
     
     // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    func transformAspectFit(metadata: VideoClip.Metadata, size: CGSize, placement: VideoPlacement) -> CGAffineTransform {
+    func transformAspectFit(metadata: VideoMetadata, size: CGSize, placement: VideoPlacement) -> CGAffineTransform {
         // 트랙에서 필요한 요소 뽑아오기
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         
@@ -188,9 +188,11 @@ final class VideoHelper {
                 
                 // 좌측 상단 모서리 기준으로 180도 돌렸으니 이제 영상의 기준점은 우측 하단
                 // 내보내는 사이즈의 높이의 절반까지 이동시킨 후, 크기 조정된 영상 높이의 절반만큼 이동하면 y축의 중심에 배치 가능
+                let xFix = size.width / 2 + (naturalSize.width * scaleToFitRatio / 2)
                 let yFix = size.height / 2 + (naturalSize.height * scaleToFitRatio / 2)
-                // 위치 보정할 아핀 변환 만들기, 영상의 기준점은 우측 하단이니 x축을 크기 조정된 영상 넓이만큼 더 이동시켜야 함
-                let centerFix = CGAffineTransform(translationX: naturalSize.width * scaleToFitRatio, y: yFix)
+
+                //  위치 보정할 아핀 변환 만들기
+                let centerFix = CGAffineTransform(translationX: xFix, y: yFix)
                 
                 
                 // 배율, 회전, 위치변환까지 적용한 아핀 변환 만들어주기

@@ -12,19 +12,21 @@ import AVFoundation
 import Photos
 
 extension ConfigureVM {
-    func fetchVideoClips(_ phAssets: [PHAsset]) async -> Result<[VideoClip], ConfigureError> {
+    func fetchVideoMetadataArr(_ phAssets: [PHAsset]) async -> Result<[VideoMetadata], ConfigureError> {
         let avAssets = await fetchAVAssets(phAssets)
         
         async let metadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
         async let images = fetchImages(phAssets).compactMap { $0 }
-        await print("metadataArr.count", metadataArr.count, "images.count", images.count)
+
         if await metadataArr.count == images.count {
-            let result = await zip(metadataArr, images).map { (metadata, image) in
-                VideoClip(metadata: metadata, image: image)
+            let result = await zip(metadataArr, images).map { zipped in
+                var (metadata, image) = zipped
+                metadata.image = image
+                return metadata
             }
             return Result.success(result)
         } else {
-            return Result.failure(ConfigureError.FailToInitVideoClips("메타데이터와 이미지의 갯수가 일치하지 않음."))
+            return Result.failure(ConfigureError.FailToInitVideoMetadataArr("메타데이터와 이미지의 갯수가 일치하지 않음."))
         }
     }
 
@@ -70,10 +72,10 @@ extension ConfigureVM {
     
     // MARK: - fetchMetaData
     // AVAsset에서 필요한 메타 데이터 뽑아내기
-    private func fetchMetadataArr(_ avAssets: [AVAsset?]) async -> [VideoClip.Metadata?] {
-        var metadataArr = [VideoClip.Metadata?](repeating: nil, count: avAssets.count)
+    private func fetchMetadataArr(_ avAssets: [AVAsset?]) async -> [VideoMetadata?] {
+        var metadataArr = [VideoMetadata?](repeating: nil, count: avAssets.count)
         
-        await withTaskGroup(of: (Int, VideoClip.Metadata?).self) { group in
+        await withTaskGroup(of: (Int, VideoMetadata?).self) { group in
             for (i, avAsset) in avAssets.enumerated() {
                 group.addTask {
                     let metadata = await self.fetchMetaData(avAsset)
@@ -89,7 +91,7 @@ extension ConfigureVM {
         return metadataArr
     }
     
-    private func fetchMetaData(_ avAsset: AVAsset?) async -> VideoClip.Metadata? {
+    private func fetchMetaData(_ avAsset: AVAsset?) async -> VideoMetadata? {
         guard let avAsset else { return nil }
         
         do {
@@ -107,7 +109,7 @@ extension ConfigureVM {
             else { return nil }
             
             
-            return VideoClip.Metadata(
+            return VideoMetadata(
                 asset: avAsset,
                 assetVideoTrack: assetVideoTrack,
                 assetAudioTrack: assetAudioTrack,

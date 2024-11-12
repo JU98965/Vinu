@@ -118,11 +118,11 @@ final class ConfigureVM {
         
         
         // 비디오 에디터에 필요한 데이터 미리 로드
-        let videoClips = phAssets
+        let metadataArr = phAssets
             .flatMapLatest { phAssets in
                 return Observable.create { observer in
                     let task = Task { @MainActor in
-                        let result = await self.fetchVideoClips(phAssets)
+                        let result = await self.fetchVideoMetadataArr(phAssets)
                         
                         switch result {
                         case .success(let data):
@@ -143,7 +143,7 @@ final class ConfigureVM {
             .share(replay: 1)
         
         // 비디오 클립을 가져와야 생성 버튼 활성화
-        let isCreateButtonEnabled = videoClips
+        let isCreateButtonEnabled = metadataArr
             .map { !$0.isEmpty }
         
         // 생성 버튼의 타이틀의 텍스트 설정
@@ -158,11 +158,11 @@ final class ConfigureVM {
         
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
-            .withLatestFrom(Observable.combineLatest(titleText, size, placement, videoClips))
+            .withLatestFrom(Observable.combineLatest(titleText, size, placement, metadataArr))
             .map { combined in
-                let (titleText, size, placement, videoClips) = combined
+                let (titleText, size, placement, metadataArr) = combined
                 
-                let result = ProjectData(title: titleText, size: size, placement: placement, videoClips: videoClips)
+                let result = ProjectData(title: titleText, size: size, placement: placement, metadataArr: metadataArr)
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 
