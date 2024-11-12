@@ -36,11 +36,11 @@ final class ConfigureVM {
     }
     
     func transform(input: Input) -> Output {
-        let ratioItemsSource = VideoResolution.allCases.map {
-            RatioCardData.init(image: UIImage(systemName: "1.square"), title: $0.rawValue, resolution: $0)
+        let ratioItemsSource = VideoSize.allCases.map {
+            RatioCardData.init(image: $0.image, title: $0.rawValue, size: $0)
         }
-        let placementItemsSource = VideoContentMode.allCases.map {
-            PlacementCardData(image: UIImage(systemName: "1.square"), title: $0.localizedString, placement: $0)
+        let placementItemsSource = VideoPlacement.allCases.map {
+            PlacementCardData(image: $0.image, title: $0.localizedString, placement: $0)
         }
         
         let phAssets = Observable.just(phAssets)
@@ -82,11 +82,11 @@ final class ConfigureVM {
             .disposed(by: bag)
         
         // 선택한 사이즈(비율) 가져오기
-        let exportSize = ratioItems
+        let size = ratioItems
             .map { items in
                 let selectedItem = items.first { $0.isSelected }
-                let exportSize = selectedItem?.resolution ?? .portrait1080x1920
-                return exportSize
+                let size = selectedItem?.size ?? .portrait1080x1920
+                return size
             }
         
         // 영상 배치를 하나만 선택하도록 하는 로직
@@ -158,11 +158,11 @@ final class ConfigureVM {
         
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentLoadingVC = input.tapCreateButton
-            .withLatestFrom(Observable.combineLatest(titleText, exportSize, placement, videoClips))
+            .withLatestFrom(Observable.combineLatest(titleText, size, placement, videoClips))
             .map { combined in
-                let (titleText, exportSize, placement, videoClips) = combined
+                let (titleText, size, placement, videoClips) = combined
                 
-                let result = ProjectData(title: titleText, exportSize: exportSize, placement: placement, videoClips: videoClips)
+                let result = ProjectData(title: titleText, size: size, placement: placement, videoClips: videoClips)
                 
                 // 추후 필요하다면 이 시점에 코어데이터 저장 코드 추가
                 
@@ -177,8 +177,4 @@ final class ConfigureVM {
             createButtonTitle: createButtonTitle,
             presentLoadingVC: presentLoadingVC)
     }
-    
-    // MARK: - Method
-    
-    
 }

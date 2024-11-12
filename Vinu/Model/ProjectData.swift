@@ -10,7 +10,7 @@ import Photos
 
 struct ProjectData {
     let title: String
-    let exportSize: VideoResolution
-    let placement: VideoContentMode
+    let size: VideoSize
+    let placement: VideoPlacement
     let videoClips: [VideoClip]
 }

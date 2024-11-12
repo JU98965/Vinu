@@ -58,9 +58,9 @@ final class EditorVM {
         let playerItem = input.timeRanges
             .withLatestFrom(projectData) { [weak self] timeRanges, projectData in
                 let metadataArr = projectData.videoClips.map { $0.metadata }
-                let exportSize = projectData.exportSize
+                let size = projectData.size
                 let placement = projectData.placement
-                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, exportSize: exportSize.cgSize, placement: placement)
+                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, size: size.cgSize, placement: placement)
                 return playerItem
             }
             .compactMap { $0 }
@@ -153,7 +153,7 @@ final class EditorVM {
     
     // MARK: - Private methods
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: VideoContentMode) -> AVPlayerItem? {
+    private func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
         let mixComposition = AVMutableComposition()
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
@@ -204,7 +204,7 @@ final class EditorVM {
         
         // 각 비디오의 사이즈를 정렬하는 로직, 아핀 배열을 변경하는 instruction을 추가
         zip(instructions, metadataArr).forEach { instruction, metadata in
-            let transform = VideoHelper.shared.transformAspectFit(metadata: metadata, exportSize: exportSize, placement: placement)
+            let transform = VideoHelper.shared.transformAspectFit(metadata: metadata, size: size, placement: placement)
             instruction.setTransform(transform, at: .zero)
         }
         
@@ -217,7 +217,7 @@ final class EditorVM {
         // 비디오 컴포지션 설정, 모든 변경사항을 이 친구가 받아서 아이템에 적용시켜줌
         let videoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
-        videoComposition.renderSize = exportSize // 출력 해상도 설정
+        videoComposition.renderSize = size // 출력 해상도 설정
         videoComposition.instructions = [mainInstruction]
         // HDR 효과 끄기, 너무 눈뽕임..
         videoComposition.colorPrimaries = AVVideoColorPrimaries_ITU_R_709_2

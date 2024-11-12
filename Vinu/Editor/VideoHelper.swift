@@ -18,7 +18,7 @@ final class VideoHelper {
     private init() {}
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], exportSize: CGSize, placement: VideoContentMode) -> AVPlayerItem? {
+    func makePlayerItem(_ metadataArr: [VideoClip.Metadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
 //        let mixComposition = AVMutableComposition()        
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
@@ -71,7 +71,7 @@ final class VideoHelper {
         
         // 각 비디오의 사이즈를 정렬하는 로직, 아핀 배열을 변경하는 instruction을 추가
         zip(instructions, metadataArr).forEach { instruction, metadata in
-            let transform = transformAspectFit(metadata: metadata, exportSize: exportSize, placement: placement)
+            let transform = transformAspectFit(metadata: metadata, size: size, placement: placement)
             instruction.setTransform(transform, at: .zero)
         }
         
@@ -84,7 +84,7 @@ final class VideoHelper {
         // 비디오 컴포지션 설정, 모든 변경사항을 이 친구가 받아서 아이템에 적용시켜줌
 //        let videoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
-        videoComposition.renderSize = exportSize // 출력 해상도 설정
+        videoComposition.renderSize = size // 출력 해상도 설정
         videoComposition.instructions = [mainInstruction]
         // HDR 효과 끄기, 너무 눈뽕임..
         videoComposition.colorPrimaries = AVVideoColorPrimaries_ITU_R_709_2
@@ -98,7 +98,7 @@ final class VideoHelper {
     }
     
     // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    func transformAspectFit(metadata: VideoClip.Metadata, exportSize: CGSize, placement: VideoContentMode) -> CGAffineTransform {
+    func transformAspectFit(metadata: VideoClip.Metadata, size: CGSize, placement: VideoPlacement) -> CGAffineTransform {
         // 트랙에서 필요한 요소 뽑아오기
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         
@@ -111,10 +111,10 @@ final class VideoHelper {
         if assetInfo.isPortrait {
             // MARK: - Portrait
             
-            // exportSize정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
+            // size정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
             // 세로로 찍었더라도 영상의 naturalSize는 가로모드 기준으로 나오기 때문에 width와 height를 서로 뒤바꿔서 계산해야함
-            let scaleToWidth = exportSize.width / naturalSize.height
-            let scaleToHeight = exportSize.height / naturalSize.width
+            let scaleToWidth = size.width / naturalSize.height
+            let scaleToHeight = size.height / naturalSize.width
             
             // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
             let scaleToFitRatio = {
@@ -130,8 +130,8 @@ final class VideoHelper {
             let scaleFactor = CGAffineTransform(scaleX: scaleToFitRatio, y: scaleToFitRatio)
             
             // Portrait라도 가로가 길쭉한 영상이 있을 수 있어서 좌표를 x,y축 모두 잡아줘야 함
-            let xFix = exportSize.width / 2 - (naturalSize.height * scaleToFitRatio / 2)
-            let yFix = exportSize.height / 2 - (naturalSize.width * scaleToFitRatio / 2)
+            let xFix = size.width / 2 - (naturalSize.height * scaleToFitRatio / 2)
+            let yFix = size.height / 2 - (naturalSize.width * scaleToFitRatio / 2)
 
             let centerFix = CGAffineTransform(translationX: xFix, y: yFix)
             
@@ -145,10 +145,10 @@ final class VideoHelper {
         } else {
             // MARK: - Landscape
             
-            // exportSize정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
+            // size정도로 스케일을 맞추려면 배율을 얼마나 조정해야 하는지 계산
             // naturalSize가 이미 가로모드 기준이기 때문에 그대로 갖다쓰면 됨
-            let scaleToWidth = exportSize.width / naturalSize.width
-            let scaleToHeight = exportSize.height / naturalSize.height
+            let scaleToWidth = size.width / naturalSize.width
+            let scaleToHeight = size.height / naturalSize.height
             
             // fit하게 배율을 적용하려면 가장 짧은 면을 기준으로 맞춰야 함
             let scaleToFitRatio = {
@@ -167,8 +167,8 @@ final class VideoHelper {
             // 영상의 중심점은 좌측상단
             // 내보내는 영상 사이즈 높이의 절반까지 이동시킨 후, 크기 조정된 영상 높이의 절반만큼 후퇴하면 y축의 중심에 배치 가능
             // Landscape라도 세로가 길쭉한 영상이 있을 수 있어서 좌표를 x,y축 모두 잡아줘야 함
-            let xFix = exportSize.width / 2 - (naturalSize.width * scaleToFitRatio / 2)
-            let yFix = exportSize.height / 2 - (naturalSize.height * scaleToFitRatio / 2)
+            let xFix = size.width / 2 - (naturalSize.width * scaleToFitRatio / 2)
+            let yFix = size.height / 2 - (naturalSize.height * scaleToFitRatio / 2)
 
             //  위치 보정할 아핀 변환 만들기
             let centerFix = CGAffineTransform(translationX: xFix, y: yFix)
@@ -188,7 +188,7 @@ final class VideoHelper {
                 
                 // 좌측 상단 모서리 기준으로 180도 돌렸으니 이제 영상의 기준점은 우측 하단
                 // 내보내는 사이즈의 높이의 절반까지 이동시킨 후, 크기 조정된 영상 높이의 절반만큼 이동하면 y축의 중심에 배치 가능
-                let yFix = exportSize.height / 2 + (naturalSize.height * scaleToFitRatio / 2)
+                let yFix = size.height / 2 + (naturalSize.height * scaleToFitRatio / 2)
                 // 위치 보정할 아핀 변환 만들기, 영상의 기준점은 우측 하단이니 x축을 크기 조정된 영상 넓이만큼 더 이동시켜야 함
                 let centerFix = CGAffineTransform(translationX: naturalSize.width * scaleToFitRatio, y: yFix)
                 

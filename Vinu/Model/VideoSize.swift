@@ -1,5 +1,5 @@
 //
-//  VideoResolution.swift
+//  VideoSize.swift
 //  Vinu
 //
 //  Created by 신정욱 on 11/13/24.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum VideoResolution: String, CaseIterable {
+enum VideoSize: String, CaseIterable {
     case portrait1080x1920 = "9:16"
     case landscape1920x1080 = "16:9"
     case portrait1440x1920 = "3:4"
@@ -30,6 +30,23 @@ enum VideoResolution: String, CaseIterable {
             CGSize(width: 1280, height: 2560)
         case .landscape2560x1280:
             CGSize(width: 2560, height: 1280)
+        }
+    }
+    
+    var image: UIImage? {
+        switch self {
+        case .portrait1080x1920:
+            UIImage(systemName: "1.square")
+        case .landscape1920x1080:
+            UIImage(systemName: "2.square")
+        case .portrait1440x1920:
+            UIImage(systemName: "3.square")
+        case .landscape1920x1440:
+            UIImage(systemName: "4.square")
+        case .portrait1280x2560:
+            UIImage(systemName: "5.square")
+        case .landscape2560x1280:
+            UIImage(systemName: "6.square")
         }
     }
 }

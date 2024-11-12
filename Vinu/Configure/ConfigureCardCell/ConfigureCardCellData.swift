@@ -17,12 +17,12 @@ struct RatioCardData: ConfigureCardCellData {
     let image: UIImage?
     let title: String
     var isSelected = false
-    let resolution: VideoResolution
+    let size: VideoSize
 }
 
 struct PlacementCardData: ConfigureCardCellData {
     let image: UIImage?
     let title: String
     var isSelected = false
-    let placement: VideoContentMode
+    let placement: VideoPlacement
 }
