@@ -128,6 +128,7 @@ final class ConfigureVM {
                         case .success(let data):
                             observer.onNext(data)
                         case .failure(let error):
+#warning("실패시 화면에 안내 띄우고 초기화면으로 돌아가게 유도해야 할 듯")
                             print(error)
                         }
                         

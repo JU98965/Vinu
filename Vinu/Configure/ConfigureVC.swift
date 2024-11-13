@@ -232,7 +232,7 @@ final class ConfigureVC: UIViewController {
 }
 
 #Preview {
-    var vc = ConfigureVC()
+    let vc = ConfigureVC()
     vc.configureVM = ConfigureVM([])
     return UINavigationController(rootViewController: vc)
 }
