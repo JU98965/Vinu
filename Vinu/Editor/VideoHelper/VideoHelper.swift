@@ -18,10 +18,15 @@ final class VideoHelper {
     private init() {}
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
-    func makePlayerItem(_ metadataArr: [VideoMetadata], _ timeRanges: [CMTimeRange], size: CGSize, placement: VideoPlacement) -> AVPlayerItem? {
+    func makePlayerItem(_ makingOptions: VideoMakingOptions) -> AVPlayerItem? {
+        let metadataArr = makingOptions.metadataArr
+        let timeRanges = makingOptions.trimmedTimeRanges
+        let size = makingOptions.size.cgSize
+        let placement = makingOptions.placement
+        
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
-
+        // 해당 메서드가 다시 실행 될 때 기존의 시간범위를 지우고 다시 설정
         composition.removeTimeRange(CMTimeRange(start: .zero, duration: composition.duration))
         
         var accumulatedTime = CMTime.zero
@@ -70,7 +75,7 @@ final class VideoHelper {
         
         // 각 비디오의 사이즈를 정렬하는 로직, 아핀 배열을 변경하는 instruction을 추가
         zip(instructions, metadataArr).forEach { instruction, metadata in
-            let transform = transformAspect(metadata: metadata, size: size, placement: placement)
+            let transform = transformAspect(metadata, size, placement)
             instruction.setTransform(transform, at: .zero)
         }
         
@@ -80,15 +85,11 @@ final class VideoHelper {
         mainInstruction.timeRange = CMTimeRange(start: .zero, duration: composition.duration)
         mainInstruction.layerInstructions = instructions
         
-        // 비디오 컴포지션 설정, 모든 변경사항을 이 친구가 받아서 아이템에 적용시켜줌
-//        let videoComposition = AVMutableVideoComposition()
+        // 비디오 컴포지션 설정, 모든 변경사항을 비디오 컴포지션이 받아서 아이템에 적용시켜줌
         videoComposition.frameDuration = CMTime(value: 1, timescale: 30) // 30fps로 설정
         videoComposition.renderSize = size // 출력 해상도 설정
         videoComposition.instructions = [mainInstruction]
-        // HDR 효과 끄기, 너무 눈뽕임..
-        videoComposition.colorPrimaries = AVVideoColorPrimaries_ITU_R_709_2
-        videoComposition.colorTransferFunction = AVVideoTransferFunction_ITU_R_709_2
-        videoComposition.colorYCbCrMatrix = AVVideoYCbCrMatrix_ITU_R_709_2
+        videoComposition.allowHDR(makingOptions.isHDRAllowed) // HDR 효과 관리
 
         let item = AVPlayerItem(asset: composition)
         item.videoComposition = videoComposition
@@ -96,14 +97,14 @@ final class VideoHelper {
         return item
     }
     
-    // 일단은 세로가 긴 영상을 만들 경우에 한해서 유효한 메서드
-    private func transformAspect(metadata: VideoMetadata, size: CGSize, placement: VideoPlacement) -> CGAffineTransform {
-        // 트랙에서 필요한 요소 뽑아오기
+    // 영상의 스케일과 배치를 설정한 사이즈에 맞게 변형
+    private func transformAspect(_ metadata: VideoMetadata, _ size: CGSize, _ placement: VideoPlacement) -> CGAffineTransform {
+        // 미리 트랙에서 뽑아온 메타 데이터 준비
         let (naturalSize, transform) = (metadata.naturalSize, metadata.preferredTransform)
         
         
         // transform의 정보를 바탕으로 이 비디오가 세로모드인지 가로모드인지 판단
-        let assetInfo = orientationFromTransform(transform)
+        let assetInfo = transform.getOrientation()
         
         
         // 세로모드, 가로모드인지에 따라서 배율 계산이 달라질 수 있으니 if문으로 분기처리
@@ -205,29 +206,7 @@ final class VideoHelper {
             return concat
         }
     }
-    
-    private func orientationFromTransform(_ transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
-        var assetOrientation = UIImage.Orientation.up
-        var isPortrait = false
-        let tfA = transform.a
-        let tfB = transform.b
-        let tfC = transform.c
-        let tfD = transform.d
-        
-        if tfA == 0 && tfB == 1.0 && tfC == -1.0 && tfD == 0 {
-            assetOrientation = .right
-            isPortrait = true
-        } else if tfA == 0 && tfB == -1.0 && tfC == 1.0 && tfD == 0 {
-            assetOrientation = .left
-            isPortrait = true
-        } else if tfA == 1.0 && tfB == 0 && tfC == 0 && tfD == 1.0 {
-            assetOrientation = .up
-        } else if tfA == -1.0 && tfB == 0 && tfC == 0 && tfD == -1.0 {
-            assetOrientation = .down
-        }
-        return (assetOrientation, isPortrait)
-    }
-        
+            
     func export() {
         // 앨범에 저장할거라 결과물은 임시디렉토리에 저장해놓고 url만 끌어다 씀
         let documentsDirectory = FileManager.default.temporaryDirectory
@@ -285,7 +264,3 @@ final class VideoHelper {
         }
     }
 }
-
-/// hdr on, off
-/// composition
-/// videoComposition

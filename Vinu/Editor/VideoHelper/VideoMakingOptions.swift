@@ -1,5 +1,5 @@
 //
-//  VideoMakingOption.swift
+//  VideoMakingOptions.swift
 //  Vinu
 //
 //  Created by 신정욱 on 11/13/24.
@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-struct VideoMakingOption {
+struct VideoMakingOptions {
     let metadataArr: [VideoMetadata]
     let size: VideoSize
     let placement: VideoPlacement

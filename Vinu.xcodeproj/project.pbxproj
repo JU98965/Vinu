@@ -81,7 +81,9 @@
 		51F738E22CE3816B003E036B /* ExporterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E12CE3815D003E036B /* ExporterVM.swift */; };
 		51F738E62CE3B5BE003E036B /* VideoPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E52CE3B5BE003E036B /* VideoPlacement.swift */; };
 		51F738E82CE3B5C5003E036B /* VideoSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738E72CE3B5C5003E036B /* VideoSize.swift */; };
-		51F738EB2CE4A60B003E036B /* VideoMakingOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738EA2CE4A60B003E036B /* VideoMakingOption.swift */; };
+		51F738EB2CE4A60B003E036B /* VideoMakingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738EA2CE4A60B003E036B /* VideoMakingOptions.swift */; };
+		51F738ED2CE4BB9F003E036B /* AVMutableVideoComposition+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738EC2CE4BB9C003E036B /* AVMutableVideoComposition+.swift */; };
+		51F738F12CE4BE39003E036B /* CGAffineTransform+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738F02CE4BE37003E036B /* CGAffineTransform+.swift */; };
 		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
 		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
@@ -161,7 +163,9 @@
 		51F738E12CE3815D003E036B /* ExporterVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterVM.swift; sourceTree = "<group>"; };
 		51F738E52CE3B5BE003E036B /* VideoPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlacement.swift; sourceTree = "<group>"; };
 		51F738E72CE3B5C5003E036B /* VideoSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSize.swift; sourceTree = "<group>"; };
-		51F738EA2CE4A60B003E036B /* VideoMakingOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMakingOption.swift; sourceTree = "<group>"; };
+		51F738EA2CE4A60B003E036B /* VideoMakingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMakingOptions.swift; sourceTree = "<group>"; };
+		51F738EC2CE4BB9C003E036B /* AVMutableVideoComposition+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVMutableVideoComposition+.swift"; sourceTree = "<group>"; };
+		51F738F02CE4BE37003E036B /* CGAffineTransform+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGAffineTransform+.swift"; sourceTree = "<group>"; };
 		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -384,11 +388,10 @@
 				51E1E1AA2CD0FD3100414BF3 /* VideoTrackView */,
 				51E1E1A92CD0FD0A00414BF3 /* VideoPlayerView */,
 				51FE51EC2CD38471008C15B9 /* PlaybackConsoleView */,
+				51F738EF2CE4BD95003E036B /* VideoHelper */,
 				51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */,
 				51D30D412CA2CE24003B9DF1 /* EditorVM.swift */,
-				513698792CB84E7A004175DE /* VideoHelper.swift */,
 				516976282CBEE178008A69BF /* EditorConfiguration.swift */,
-				51F738EA2CE4A60B003E036B /* VideoMakingOption.swift */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -460,6 +463,17 @@
 				51F738E12CE3815D003E036B /* ExporterVM.swift */,
 			);
 			path = Exporter;
+			sourceTree = "<group>";
+		};
+		51F738EF2CE4BD95003E036B /* VideoHelper */ = {
+			isa = PBXGroup;
+			children = (
+				513698792CB84E7A004175DE /* VideoHelper.swift */,
+				51F738EA2CE4A60B003E036B /* VideoMakingOptions.swift */,
+				51F738EC2CE4BB9C003E036B /* AVMutableVideoComposition+.swift */,
+				51F738F02CE4BE37003E036B /* CGAffineTransform+.swift */,
+			);
+			path = VideoHelper;
 			sourceTree = "<group>";
 		};
 		51FE51EC2CD38471008C15B9 /* PlaybackConsoleView */ = {
@@ -558,6 +572,7 @@
 				519BF0D32C9AEBF40064FE0A /* ThumbnailData.swift in Sources */,
 				51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */,
 				5146D5452CAC3A7D00C407F3 /* PHAsset.swift in Sources */,
+				51F738ED2CE4BB9F003E036B /* AVMutableVideoComposition+.swift in Sources */,
 				518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */,
 				510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */,
 				51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */,
@@ -594,6 +609,7 @@
 				5146D54F2CAC3B5B00C407F3 /* CGFloat.swift in Sources */,
 				5146D5582CAC50DF00C407F3 /* ThumbnailData+RxDataSources.swift in Sources */,
 				51E1E1AC2CD11B8B00414BF3 /* PlaybackConsoleView.swift in Sources */,
+				51F738F12CE4BE39003E036B /* CGAffineTransform+.swift in Sources */,
 				517D56C12CC4051A00009E23 /* VideoTrackVM.swift in Sources */,
 				519BF0D02C9AE9080064FE0A /* ThumbnailCell.swift in Sources */,
 				517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */,
@@ -619,7 +635,7 @@
 				5146D5492CAC3AC500C407F3 /* NSDirectionalEdgeInsets.swift in Sources */,
 				514BD1D82CCEB10500611AC5 /* VideoTrackModel.swift in Sources */,
 				519BF0CD2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift in Sources */,
-				51F738EB2CE4A60B003E036B /* VideoMakingOption.swift in Sources */,
+				51F738EB2CE4A60B003E036B /* VideoMakingOptions.swift in Sources */,
 				51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */,
 				51F738D62CDFD568003E036B /* ConfigureVM+Concurrency.swift in Sources */,
 			);

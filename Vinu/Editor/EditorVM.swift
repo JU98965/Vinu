@@ -41,31 +41,45 @@ final class EditorVM {
     }
     
     func transform(input: Input) -> Output {
-        let configData = BehaviorSubject(value: configuration).asObservable()
+        // MARK: - Subjects
+        // just로 만들면 dispose가 하위 스트림에 전파되어버려서 서브젝트로 관리
+        let configData = BehaviorSubject(value: configuration)
+            .asObservable()
             .share(replay: 1)
+        
+        // 전체적인 편집 상태를 관리하는 서브젝트
+        let makingOptions = BehaviorSubject(value: VideoMakingOptions(
+            metadataArr: configuration.metadataArr,
+            size: configuration.size,
+            placement: configuration.placement,
+            trimmedTimeRanges: [CMTimeRange](),
+            isHDRAllowed: false))
         
         // 재생 상태를 가지는 서브젝트
         let isPlaying = BehaviorSubject(value: false)
         
-        // 트랙 뷰에 들어갈 데이터 준비
-        let trackViewData = configData
-            .map { configData in
-                configData.metadataArr.map { VideoTrackModel(image: $0.image, duration: $0.duration) }
-            }
-            .share(replay: 1)
-
-        // 트랙뷰에서 제공받은 각 클립의 시간 범위를 기반으로 플레이어 아이템 작성
-        let playerItem = input.timeRanges
-            .withLatestFrom(configData) { timeRanges, configData in
-                let metadataArr = configData.metadataArr
-                let size = configData.size
-                let placement = configData.placement
-                let playerItem = VideoHelper.shared.makePlayerItem(metadataArr, timeRanges, size: size.cgSize, placement: placement)
-                return playerItem
-            }
+        // MARK: - Observables
+        // makingOptions의 업데이트에 따라 playerItem 생성
+        let playerItem = makingOptions
+            .map { VideoHelper.shared.makePlayerItem($0) }
             .compactMap { $0 }
             .share(replay: 1)
-
+        
+        // 트랙 뷰 초기화 데이터 전달
+        let trackViewData = configData
+            .map { $0.metadataArr.map { VideoTrackModel(image: $0.image, duration: $0.duration) } }
+            .share(replay: 1)
+       
+        // 트랙뷰에서 클립들의 새로운 시간 범위를 받아와 생성 옵션 업데이트
+        input.timeRanges
+            .withLatestFrom(makingOptions) { timeRanges, makingOption in
+                var makingOption = makingOption
+                makingOption.trimmedTimeRanges = timeRanges
+                return makingOption
+            }
+            .bind(to: makingOptions)
+            .disposed(by: bag)
+        
         // 비디오 플레이어의 진행률
         let progress = input.progress
             .share(replay: 1)
