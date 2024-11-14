@@ -10,25 +10,6 @@ import UIKit
 import Photos
 
 extension PHAsset {
-    func fetchURL(completionHandler : @escaping ((_ responseURL : URL?) -> Void)) {
-        guard self.mediaType == .video else { return }
-        
-        let options = PHVideoRequestOptions()
-        options.version = .current
-        
-        PHImageManager.default().requestAVAsset(
-            forVideo: self,
-            options: options,
-            resultHandler: { asset, audioMix, info in
-                if let urlAsset = asset as? AVURLAsset {
-                    let localVideoUrl: URL = urlAsset.url as URL
-                    completionHandler(localVideoUrl)
-                } else {
-                    completionHandler(nil)
-                }
-            })
-    }
-    
     func fetchImage(completionHandler : @escaping ((_ responseImage : UIImage?) -> Void)) {
         guard self.mediaType == .video else { return }
         
@@ -52,27 +33,5 @@ extension PHAsset {
                     }
                 }
             }
-    }
-    
-    func fetchAVAsset(completionHandler : @escaping ((_ responseURL : AVAsset?) -> Void)) {
-        guard self.mediaType == .video else { return }
-        
-        let options = PHVideoRequestOptions()
-        options.version = .current
-        options.isNetworkAccessAllowed = false
-        options.deliveryMode = .automatic
-        
-        PHImageManager.default().requestAVAsset(
-            forVideo: self,
-            options: options,
-            resultHandler: { asset, audioMix, info in
-                DispatchQueue.main.async {
-                    if let asset {
-                        completionHandler(asset)
-                    } else {
-                        completionHandler(nil)
-                    }
-                }
-            })
     }
 }

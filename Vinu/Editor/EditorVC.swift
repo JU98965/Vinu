@@ -37,6 +37,8 @@ final class EditorVC: UIViewController {
     
     let videoTrackView = VideoTrackView()
     
+    let editConsoleView = EditConsoleView()
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,11 +55,13 @@ final class EditorVC: UIViewController {
         mainVStack.addArrangedSubview(videoPlayerView)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
+        mainVStack.addArrangedSubview(editConsoleView)
         navigationHStack.addArrangedSubview(exportButton)
 
-        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 60)) }
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(60) }
+        editConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
     }
     
     // MARK: - Binding

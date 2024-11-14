@@ -55,6 +55,7 @@ final class VideoHelper {
                         at: accumulatedTime)
                 }
             } catch {
+#warning("nil일 경우 실패 얼럿이라도 띄워야 하는 거 아닌가?")
                 return nil
             }
 
@@ -90,6 +91,7 @@ final class VideoHelper {
         videoComposition.instructions = [mainInstruction]
         videoComposition.allowHDR(makingOptions.isHDRAllowed) // HDR 효과 관리
 
+        // 분명히 비디오 컴포지션만 업데이트 가능할 것 같은데.. 연구 좀 해봐야 할 듯
         let item = AVPlayerItem(asset: composition)
         item.videoComposition = videoComposition
         

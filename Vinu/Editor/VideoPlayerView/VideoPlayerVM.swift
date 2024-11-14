@@ -37,6 +37,7 @@ final class VideoPlayerVM {
         let configure = input.itemStatus
             .filter { $0 == .readyToPlay }
             .map { _ in }
+            .take(1) // 구성은 1번만 하면 됨
         
         // 현재 경과시간을 바탕으로 진행률 계산 후 외부에 전달
         let progress = input.elapsedTime
