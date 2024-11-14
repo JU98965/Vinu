@@ -75,6 +75,7 @@ final class EditorVC: UIViewController {
             scaleFactor: videoTrackView.scaleFactor.asObservable(),
             controlStatus: videoPlayerView.controlStatus.asObservable(),
             playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable(),
+            hdrTap: editConsoleView.hdrButton.rx.tap.asObservable(),
             exportTap: exportButton.rx.tap.asObservable())
         
         let output = editorVM.transform(input: input)

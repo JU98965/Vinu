@@ -19,6 +19,7 @@ final class EditorVM {
         let scaleFactor: Observable<CGFloat>
         let controlStatus: Observable<AVPlayer.TimeControlStatus>
         let playbackTap: Observable<Void>
+        let hdrTap: Observable<Void>
         let exportTap: Observable<Void>
     }
     
@@ -149,6 +150,16 @@ final class EditorVM {
                     return UIImage(systemName: "play.fill")
                 }
             }
+        
+        // 영상에 HDR을 적용할지 말지를 설정
+        input.hdrTap
+            .withLatestFrom(makingOptions) { _, options in
+                var options = options
+                options.isHDRAllowed.toggle()
+                return options
+            }
+            .bind(to: makingOptions)
+            .disposed(by: bag)
         
         input.exportTap
             .bind(onNext: { VideoHelper.shared.export() })
