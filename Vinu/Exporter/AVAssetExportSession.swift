@@ -17,7 +17,7 @@ extension AVAssetExportSession {
         let outputURL = documentsDirectory.appendingPathComponent(videofileName)
         
         // outputURL이 유효하지 않다면 생성 실패 처리
-        guard UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) else { return nil }
+//        guard UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) else { return nil }
         
         self.init(asset: configuration.composition, presetName: AVAssetExportPresetHighestQuality)
         self.outputFileType = .mov

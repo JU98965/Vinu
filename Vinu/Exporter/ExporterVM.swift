@@ -36,11 +36,13 @@ final class ExporterVM {
         let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
         
         let estimatedFileSizeText = estimatedFileSizeText()
+            .observe(on: MainScheduler.instance)
         
         let isExportButtonEnabled = Observable.just(exporter != nil)
         
         input.exportButtonTap
             .flatMapLatest(export)
+            .observe(on: MainScheduler.instance)
             .bind(to: exporterStatus)
             .disposed(by: bag)
         
@@ -51,6 +53,7 @@ final class ExporterVM {
                 let baseString = String(localized: "진행률: ")
                 return baseString + String(format: "%01d%", progress)
             }
+            .observe(on: MainScheduler.instance)
         
         let statusText = exporterStatus
             .map { status in

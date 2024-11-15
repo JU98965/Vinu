@@ -95,7 +95,7 @@ final class ExporterVC: UIViewController {
         
         output.progressText
             .bind(with: self) { owner, text in
-                owner.progressLabel.isHidden = (text != nil)
+                owner.progressLabel.isHidden = (text == nil)
                 owner.progressLabel.text = text
             }
             .disposed(by: bag)
