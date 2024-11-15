@@ -51,8 +51,8 @@ final class ConfigureVM {
         let placeHolder = Observable
             .just({
                 let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy년 M월 d일"
-                return formatter.string(from: Date())
+                formatter.dateFormat = "yyyyMMdd_HHmm"
+                return "Vinu_" + formatter.string(from: Date())
             }())
             .share(replay: 1)
         

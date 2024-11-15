@@ -9,13 +9,8 @@ import UIKit
 import AVFoundation
 
 final class VideoHelper {
-    
-    static let shared = VideoHelper()
-    
-    let composition = AVMutableComposition()
+    var composition = AVMutableComposition()
     let videoComposition = AVMutableVideoComposition()
-    
-    private init() {}
     
     // 분명히 더 최적화 가능할 거 같은데, 연구가 필요해 보임..
     func makePlayerItem(_ makingOptions: VideoMakingOptions) -> AVPlayerItem? {
@@ -26,8 +21,8 @@ final class VideoHelper {
         
         var instructions = [AVMutableVideoCompositionLayerInstruction]()
 
-        // 해당 메서드가 다시 실행 될 때 기존의 시간범위를 지우고 다시 설정
-        composition.removeTimeRange(CMTimeRange(start: .zero, duration: composition.duration))
+        // 해당 메서드가 다시 실행 될 때 컴포지션 초기화
+        composition = AVMutableComposition()
         
         // 각 클립을 하나의 트랙으로 합치는 로직
         var accumulatedTime = CMTime.zero
@@ -209,63 +204,6 @@ final class VideoHelper {
             
         default:
             return transform
-        }
-    }
-            
-    func export() {
-        // 앨범에 저장할거라 결과물은 임시디렉토리에 저장해놓고 url만 끌어다 씀
-        let documentsDirectory = FileManager.default.temporaryDirectory
-        let videoID = UUID().uuidString
-        // outputFileType을 따로 지정해도 .mov라고 확장자는 적어줘야 함
-        let videofileName = "\(videoID).mov"
-        let outputURL = documentsDirectory.appendingPathComponent(videofileName)
-        
-        let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)!
-        exporter.outputFileType = .mov
-        exporter.outputURL = outputURL
-        exporter.videoComposition = videoComposition
-        // Timerange를 수정한 경우 따로 exporter에 Timerange를 등록하지 않으면 에러가 발생함, 왠지는 모르겠음
-        exporter.timeRange = CMTimeRange(start: .zero, duration: composition.duration)
-        
-        Task {
-            try? await print(exporter.estimatedOutputFileLengthInBytes)
-
-            if #available(iOS 18, *) {
-                print("Run at iOS 18")
-                Task {
-                    for await state in exporter.states(updateInterval: 1.0) {
-                        switch state {
-                        case .pending:
-                            print("pending")
-                        case .waiting:
-                            print("waiting")
-                        case .exporting(progress: let progress):
-                            print("exporting", progress.fractionCompleted)
-                        @unknown default:
-                            print("default")
-                        }
-                    }
-                }
-
-                await exporter.export()
-            } else {
-                print("Run at others")
-                await exporter.export()
-            }
-            
-            switch exporter.status {
-            case .failed:
-                print("Export failed \(exporter.error!)")
-            case .completed:
-                if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
-                    print("끝completed")
-                } else {
-                    print("not completed")
-                }
-            default:
-                break
-            }
         }
     }
 }

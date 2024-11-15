@@ -12,12 +12,10 @@ extension AVAssetExportSession {
     convenience init?(_ configuration: ExporterConfiguration) {
         // 앨범에 저장할거라 결과물은 임시디렉토리에 저장해놓고 url만 끌어다 씀
         let documentsDirectory = FileManager.default.temporaryDirectory
+        let uuidString = UUID().uuidString
         // outputFileType을 따로 지정해도 .mov라고 확장자는 적어줘야 함
-        let videofileName = "\(configuration.title).mov"
+        let videofileName = "\(configuration.title)_\(uuidString).mov"
         let outputURL = documentsDirectory.appendingPathComponent(videofileName)
-        
-        // outputURL이 유효하지 않다면 생성 실패 처리
-//        guard UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) else { return nil }
         
         self.init(asset: configuration.composition, presetName: AVAssetExportPresetHighestQuality)
         self.outputFileType = .mov

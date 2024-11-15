@@ -43,6 +43,8 @@ final class EditorVM {
     }
     
     func transform(input: Input) -> Output {
+        let videoHelper = VideoHelper()
+
         // MARK: - Subjects
         // just로 만들면 dispose가 하위 스트림에 전파되어버려서 서브젝트로 관리
         let configData = BehaviorSubject(value: configuration)
@@ -63,7 +65,7 @@ final class EditorVM {
         // MARK: - Observables
         // makingOptions의 업데이트에 따라 playerItem 생성
         let playerItem = makingOptions
-            .map { VideoHelper.shared.makePlayerItem($0) }
+            .map { videoHelper.makePlayerItem($0) }
             .compactMap { $0 }
             .share(replay: 1)
         
@@ -168,8 +170,8 @@ final class EditorVM {
             .withLatestFrom(configData) { _, configData in
                 return ExporterConfiguration(
                     title: configData.title,
-                    composition: VideoHelper.shared.composition,
-                    videoComposition: VideoHelper.shared.videoComposition)
+                    composition: videoHelper.composition,
+                    videoComposition: videoHelper.videoComposition)
             }
 
      

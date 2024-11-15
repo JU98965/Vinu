@@ -33,10 +33,11 @@ final class ExporterVC: UIViewController {
     
     let progressLabel = {
         let label = UILabel()
-        label.text = String(localized: "진행률: ")
+        label.text = String(localized: "진행률: 0%")
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .center
+        label.isHidden = true
         return label
     }()
     

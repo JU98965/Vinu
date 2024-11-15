@@ -23,38 +23,31 @@ final class ExporterVM {
         let statusText: Observable<String>
     }
     
-    private let configuration: ExporterConfiguration
     private let exporter: AVAssetExportSession?
     private let bag = DisposeBag()
     
     init(_ configuration: ExporterConfiguration) {
-        self.configuration = configuration
         self.exporter = AVAssetExportSession(configuration)
     }
 
     func transform(input: Input) -> Output {
         let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
         
+        // 예상 파일 크기 받아오기
         let estimatedFileSizeText = estimatedFileSizeText()
             .observe(on: MainScheduler.instance)
         
+        // 익스포터가 nil이면 내보내기 버튼 활성화 조차 안되게
         let isExportButtonEnabled = Observable.just(exporter != nil)
         
+        // 내보내기 버튼 눌리면 내보내기 작업 실행
         input.exportButtonTap
             .flatMapLatest(export)
             .observe(on: MainScheduler.instance)
             .bind(to: exporterStatus)
             .disposed(by: bag)
         
-        let progressText = input.exportButtonTap
-            .flatMapLatest(getPeriodicProgress)
-            .map { progress -> String? in
-                guard let progress else { return nil }
-                let baseString = String(localized: "진행률: ")
-                return baseString + String(format: "%01d%", progress)
-            }
-            .observe(on: MainScheduler.instance)
-        
+        // 내보내기 작업 완료 후, 결과 텍스트 전달
         let statusText = exporterStatus
             .map { status in
                 switch status {
@@ -71,7 +64,25 @@ final class ExporterVM {
                 }
             }
         
+        // getPeriodicProgress가 1.0까지 반환하지 못했을 때 exporterStatus를 참고해서 1.0 반환
+        let completedProgressFactor = exporterStatus
+            .map { status -> Double? in
+                status == .completed ? 1.0 : nil
+            }
         
+        // iOS18 이상은 진행률 확인 가능
+        let progressFactor = input.exportButtonTap
+            .flatMapLatest(getPeriodicProgress)
+            .observe(on: MainScheduler.instance)
+
+        // 진행률을 사용할 수 있는 iOS버전일 경우 label로 전달
+        let progressText = Observable
+            .merge(progressFactor, completedProgressFactor)
+            .map { progress -> String? in
+                guard let progress else { return nil }
+                let baseString = String(localized: "진행률: ")
+                return baseString + "\(Int(progress * 100))%"
+            }
         
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
@@ -79,7 +90,9 @@ final class ExporterVM {
             progressText: progressText,
             statusText: statusText)
     }
-        
+    
+    // MARK: - Methods
+    // 예상 파일 크기 받아오기
     private func estimatedFileSizeText() -> Observable<String> {
         Observable.create { observer in
             Task {
@@ -99,7 +112,7 @@ final class ExporterVM {
         }
     }
     
-    
+    // 내보내기 버튼 눌리면 내보내기 작업 실행
     private func export() -> Observable<AVAssetExportSession.Status> {
         Observable.create { observer in
             Task {
@@ -109,7 +122,11 @@ final class ExporterVM {
                 
                 // 작업물 내보내기
                 await exporter.export()
-                // 내보낸 작업물 앨범에 저장 (저장 가능 여부는 ExportSession생성 단계에서 이미 확인함)
+                
+                // outputURL이 유효하지 않다면 생성 실패 처리
+                guard UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path)
+                else { observer.onNext(.failed); return }
+                // 내보낸 작업물 앨범에 저장
                 UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
 
                 observer.onNext(exporter.status)
@@ -119,6 +136,7 @@ final class ExporterVM {
         }
     }
     
+    // iOS18 이상은 진행률 확인 가능
     private func getPeriodicProgress() -> Observable<Double?> {
         Observable.create { observer in
             Task {
@@ -127,7 +145,7 @@ final class ExporterVM {
                     let exporter = self.exporter
                 else { observer.onNext(nil); return }
                 
-                for await state in exporter.states(updateInterval: 1.0) {
+                for await state in exporter.states(updateInterval: 0.5) {
                     switch state {
                     case .pending:
                         print("pending")
