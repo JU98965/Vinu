@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 final class ExporterVC: UIViewController {
-    let exporterVM: ExporterVM? = ExporterVM()
+    var exporterVM: ExporterVM?
     private let bag = DisposeBag()
     
     // MARK: - Components
@@ -31,9 +31,18 @@ final class ExporterVC: UIViewController {
         return label
     }()
     
-    let resultLabel = {
+    let progressLabel = {
         let label = UILabel()
-        label.text = String(localized: "내보내기 결과")
+        label.text = String(localized: "진행률: ")
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let statusLabel = {
+        let label = UILabel()
+        label.text = String(localized: "준비중")
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .center
@@ -49,15 +58,18 @@ final class ExporterVC: UIViewController {
     // MARK: - Life Cylce
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .backWhite
         setNavigationBar(title: String(localized: "비디오 내보내기"))
         setAutoLayout()
+        setBinding()
     }
     
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
         mainVStack.addArrangedSubview(estimatedFileSizeLabel)
-        mainVStack.addArrangedSubview(resultLabel)
+        mainVStack.addArrangedSubview(progressLabel)
+        mainVStack.addArrangedSubview(statusLabel)
         mainVStack.addArrangedSubview(exportButton)
         
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
@@ -72,6 +84,25 @@ final class ExporterVC: UIViewController {
             exportButtonTap: exportButton.rx.tap.asObservable())
         
         let output = exporterVM.transform(input: input)
+        
+        output.estimatedFileSizeText
+            .bind(to: estimatedFileSizeLabel.rx.text)
+            .disposed(by: bag)
+        
+        output.isExportButtonEnabled
+            .bind(to: exportButton.rx.isEnabled)
+            .disposed(by: bag)
+        
+        output.progressText
+            .bind(with: self) { owner, text in
+                owner.progressLabel.isHidden = (text != nil)
+                owner.progressLabel.text = text
+            }
+            .disposed(by: bag)
+        
+        output.statusText
+            .bind(to: statusLabel.rx.text)
+            .disposed(by: bag)
     }
 }
 

@@ -147,6 +147,15 @@ final class EditorVC: UIViewController {
             .bind(to: playbackConsoleView.playbackButton.rx.image())
             .disposed(by: bag)
         
+        // 내보내기 버튼을 누르면 화면 전환
+        output.presentExportVC
+            .debug()
+            .bind(with: self) { owner, configration in
+                let vc = ExporterVC()
+                vc.exporterVM = ExporterVM(configration)
+                owner.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: bag)
     }
 }
 

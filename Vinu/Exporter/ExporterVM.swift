@@ -17,74 +17,129 @@ final class ExporterVM {
     }
     
     struct Output {
-
+        let estimatedFileSizeText: Observable<String>
+        let isExportButtonEnabled: Observable<Bool>
+        let progressText: Observable<String?>
+        let statusText: Observable<String>
     }
     
+    private let configuration: ExporterConfiguration
+    private let exporter: AVAssetExportSession?
     private let bag = DisposeBag()
+    
+    init(_ configuration: ExporterConfiguration) {
+        self.configuration = configuration
+        self.exporter = AVAssetExportSession(configuration)
+    }
 
     func transform(input: Input) -> Output {
+        let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
+        
+        let estimatedFileSizeText = estimatedFileSizeText()
+        
+        let isExportButtonEnabled = Observable.just(exporter != nil)
+        
         input.exportButtonTap
-            .bind(onNext: { VideoHelper.shared.export() })
+            .flatMapLatest(export)
+            .bind(to: exporterStatus)
             .disposed(by: bag)
         
+        let progressText = input.exportButtonTap
+            .flatMapLatest(getPeriodicProgress)
+            .map { progress -> String? in
+                guard let progress else { return nil }
+                let baseString = String(localized: "진행률: ")
+                return baseString + String(format: "%01d%", progress)
+            }
         
-        return Output()
-    }
-    
-    func export(asset: AVAsset) {
-        // 앨범에 저장할거라 결과물은 임시디렉토리에 저장해놓고 url만 끌어다 씀
-        let documentsDirectory = FileManager.default.temporaryDirectory
-        let videoID = UUID().uuidString
-        // outputFileType을 따로 지정해도 .mov라고 확장자는 적어줘야 함
-        let videofileName = "\(videoID).mov"
-        let outputURL = documentsDirectory.appendingPathComponent(videofileName)
-        
-        let exporter = AVAssetExportSession(asset: VideoHelper.shared.composition, presetName: AVAssetExportPresetHighestQuality)!
-        exporter.outputFileType = .mov
-        exporter.outputURL = outputURL
-        exporter.videoComposition = VideoHelper.shared.videoComposition
-        // Timerange를 수정한 경우 따로 exporter에 Timerange를 등록하지 않으면 에러가 발생함, 왠지는 모르겠음
-        exporter.timeRange = CMTimeRange(start: .zero, duration: VideoHelper.shared.composition.duration)
-        
-        Task {
-            try? await print(exporter.estimatedOutputFileLengthInBytes)
-
-            if #available(iOS 18, *) {
-                print("Run at iOS 18")
-                Task {
-                    for await state in exporter.states(updateInterval: 1.0) {
-                        switch state {
-                        case .pending:
-                            print("pending")
-                        case .waiting:
-                            print("waiting")
-                        case .exporting(progress: let progress):
-                            print("exporting", progress.fractionCompleted)
-                        @unknown default:
-                            print("default")
-                        }
-                    }
+        let statusText = exporterStatus
+            .map { status in
+                switch status {
+                case .exporting:
+                    return String(localized: "내보내는 중")
+                case .completed:
+                    return String(localized: "내보내기 완료")
+                case .failed:
+                    return String(localized: "내보내기 실패")
+                case .cancelled:
+                    return String(localized: "취소됨")
+                default:
+                    return String(localized: "대기중")
                 }
-
-                await exporter.export()
-            } else {
-                print("Run at others")
-                await exporter.export()
+            }
+        
+        
+        
+        return Output(
+            estimatedFileSizeText: estimatedFileSizeText,
+            isExportButtonEnabled: isExportButtonEnabled,
+            progressText: progressText,
+            statusText: statusText)
+    }
+        
+    private func estimatedFileSizeText() -> Observable<String> {
+        Observable.create { observer in
+            Task {
+                let fileLength = try? await self.exporter?.estimatedOutputFileLengthInBytes
+                let baseString = String(localized: "예상 크기: ")
+                
+                if let fileLength {
+                    let text = baseString + ByteCountFormatter.string(fromByteCount: fileLength, countStyle: .file)
+                    observer.onNext(text)
+                } else {
+                    let text = baseString + String(localized: "알 수 없음")
+                    observer.onNext(text)
+                }
             }
             
-            switch exporter.status {
-            case .failed:
-                print("Export failed \(exporter.error!)")
-            case .completed:
-                if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
-                    print("끝completed")
-                } else {
-                    print("not completed")
-                }
-            default:
-                break
+            return Disposables.create()
+        }
+    }
+    
+    
+    private func export() -> Observable<AVAssetExportSession.Status> {
+        Observable.create { observer in
+            Task {
+                guard let exporter = self.exporter,
+                      let outputURL = exporter.outputURL
+                else { observer.onNext(.failed); return }
+                
+                // 작업물 내보내기
+                await exporter.export()
+                // 내보낸 작업물 앨범에 저장 (저장 가능 여부는 ExportSession생성 단계에서 이미 확인함)
+                UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
+
+                observer.onNext(exporter.status)
             }
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func getPeriodicProgress() -> Observable<Double?> {
+        Observable.create { observer in
+            Task {
+                guard
+                    #available(iOS 18, *),
+                    let exporter = self.exporter
+                else { observer.onNext(nil); return }
+                
+                for await state in exporter.states(updateInterval: 1.0) {
+                    switch state {
+                    case .pending:
+                        print("pending")
+                    case .waiting:
+                        print("waiting")
+                    case .exporting(progress: let progress):
+                        print("exporting", progress.fractionCompleted)
+                        observer.onNext(progress.fractionCompleted)
+                    @unknown default:
+                        print("default")
+                    }
+                }
+            }
+            
+            return Disposables.create()
         }
     }
 }

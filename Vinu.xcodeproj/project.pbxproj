@@ -85,6 +85,8 @@
 		51F738ED2CE4BB9F003E036B /* AVMutableVideoComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738EC2CE4BB9C003E036B /* AVMutableVideoComposition.swift */; };
 		51F738F12CE4BE39003E036B /* CGAffineTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738F02CE4BE37003E036B /* CGAffineTransform.swift */; };
 		51F738FC2CE60475003E036B /* EditConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738FB2CE60475003E036B /* EditConsoleView.swift */; };
+		51F738FF2CE6152E003E036B /* ExporterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */; };
+		51F739052CE656F3003E036B /* AVAssetExportSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F739042CE656ED003E036B /* AVAssetExportSession.swift */; };
 		51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */; };
 		51FE8E8F2CCFB1390083AA11 /* VideoPlayerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */; };
 /* End PBXBuildFile section */
@@ -168,6 +170,8 @@
 		51F738EC2CE4BB9C003E036B /* AVMutableVideoComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVMutableVideoComposition.swift; sourceTree = "<group>"; };
 		51F738F02CE4BE37003E036B /* CGAffineTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGAffineTransform.swift; sourceTree = "<group>"; };
 		51F738FB2CE60475003E036B /* EditConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditConsoleView.swift; sourceTree = "<group>"; };
+		51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterConfiguration.swift; sourceTree = "<group>"; };
+		51F739042CE656ED003E036B /* AVAssetExportSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExportSession.swift; sourceTree = "<group>"; };
 		51FE8E8C2CCF9B9D0083AA11 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		51FE8E8E2CCFB1350083AA11 /* VideoPlayerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -464,6 +468,8 @@
 			children = (
 				51F738DF2CE26214003E036B /* ExporterVC.swift */,
 				51F738E12CE3815D003E036B /* ExporterVM.swift */,
+				51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */,
+				51F739042CE656ED003E036B /* AVAssetExportSession.swift */,
 			);
 			path = Exporter;
 			sourceTree = "<group>";
@@ -606,6 +612,7 @@
 				5146D5632CAC56DB00C407F3 /* VideoMetadata.swift in Sources */,
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
 				5146D5432CAC3A6700C407F3 /* UICollectionView.swift in Sources */,
+				51F739052CE656F3003E036B /* AVAssetExportSession.swift in Sources */,
 				51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */,
 				51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */,
 				51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */,
@@ -654,6 +661,7 @@
 				5146D54B2CAC3AD800C407F3 /* Int.swift in Sources */,
 				5146D5492CAC3AC500C407F3 /* NSDirectionalEdgeInsets.swift in Sources */,
 				514BD1D82CCEB10500611AC5 /* VideoTrackModel.swift in Sources */,
+				51F738FF2CE6152E003E036B /* ExporterConfiguration.swift in Sources */,
 				519BF0CD2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift in Sources */,
 				51F738EB2CE4A60B003E036B /* VideoMakingOptions.swift in Sources */,
 				51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */,

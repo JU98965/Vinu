@@ -32,6 +32,7 @@ final class EditorVM {
         let scaleFactorText: Observable<String>
         let shouldPlay: Observable<Bool>
         let playbackImage: Observable<UIImage?>
+        let presentExportVC: Observable<ExporterConfiguration>
     }
     
     let configuration: EditorConfiguration
@@ -161,9 +162,16 @@ final class EditorVM {
             .bind(to: makingOptions)
             .disposed(by: bag)
         
-        input.exportTap
-            .bind(onNext: { VideoHelper.shared.export() })
-            .disposed(by: bag)
+        // playerItem이 준비될 때까지는 내보내기 이벤트 무효
+        let exportTap = input.exportTap
+            .skip(until: playerItem)
+            .withLatestFrom(configData) { _, configData in
+                return ExporterConfiguration(
+                    title: configData.title,
+                    composition: VideoHelper.shared.composition,
+                    videoComposition: VideoHelper.shared.videoComposition)
+            }
+
      
         return Output(
             playerItem: playerItem,
@@ -173,7 +181,8 @@ final class EditorVM {
             elapsedTimeText: elapsedTimeText,
             scaleFactorText: scaleFactorText,
             shouldPlay: shouldPlay,
-            playbackImage: playbackImage)
+            playbackImage: playbackImage,
+            presentExportVC: exportTap)
     }
     
     // MARK: - Private methods
