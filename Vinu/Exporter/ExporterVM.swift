@@ -35,6 +35,7 @@ final class ExporterVM {
 
     func transform(input: Input) -> Output {
         let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
+        let newExporterStatus = BehaviorSubject(value: ExpoterStatus.waiting)
         let isExportButtonHidden = BehaviorSubject(value: false)
 
         
