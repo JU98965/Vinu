@@ -19,7 +19,10 @@ final class ExporterVM {
     struct Output {
         let estimatedFileSizeText: Observable<String>
         let isExportButtonEnabled: Observable<Bool>
-        let progressText: Observable<String?>
+        let isExportButtonHidden: Observable <Bool>
+        let isPorgressComponentsHidden: Observable<Bool>
+        let progressFactor: Observable<Float>
+        let progressText: Observable<String>
         let statusText: Observable<String>
     }
     
@@ -32,6 +35,8 @@ final class ExporterVM {
 
     func transform(input: Input) -> Output {
         let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
+        let isExportButtonHidden = BehaviorSubject(value: false)
+
         
         // 예상 파일 크기 받아오기
         let estimatedFileSizeText = estimatedFileSizeText()
@@ -39,6 +44,13 @@ final class ExporterVM {
         
         // 익스포터가 nil이면 내보내기 버튼 활성화 조차 안되게
         let isExportButtonEnabled = Observable.just(exporter != nil)
+        
+        // 내보내기 버튼이 두 번 눌리지 않도록 한 번 눌리면 버튼 숨기기
+        input.exportButtonTap
+            .withLatestFrom(isExportButtonHidden)
+            .map { !$0 }
+            .bind(to: isExportButtonHidden)
+            .disposed(by: bag)
         
         // 내보내기 버튼 눌리면 내보내기 작업 실행
         input.exportButtonTap
@@ -64,22 +76,38 @@ final class ExporterVM {
                 }
             }
         
-        // getPeriodicProgress가 1.0까지 반환하지 못했을 때 exporterStatus를 참고해서 1.0 반환
-        let completedProgressFactor = exporterStatus
+        // 주기적으로 진행률을 받아옴 (iOS18 이상)
+        let periodicProgress = input.exportButtonTap
+            .flatMapLatest(getPeriodicProgress)
+            .observe(on: MainScheduler.instance)
+
+        // getPeriodicProgress가 1.0까지 반환하지 못했을 때 exporterStatus를 참고해서 1.0 반환 (iOS18 이상)
+        let completedProgress = exporterStatus
             .map { status -> Double? in
                 status == .completed ? 1.0 : nil
             }
         
-        // iOS18 이상은 진행률 확인 가능
-        let progressFactor = input.exportButtonTap
-            .flatMapLatest(getPeriodicProgress)
-            .observe(on: MainScheduler.instance)
+        // 주기적, 완료 진행률의 스트림을 병합 (iOS18 이상)
+        let mergerdProgress = Observable
+            .merge(periodicProgress, completedProgress)
+            .map { progress -> Float? in
+                guard let progress, #available(iOS 18, *) else { return nil }
+                return Float(progress)
+            }
+            .share(replay: 1)
+        
+        // iOS18 이하는 진행률과 관련한 컴포넌트들을 보여줄 수 없음
+        let isPorgressComponentsEnabled = mergerdProgress
+            .map { $0 == nil }
+        
+        // progressView에 바인딩할 진행률 값 (iOS18 이상)
+        let progressFactor = mergerdProgress
+            .compactMap { $0 }
 
-        // 진행률을 사용할 수 있는 iOS버전일 경우 label로 전달
-        let progressText = Observable
-            .merge(progressFactor, completedProgressFactor)
-            .map { progress -> String? in
-                guard let progress else { return nil }
+        // 진행률을 label로 전달 (iOS18 이상)
+        let progressText = mergerdProgress
+            .compactMap { $0 }
+            .map { progress in
                 let baseString = String(localized: "진행률: ")
                 return baseString + "\(Int(progress * 100))%"
             }
@@ -87,6 +115,9 @@ final class ExporterVM {
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,
+            isExportButtonHidden: isExportButtonHidden.asObservable(),
+            isPorgressComponentsHidden: isPorgressComponentsEnabled,
+            progressFactor: progressFactor,
             progressText: progressText,
             statusText: statusText)
     }

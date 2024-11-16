@@ -31,6 +31,15 @@ final class ExporterVC: UIViewController {
         return label
     }()
     
+    let progressBar = {
+        let bar = UIProgressView(progressViewStyle: .bar)
+        bar.backgroundColor = .lightGray
+        bar.progressTintColor = .tintSoda
+        bar.smoothCorner(radius: 16)
+        bar.clipsToBounds = true
+        return bar
+    }()
+    
     let progressLabel = {
         let label = UILabel()
         label.text = String(localized: "진행률: 0%")
@@ -69,12 +78,14 @@ final class ExporterVC: UIViewController {
     private func setAutoLayout() {
         view.addSubview(mainVStack)
         mainVStack.addArrangedSubview(estimatedFileSizeLabel)
+        mainVStack.addArrangedSubview(progressBar)
         mainVStack.addArrangedSubview(progressLabel)
         mainVStack.addArrangedSubview(statusLabel)
         mainVStack.addArrangedSubview(exportButton)
         
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
         exportButton.snp.makeConstraints { $0.height.equalTo(64) }
+        progressBar.snp.makeConstraints { $0.height.equalTo(32) }
     }
     
     // MARK: - Binding
@@ -94,11 +105,20 @@ final class ExporterVC: UIViewController {
             .bind(to: exportButton.rx.isEnabled)
             .disposed(by: bag)
         
+        output.isExportButtonHidden
+            .bind(to: exportButton.rx.isHidden)
+            .disposed(by: bag)
+        
+        output.isPorgressComponentsHidden
+            .bind(to: progressBar.rx.isHidden, progressLabel.rx.isHidden)
+            .disposed(by: bag)
+        
+        output.progressFactor
+            .bind(to: progressBar.rx.progress)
+            .disposed(by: bag)
+        
         output.progressText
-            .bind(with: self) { owner, text in
-                owner.progressLabel.isHidden = (text == nil)
-                owner.progressLabel.text = text
-            }
+            .bind(to: progressLabel.rx.text)
             .disposed(by: bag)
         
         output.statusText
