@@ -46,7 +46,6 @@ final class ExporterVC: UIViewController {
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .center
-        label.isHidden = true
         return label
     }()
     
@@ -109,11 +108,7 @@ final class ExporterVC: UIViewController {
             .bind(to: exportButton.rx.isHidden)
             .disposed(by: bag)
         
-        output.isPorgressComponentsHidden
-            .bind(to: progressBar.rx.isHidden, progressLabel.rx.isHidden)
-            .disposed(by: bag)
-        
-        output.progressFactor
+        output.progress
             .bind(to: progressBar.rx.progress)
             .disposed(by: bag)
         

@@ -20,13 +20,13 @@ final class ExporterVM {
         let estimatedFileSizeText: Observable<String>
         let isExportButtonEnabled: Observable<Bool>
         let isExportButtonHidden: Observable <Bool>
-        let isPorgressComponentsHidden: Observable<Bool>
-        let progressFactor: Observable<Float>
+        let progress: Observable<Float>
         let progressText: Observable<String>
         let statusText: Observable<String>
     }
     
     private let exporter: AVAssetExportSession?
+    private var exportTimer: Timer?
     private let bag = DisposeBag()
     
     init(_ configuration: ExporterConfiguration) {
@@ -34,33 +34,42 @@ final class ExporterVM {
     }
 
     func transform(input: Input) -> Output {
-        let exporterStatus = BehaviorSubject(value: AVAssetExportSession.Status.unknown)
-        let newExporterStatus = BehaviorSubject(value: ExpoterStatus.waiting)
+        // exporter객체를 스트림 차원에서 관리하기 위한 서브젝트
+        let exporter = BehaviorSubject(value: exporter).asObservable()
+        // 내보내기 버튼의 숨기기 상태
         let isExportButtonHidden = BehaviorSubject(value: false)
 
+        // exporter의 상태가 변하면 값을 방출
+        let exporterStatus = exporter
+            .compactMap { $0 }
+            .flatMapLatest {
+                $0.rx.observeWeakly(AVAssetExportSession.Status.self, "status")
+                    .compactMap { $0 }
+            }
+            .share(replay: 1)
         
         // 예상 파일 크기 받아오기
         let estimatedFileSizeText = estimatedFileSizeText()
             .observe(on: MainScheduler.instance)
         
         // 익스포터가 nil이면 내보내기 버튼 활성화 조차 안되게
-        let isExportButtonEnabled = Observable.just(exporter != nil)
+        let isExportButtonEnabled = exporter
+            .map { $0 != nil }
         
         // 내보내기 버튼이 두 번 눌리지 않도록 한 번 눌리면 버튼 숨기기
         input.exportButtonTap
-            .withLatestFrom(isExportButtonHidden)
-            .map { !$0 }
+            .withLatestFrom(isExportButtonHidden) { !$1 }
             .bind(to: isExportButtonHidden)
             .disposed(by: bag)
         
         // 내보내기 버튼 눌리면 내보내기 작업 실행
         input.exportButtonTap
-            .flatMapLatest(export)
-            .observe(on: MainScheduler.instance)
-            .bind(to: exporterStatus)
+            .bind(with: self, onNext: { owner, _ in
+                owner.export()
+            })
             .disposed(by: bag)
         
-        // 내보내기 작업 완료 후, 결과 텍스트 전달
+        // exporter의 상태에 따라 텍스트 전달
         let statusText = exporterStatus
             .map { status in
                 switch status {
@@ -77,37 +86,13 @@ final class ExporterVM {
                 }
             }
         
-        // 주기적으로 진행률을 받아옴 (iOS18 이상)
-        let periodicProgress = input.exportButtonTap
+        // 내보내기 중에는
+        let progress = input.exportButtonTap
             .flatMapLatest(getPeriodicProgress)
-            .observe(on: MainScheduler.instance)
-
-        // getPeriodicProgress가 1.0까지 반환하지 못했을 때 exporterStatus를 참고해서 1.0 반환 (iOS18 이상)
-        let completedProgress = exporterStatus
-            .map { status -> Double? in
-                status == .completed ? 1.0 : nil
-            }
-        
-        // 주기적, 완료 진행률의 스트림을 병합 (iOS18 이상)
-        let mergerdProgress = Observable
-            .merge(periodicProgress, completedProgress)
-            .map { progress -> Float? in
-                guard let progress, #available(iOS 18, *) else { return nil }
-                return Float(progress)
-            }
             .share(replay: 1)
         
-        // iOS18 이하는 진행률과 관련한 컴포넌트들을 보여줄 수 없음
-        let isPorgressComponentsEnabled = mergerdProgress
-            .map { $0 == nil }
-        
-        // progressView에 바인딩할 진행률 값 (iOS18 이상)
-        let progressFactor = mergerdProgress
-            .compactMap { $0 }
-
-        // 진행률을 label로 전달 (iOS18 이상)
-        let progressText = mergerdProgress
-            .compactMap { $0 }
+        // 진행률 텍스트 전달
+        let progressText = progress
             .map { progress in
                 let baseString = String(localized: "진행률: ")
                 return baseString + "\(Int(progress * 100))%"
@@ -117,8 +102,7 @@ final class ExporterVM {
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,
             isExportButtonHidden: isExportButtonHidden.asObservable(),
-            isPorgressComponentsHidden: isPorgressComponentsEnabled,
-            progressFactor: progressFactor,
+            progress: progress,
             progressText: progressText,
             statusText: statusText)
     }
@@ -144,55 +128,30 @@ final class ExporterVM {
         }
     }
     
-    // 내보내기 버튼 눌리면 내보내기 작업 실행
-    private func export() -> Observable<AVAssetExportSession.Status> {
-        Observable.create { observer in
-            Task {
-                guard let exporter = self.exporter,
-                      let outputURL = exporter.outputURL
-                else { observer.onNext(.failed); return }
-                
-                // 작업물 내보내기
-                await exporter.export()
-                
-                // outputURL이 유효하지 않다면 생성 실패 처리
-                guard UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputURL.path)
-                else { observer.onNext(.failed); return }
-                // 내보낸 작업물 앨범에 저장
-                UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
-
-                observer.onNext(exporter.status)
-            }
-            
-            return Disposables.create()
+    private func export() {
+        Task {
+            guard let exporter = self.exporter, let outputURL = exporter.outputURL else { return }
+            // 작업물 내보내기
+            await exporter.export()
+            // 내보낸 작업물 앨범에 저장
+            UISaveVideoAtPathToSavedPhotosAlbum(outputURL.path, self, nil, nil)
         }
     }
     
-    // iOS18 이상은 진행률 확인 가능
-    private func getPeriodicProgress() -> Observable<Double?> {
-        Observable.create { observer in
-            Task {
-                guard
-                    #available(iOS 18, *),
-                    let exporter = self.exporter
-                else { observer.onNext(nil); return }
+    private func getPeriodicProgress() -> Observable<Float> {
+        Observable.create { [weak self] observer in
+            guard let self, let exporter else { return Disposables.create() }
+            
+            self.exportTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                // 타이머는 메인 런루프에서 밖에 안 돎, 데이터 레이스 안일어날 듯?
+                let progress = exporter.progress
+                observer.onNext(progress)
                 
-                for await state in exporter.states(updateInterval: 0.5) {
-                    switch state {
-                    case .pending:
-                        print("pending")
-                    case .waiting:
-                        print("waiting")
-                    case .exporting(progress: let progress):
-                        print("exporting", progress.fractionCompleted)
-                        observer.onNext(progress.fractionCompleted)
-                    @unknown default:
-                        print("default")
-                    }
-                }
+                // progress가 1.0에 다다르면 타이머 정지
+                if progress == 1.0 { timer.invalidate() }
             }
             
-            return Disposables.create()
+            return Disposables.create{ self.exportTimer?.invalidate() }
         }
     }
 }
