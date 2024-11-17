@@ -64,6 +64,12 @@ final class ExporterVC: UIViewController {
         return button
     }()
     
+    let backHomeButton = {
+        let button = UIButton(configuration: .filled())
+        button.setTitle("홈으로 돌아가기", for: .normal)
+        return button
+    }()
+    
     // MARK: - Life Cylce
     override func viewDidLoad() {
         super.viewDidLoad()

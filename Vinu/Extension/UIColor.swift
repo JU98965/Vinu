@@ -25,7 +25,7 @@ extension UIColor {
     }
     
     static var backWhite: UIColor {
-        UIColor(hex: 0xF8F8F8)
+        UIColor(hex: 0xF9FBFF)
     }
     
     static var textGray: UIColor {
@@ -48,6 +48,9 @@ extension UIColor {
         UIColor(hex: 0x202020)
     }
     
+    static var tintBlue: UIColor {
+        UIColor(hex: 0xC3CDE6)
+    }
     static var chuColorPalette: [UIColor] {
         let array: [UIColor] = [
             .init(hex: 0xd4b8a6),
