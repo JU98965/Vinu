@@ -18,24 +18,15 @@ final class MainVC: UIViewController {
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
-//        sv.isLayoutMarginsRelativeArrangement = true
-//        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 50)
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 50)
         sv.spacing = 50
         return sv
     }()
     
-    let titleLabel = {
-        let label = UILabel()
-        label.text = String(localized: "안녕하세요 비누라고 해요.")
-        label.font = .preferredFont(forTextStyle: .title1)
-        label.textColor = .textGray
-        label.dropShadow(radius: 8, opacity: 0.1)
-        return label
-    }()
-    
     let subTitleLabel = {
         let label = UILabel()
-        label.text = String(localized: "온 세상의 추억들을 하나로 이음.")
+        label.text = String(localized: "영상을 이어붙이는 가장 쉬운 방법")
         label.font = .preferredFont(forTextStyle: .title1)
         label.adjustsFontSizeToFitWidth = true
         label.textColor = .textGray
@@ -51,8 +42,6 @@ final class MainVC: UIViewController {
         return view
     }()
     
-//    let splashyView = SplashyView()
-
     let startButton = {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .tintBlue
@@ -70,8 +59,6 @@ final class MainVC: UIViewController {
         button.setTitleShadowColor(.black, for: .normal)
         return button
     }()
-    
-//    let entryView = EntryView()
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -83,28 +70,25 @@ final class MainVC: UIViewController {
         setBinding()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        // 영상 선택창에서 다시 돌아올 때 네비게이션 바를 숨김
-//        self.navigationController?.setNavigationBarHidden(true, animated: true)
-//    }
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        // 다른 창으로 넘어갈 때 숨겼던 네비게이션 바를 표시
-//        self.navigationController?.setNavigationBarHidden(false, animated: true)
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        // 영상 선택창에서 다시 돌아올 때 네비게이션 바를 숨김
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        // 다른 창으로 넘어갈 때 숨겼던 네비게이션 바를 표시
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
         mainVStack.addArrangedSubview(imageContentView)
-        mainVStack.addArrangedSubview(titleLabel)
         mainVStack.addArrangedSubview(subTitleLabel)
-//        mainVStack.addArrangedSubview(splashyView)
         mainVStack.addArrangedSubview(startButton)
         imageContentView.addSubview(imageView)
         
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
-//        imageContentView.snp.makeConstraints { $0.height.equalToSuperview().multipliedBy(0.5) }
         imageView.snp.makeConstraints { $0.center.equalToSuperview() }
         startButton.snp.makeConstraints { $0.height.equalTo(50) }
     }

@@ -49,7 +49,7 @@ final class PendingItemView: UIView {
     let nextButtonBack = {
         let sv = UIStackView()
         sv.backgroundColor = .backWhite
-        sv.smoothCorner(radius: 64 / 3)
+        sv.smoothCorner(radius: 64 / 4)
         sv.clipsToBounds = true
         return sv
     }()

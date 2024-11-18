@@ -14,7 +14,7 @@ final class SelectedOverlayView: UIView {
     // MARK: - Components
     let selectBack = {
         let view = UIView()
-        view.backgroundColor = .backWhite.withAlphaComponent(0.6)
+        view.backgroundColor = .black.withAlphaComponent(0.5)
         return view
     }()
     
@@ -37,7 +37,7 @@ final class SelectedOverlayView: UIView {
         label.font = .boldSystemFont(ofSize: 72)
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
-        label.textColor = .tintSoda
+        label.textColor = .tintBlue
         return label
     }()
 

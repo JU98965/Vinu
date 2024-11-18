@@ -25,29 +25,18 @@ final class ThumbnailCell: UICollectionViewCell {
         return view
     }()
     
-    let durationLabelShadow = {
-        let sv = UIStackView()
-        sv.dropShadow(radius: 1.5, opacity: 0.1)
-        // sv.layer.compositingFilter = "hardLightBlendMode"
-        return sv
-    }()
-    
     let durationLabel = {
-        let inset = UIEdgeInsets(horizontal: 2.5, vertical: 1)
-        let label = PaddingUILabel(padding: inset)
-        label.font = .systemFont(ofSize: 10, weight: .semibold)
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 11, weight: .semibold)
         label.text = "12:34" // temp
-        label.smoothCorner(radius: 3)
-        label.clipsToBounds = true
-        label.textColor = .textGray
-        label.backgroundColor = .white
+        label.textColor = .white
+        label.dropShadow(radius: 3, opacity: 0.75)
         return label
     }()
 
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.smoothCorner(radius: 5)
         contentView.clipsToBounds = true
 
         setAutoLayout()
@@ -69,14 +58,13 @@ final class ThumbnailCell: UICollectionViewCell {
     private func setAutoLayout() {
         contentView.addSubview(imageView)
         contentView.addSubview(selectedOverlayView)
-        contentView.addSubview(durationLabelShadow)
-        durationLabelShadow.addArrangedSubview(durationLabel)
-
+        contentView.addSubview(durationLabel)
+        
         imageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         selectedOverlayView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        durationLabelShadow.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(5)
+        durationLabel.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(1.5)
+            $0.trailing.equalToSuperview().inset(3)
         }
     }
     

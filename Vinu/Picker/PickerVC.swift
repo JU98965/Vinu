@@ -35,13 +35,13 @@ final class PickerVC: UIViewController {
     
     let nextButton = {
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintSoda
+        config.baseBackgroundColor = .tintBlue
         config.baseForegroundColor = .white
         config.attributedTitle = AttributedString(
             String(localized: "다음"),
             attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
-        let button = GradientButton(configuration: config)
-        button.smoothCorner(radius: 64 / 3)
+        let button = UIButton(configuration: config)
+        button.smoothCorner(radius: 64 / 4)
         button.clipsToBounds = true
         return button
     }()
