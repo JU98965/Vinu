@@ -17,16 +17,29 @@ final class PendingCell: UICollectionViewCell {
         view.contentMode = .scaleAspectFill
         view.backgroundColor = .chuLightGray
         view.clipsToBounds = true
-        view.smoothCorner(radius: 5)
+        view.smoothCorner(radius: 7.5)
         return view
     }()
     
+    let overrayView = {
+        let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.25)
+        view.smoothCorner(radius: 7.5)
+        return view
+    }()
+    
+    let removeImageBack = {
+        let view = UIStackView()
+        view.backgroundColor = .tintBlue
+        view.isLayoutMarginsRelativeArrangement = true
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 4)
+        view.dropShadow(radius: 3, opacity: 0.1)
+        return view
+    }()
+     
     let removeImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "multiply.circle.fill")
-        view.tintColor = .white
-        view.layer.compositingFilter = "hardLightBlendMode"
-        view.dropShadow(radius: 1, opacity: 0.1)
+        view.image = UIImage(named: "x_icon")?.withTintColor(.white)
         return view
     }()
     
@@ -35,15 +48,14 @@ final class PendingCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
         contentView.dropShadow(radius: 1.5, opacity: 0.1)
-        contentView.smoothCorner(radius: 5)
+        contentView.smoothCorner(radius: 7.5)
         
         setAutoLayout()
     }
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-//        contentView.smoothCorner(radius: contentView.bounds.height / 3)
-//        imageView.smoothCorner(radius: imageView.bounds.height / 3)
+        removeImageBack.smoothCorner(radius: removeImageBack.bounds.height / 2)
     }
     
     required init?(coder: NSCoder) {
@@ -53,18 +65,18 @@ final class PendingCell: UICollectionViewCell {
     // MARK: - Layout
     private func setAutoLayout() {
         contentView.addSubview(imageView)
-        contentView.addSubview(removeImageView)
+        contentView.addSubview(overrayView)
+        contentView.addSubview(removeImageBack)
+        removeImageBack.addArrangedSubview(removeImageView)
         
-        contentView.snp.makeConstraints {
-            $0.size.equalToSuperview()
-            $0.center.equalToSuperview()
-        }
+        contentView.snp.makeConstraints { $0.edges.equalToSuperview().inset(3) }
         imageView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        removeImageView.snp.makeConstraints {
-            $0.top.trailing.equalToSuperview()
+        overrayView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        removeImageBack.snp.makeConstraints {
+            $0.top.trailing.equalToSuperview().inset(-3)
             $0.size.equalTo(16)
         }
-    }
+    } 
     
     // MARK: - Configure Components
     func configure(thumbnailData: ThumbnailData) {
