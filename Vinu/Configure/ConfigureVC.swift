@@ -18,7 +18,7 @@ final class ConfigureVC: UIViewController {
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
-        sv.spacing = 15
+        sv.spacing = 30
         return sv
     }()
     
@@ -61,13 +61,11 @@ final class ConfigureVC: UIViewController {
         view.addSubview(mainVStack)
         view.addSubview(createButton)
         mainVStack.addArrangedSubview(titleContainer)
-        mainVStack.addArrangedSubview(DivideView(lineWidth: 1, lineColor: .chuLightGray))
         mainVStack.addArrangedSubview(sizeContainer)
-        mainVStack.addArrangedSubview(DivideView(lineWidth: 1, lineColor: .chuLightGray))
         mainVStack.addArrangedSubview(placementContainer)
         
         
-        mainVStack.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide) }
+        mainVStack.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(top: 15)) }
         createButton.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(50)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(15)

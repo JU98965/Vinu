@@ -28,7 +28,7 @@ final class EditorVM {
         let trackViewData: Observable<[VideoTrackModel]>
         let progress: Observable<Double>
         let seekingPoint: Observable<CMTime>
-        let elapsedTimeText: Observable<(String, String)>
+        let elapsedTimeText: Observable<String>
         let scaleFactorText: Observable<String>
         let shouldPlay: Observable<Bool>
         let playbackImage: Observable<UIImage?>
@@ -188,7 +188,7 @@ final class EditorVM {
     }
     
     // MARK: - Private methods
-    private func getElapsedTimeText(item: AVPlayerItem, progress: CGFloat) -> Observable<(String, String)> {
+    private func getElapsedTimeText(item: AVPlayerItem, progress: CGFloat) -> Observable<String> {
         return Observable.create { observer in
             let duration = CMTimeGetSeconds(item.duration)
             let progress = progress * duration
@@ -203,10 +203,10 @@ final class EditorVM {
             let minuteProgress = roundedProgress.cutMinute
             let secondProgress = roundedProgress.cutSecond
             
-            let durationText = String(format: "%02d:%02d", minuteDuration, secondDuration)
-            let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
+            let result = String(format: "%02d:%02d / %02d:%02d", minuteDuration, secondDuration, minuteProgress, secondProgress)
+//            let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
             
-            let result = (progressText, durationText)
+//            let result = (progressText, durationText)
             observer.onNext(result)
             
             return Disposables.create()

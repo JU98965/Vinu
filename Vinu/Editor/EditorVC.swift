@@ -59,7 +59,7 @@ final class EditorVC: UIViewController {
         navigationHStack.addArrangedSubview(exportButton)
 
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
-        playbackConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
+        playbackConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(60) }
         editConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
     }
@@ -116,14 +116,7 @@ final class EditorVC: UIViewController {
         
         // 트랙뷰의 콘텐츠 오프셋 변경에 따라서 경과 시간 텍스트 바인딩
         output.elapsedTimeText
-            .bind(with: self, onNext: { owner, texts in
-                let console = owner.playbackConsoleView
-                let progress = texts.0
-                let duration = texts.1
-
-                console.elapsedTimeLabel.text = progress
-                console.totalTimeLabel.text = duration
-            })
+            .bind(to: playbackConsoleView.elapsedTimeLabel.rx.text)
             .disposed(by: bag)
         
         // 확대 배율을 텍스트로 바꿔서 콘솔에 전달
