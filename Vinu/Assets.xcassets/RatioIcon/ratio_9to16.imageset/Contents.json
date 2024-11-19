@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ratio_9to16.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

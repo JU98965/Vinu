@@ -15,23 +15,27 @@ final class ConfigureCardCell: UICollectionViewCell {
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
-        sv.smoothCorner(radius: 64 / 4)
-        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    let imageBack = {
+        let sv = UIStackView()
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 8)
         return sv
     }()
     
     let imageView = {
         let view = UIImageView()
-        view.tintColor = .textGray
         view.contentMode = .scaleAspectFit
-        view.image = UIImage(systemName: "2.square")
+        // view.image = UIImage(systemName: "2.square")
         return view
     }()
     
-    let sizeLabel = {
+    let titleLabel = {
         let label = UILabel()
-        label.text = "16:9" // temp
-        label.textColor = .textGray
+        // label.text = "16:9" // temp
+        // label.textColor = .textGray
         label.font = .boldSystemFont(ofSize: 14)
         label.textAlignment = .center
         return label
@@ -53,36 +57,32 @@ final class ConfigureCardCell: UICollectionViewCell {
     // MARK: - Layout
     private func setAutoLayout() {
         contentView.addSubview(mainVStack)
-        mainVStack.addArrangedSubview(imageView)
-        mainVStack.addArrangedSubview(sizeLabel)
+        mainVStack.addArrangedSubview(imageBack)
+        mainVStack.addArrangedSubview(titleLabel)
+        imageBack.addArrangedSubview(imageView)
             
         mainVStack.snp.makeConstraints { $0.edges.equalToSuperview() }
-        sizeLabel.snp.makeConstraints { $0.height.equalTo(32) }
+        titleLabel.snp.makeConstraints { $0.height.equalTo(32) }
     }
     
     // MARK: - Configure Components
     func configure(itemData: ConfigureCardCellData) {
-        imageView.image = itemData.image
-        sizeLabel.text = itemData.title
+        titleLabel.text = itemData.title
         
         // 선택 여부에 따라 이펙트를 그리거나 지우기
         if itemData.isSelected {
-            imageView.tintColor = .tintSoda
-            sizeLabel.textColor = .tintSoda
-            
-            mainVStack.backgroundColor = .white
-            contentView.dropShadow(radius: 8, opacity: 0.01)
+            imageView.image = itemData.image?.withTintColor(.tintBlue)
+            titleLabel.textColor = .tintBlue
         } else {
-            imageView.tintColor = .textGray
-            sizeLabel.textColor = .textGray
-            
-            mainVStack.backgroundColor = .clear
-            contentView.layer.shadowOpacity = 0
+            imageView.image = itemData.image?.withTintColor(.textGray)
+            titleLabel.textColor = .textGray
         }
     }
 }
 
 #Preview(traits: .fixedLayout(width: 64, height: 96)) {
-    UINavigationController(rootViewController: ConfigureVC())
+    let vc = ConfigureVC()
+    vc.configureVM = ConfigureVM([])
+    return UINavigationController(rootViewController: vc)
 //    ConfigureCardCell()
 }

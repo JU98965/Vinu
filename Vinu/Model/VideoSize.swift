@@ -36,17 +36,17 @@ enum VideoSize: String, CaseIterable {
     var image: UIImage? {
         switch self {
         case .portrait1080x1920:
-            UIImage(systemName: "1.square")
+            UIImage(named: "ratio_9to16")
         case .landscape1920x1080:
-            UIImage(systemName: "2.square")
+            UIImage(named: "ratio_16to9")
         case .portrait1440x1920:
-            UIImage(systemName: "3.square")
+            UIImage(named: "ratio_3to4")
         case .landscape1920x1440:
-            UIImage(systemName: "4.square")
+            UIImage(named: "ratio_4to3")
         case .portrait1280x2560:
-            UIImage(systemName: "5.square")
+            UIImage(named: "ratio_1to2")
         case .landscape2560x1280:
-            UIImage(systemName: "6.square")
+            UIImage(named: "ratio_2to1")
         }
     }
 }

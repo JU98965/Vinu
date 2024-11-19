@@ -64,6 +64,9 @@
 		519BF0D52C9AEDE70064FE0A /* PickerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0D42C9AEDE70064FE0A /* PickerVM.swift */; };
 		519F097B2C9DB9D4009A16E2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 519F097A2C9DB9D4009A16E2 /* RxDataSources */; };
 		51B048EA2CBFA39500C9382B /* TrimHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B048E92CBFA39500C9382B /* TrimHandleView.swift */; };
+		51C622F02CECA72E005E9E92 /* TitleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622EF2CECA72E005E9E92 /* TitleContainer.swift */; };
+		51C622F22CECAF0C005E9E92 /* SizeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F12CECAF0C005E9E92 /* SizeContainer.swift */; };
+		51C622F42CECB536005E9E92 /* PlacementContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F32CECB536005E9E92 /* PlacementContainer.swift */; };
 		51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CB74272CDE0CA600C87F6C /* PendingItemView.swift */; };
 		51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D3D2CA2B124003B9DF1 /* VideoData.swift */; };
 		51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */; };
@@ -149,6 +152,9 @@
 		519BF0D22C9AEBF40064FE0A /* ThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailData.swift; sourceTree = "<group>"; };
 		519BF0D42C9AEDE70064FE0A /* PickerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerVM.swift; sourceTree = "<group>"; };
 		51B048E92CBFA39500C9382B /* TrimHandleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimHandleView.swift; sourceTree = "<group>"; };
+		51C622EF2CECA72E005E9E92 /* TitleContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleContainer.swift; sourceTree = "<group>"; };
+		51C622F12CECAF0C005E9E92 /* SizeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeContainer.swift; sourceTree = "<group>"; };
+		51C622F32CECB536005E9E92 /* PlacementContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementContainer.swift; sourceTree = "<group>"; };
 		51CB74272CDE0CA600C87F6C /* PendingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingItemView.swift; sourceTree = "<group>"; };
 		51D30D3D2CA2B124003B9DF1 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
 		51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorVC.swift; sourceTree = "<group>"; };
@@ -342,6 +348,7 @@
 		518408F62CAB21B100779D12 /* Configure */ = {
 			isa = PBXGroup;
 			children = (
+				51C622F52CECBA03005E9E92 /* Container */,
 				51D30D532CA30BCA003B9DF1 /* ConfigureCardCell */,
 				51D30D472CA2F952003B9DF1 /* ConfigureVC.swift */,
 				51D30D4A2CA2F969003B9DF1 /* ConfigureVM.swift */,
@@ -421,6 +428,16 @@
 				519BF0CF2C9AE9080064FE0A /* ThumbnailCell.swift */,
 			);
 			path = ThumbnailCell;
+			sourceTree = "<group>";
+		};
+		51C622F52CECBA03005E9E92 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				51C622EF2CECA72E005E9E92 /* TitleContainer.swift */,
+				51C622F12CECAF0C005E9E92 /* SizeContainer.swift */,
+				51C622F32CECB536005E9E92 /* PlacementContainer.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 		51CB74292CDE0CAB00C87F6C /* PendingItemView */ = {
@@ -604,6 +621,7 @@
 				5146D54D2CAC3AEB00C407F3 /* Array+ThumbnailData.swift in Sources */,
 				516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */,
 				5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */,
+				51C622F42CECB536005E9E92 /* PlacementContainer.swift in Sources */,
 				51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */,
 				5146D5472CAC3A9F00C407F3 /* UIEdgeInsets.swift in Sources */,
 				51B048EA2CBFA39500C9382B /* TrimHandleView.swift in Sources */,
@@ -636,7 +654,9 @@
 				5146D54F2CAC3B5B00C407F3 /* CGFloat.swift in Sources */,
 				5146D5582CAC50DF00C407F3 /* ThumbnailData+RxDataSources.swift in Sources */,
 				51E1E1AC2CD11B8B00414BF3 /* PlaybackConsoleView.swift in Sources */,
+				51C622F02CECA72E005E9E92 /* TitleContainer.swift in Sources */,
 				51F738F12CE4BE39003E036B /* CGAffineTransform.swift in Sources */,
+				51C622F22CECAF0C005E9E92 /* SizeContainer.swift in Sources */,
 				517D56C12CC4051A00009E23 /* VideoTrackVM.swift in Sources */,
 				519BF0D02C9AE9080064FE0A /* ThumbnailCell.swift in Sources */,
 				517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */,

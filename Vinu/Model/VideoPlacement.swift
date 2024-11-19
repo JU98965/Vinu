@@ -24,9 +24,9 @@ enum VideoPlacement: CaseIterable {
     var image: UIImage? {
         switch self {
         case .aspectFit:
-            UIImage(systemName: "1.square")
+            UIImage(named: "aspect_fit")
         case .aspectFill:
-            UIImage(systemName: "2.square")
+            UIImage(named: "aspect_fill")
         }
     }
 }

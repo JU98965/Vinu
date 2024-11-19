@@ -56,7 +56,6 @@ final class MainVC: UIViewController {
             opacity: 0.5,
             offset: CGSize(width: 0, height: 5),
             color: .tintBlue)
-        button.setTitleShadowColor(.black, for: .normal)
         return button
     }()
 
