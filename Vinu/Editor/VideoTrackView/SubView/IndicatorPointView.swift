@@ -12,8 +12,8 @@ final class IndicatorPointView: UIView {
     // MARK: - Components
     let pointView = {
         let view = UIView()
-        view.layer.cornerRadius = 2.5
-        view.backgroundColor = .black
+//        view.layer.cornerRadius = 2.5
+        view.backgroundColor = .textGray
         return view
     }()
     
@@ -33,7 +33,8 @@ final class IndicatorPointView: UIView {
         
         pointView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.size.equalTo(5)
+            $0.width.equalTo(1)
+            $0.height.equalTo(5)
         }
     }
 }

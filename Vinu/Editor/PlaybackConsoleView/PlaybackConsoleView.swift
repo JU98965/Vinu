@@ -48,7 +48,7 @@ final class PlaybackConsoleView: UIView {
     
     let scaleLabel = {
         let label = PaddingUILabel(padding: UIEdgeInsets(right: 15))
-        label.text = "x0.00"
+        label.text = "0.00"
         label.textAlignment = .right
         label.textColor = .textGray
         return label

@@ -18,6 +18,11 @@ final class VideoTrackView: UIView {
     private let once = OnlyOnce()
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
     let sourceIn = PublishSubject<[VideoTrackModel]>()
+//    let sourceIn = BehaviorSubject<[VideoTrackModel]>(value: [
+//        .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 5, preferredTimescale: 1)),
+//        .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 3, preferredTimescale: 1)),
+//    ])
+
     let timeRanges = PublishSubject<[CMTimeRange]>()
     let scrollProgress = PublishSubject<CGFloat>()
     let scaleFactor = PublishSubject<CGFloat>()
@@ -38,8 +43,7 @@ final class VideoTrackView: UIView {
     let contentVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
-        sv.distribution = .fill
-        sv.spacing = .zero
+        sv.spacing = 8
         return sv
     }()
     
@@ -123,7 +127,7 @@ final class VideoTrackView: UIView {
         scrollView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(70)
+            $0.height.equalTo(78)
         }
         contentVStack.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()

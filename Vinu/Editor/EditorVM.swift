@@ -112,7 +112,7 @@ final class EditorVM {
         // 확대 배율을 텍스트로 바꿔서 콘솔에 전달
         // 초기값이 있어야 실행 때 값을 방출할 수 있음
         let scaleFactorText = input.scaleFactor.startWith(1.0)
-            .map { String(format: "x%.2f", $0) }
+            .map { String(format: "%.2f", $0) }
             .share(replay: 1)
         
         // 플레이어의 재생 상태가 변하면 서브젝트에 업데이트

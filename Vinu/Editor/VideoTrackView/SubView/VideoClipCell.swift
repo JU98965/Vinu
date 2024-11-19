@@ -23,8 +23,7 @@ final class VideoClipCell: UICollectionViewCell {
         cv.register(FrameCell.self, forCellWithReuseIdentifier: FrameCell.identifier)
         cv.showsHorizontalScrollIndicator = false
         cv.isScrollEnabled = false
-        cv.layer.cornerRadius = 8
-        cv.layer.cornerCurve = .continuous
+        cv.smoothCorner(radius: 7.5)
         cv.clipsToBounds = true
         cv.backgroundColor = .chuTint
         // 모든 수치가 정해져 있어 layoutsubview 시점에 초기화 시켜줄 필요 없음

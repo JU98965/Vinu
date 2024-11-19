@@ -15,7 +15,7 @@ final class FrameCell: UICollectionViewCell {
     let imageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
-        view.backgroundColor = .chuLightGray
+        // view.backgroundColor = .chuLightGray
         return view
     }()
     
