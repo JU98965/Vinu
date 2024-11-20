@@ -203,10 +203,8 @@ final class EditorVM {
             let minuteProgress = roundedProgress.cutMinute
             let secondProgress = roundedProgress.cutSecond
             
-            let result = String(format: "%02d:%02d / %02d:%02d", minuteDuration, secondDuration, minuteProgress, secondProgress)
-//            let progressText = String(format: "%02d:%02d", minuteProgress, secondProgress)
+            let result = String(format: "%02d:%02d / %02d:%02d", minuteProgress, secondProgress, minuteDuration, secondDuration)
             
-//            let result = (progressText, durationText)
             observer.onNext(result)
             
             return Disposables.create()

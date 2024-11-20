@@ -19,7 +19,7 @@ final class EditorVC: UIViewController {
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
-        sv.distribution = .fill
+        sv.spacing = 15
         return sv
     }()
     
@@ -31,7 +31,14 @@ final class EditorVC: UIViewController {
         return button
     }()
     
-    let videoPlayerView = VideoPlayerView()
+    let videoPlayerContainer = UIView()
+    
+    let videoPlayerView = {
+        let view = VideoPlayerView()
+        view.backgroundColor = .chuLightGray
+        view.smoothCorner(radius: 7.5)
+        return view
+    }()
     
     let playbackConsoleView = PlaybackConsoleView()
     
@@ -42,7 +49,7 @@ final class EditorVC: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .chuLightGray
+        view.backgroundColor = .backWhite
         
         setAutoLayout()
         setBinding()
@@ -52,16 +59,18 @@ final class EditorVC: UIViewController {
     private func setAutoLayout() {
         view.addSubview(mainVStack)
         mainVStack.addArrangedSubview(navigationHStack)
-        mainVStack.addArrangedSubview(videoPlayerView)
+        mainVStack.addArrangedSubview(videoPlayerContainer)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
         mainVStack.addArrangedSubview(editConsoleView)
         navigationHStack.addArrangedSubview(exportButton)
+        videoPlayerContainer.addSubview(videoPlayerView)
 
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
+        videoPlayerView.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
-        videoTrackView.snp.makeConstraints { $0.height.equalTo(60) }
-        editConsoleView.snp.makeConstraints { $0.height.equalTo(60) }
+        videoTrackView.snp.makeConstraints { $0.height.equalTo(78) }
+        editConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
     }
     
     // MARK: - Binding

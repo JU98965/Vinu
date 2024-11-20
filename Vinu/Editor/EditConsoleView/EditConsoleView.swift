@@ -11,11 +11,26 @@ import SnapKit
 final class EditConsoleView: UIView {
     
     // MARK: - Components
-    let mainHStack = UIStackView()
+    let mainHStack = {
+        let sv = UIStackView()
+        sv.distribution = .fillEqually
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
+        sv.backgroundColor = .white
+        sv.smoothCorner(radius: 7.5)
+        sv.dropShadow(radius: 7.5, opacity: 0.05)
+        return sv
+    }()
     
     let hdrButton = {
-        let button = UIButton(configuration: .plain())
-        button.setTitle("HDR", for: .normal)
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .tintBlue
+        config.baseForegroundColor = .white
+        config.attributedTitle = AttributedString(
+            String(localized: "HDR"),
+            attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)]))
+        let button = UIButton(configuration: config)
+        button.smoothCorner(radius: 7.5)
         return button
     }()
     
@@ -32,13 +47,14 @@ final class EditConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(mainHStack)
+        mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
         mainHStack.addArrangedSubview(hdrButton)
         mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
         
-        mainHStack.snp.makeConstraints { $0.edges.equalToSuperview() }
+        mainHStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
     }
 }
 
 #Preview(traits: .fixedLayout(width: 300, height: 64)) {
-    EditConsoleView()
+    EditorVC()
 }

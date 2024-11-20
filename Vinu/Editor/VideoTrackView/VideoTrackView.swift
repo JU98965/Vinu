@@ -34,7 +34,6 @@ final class VideoTrackView: UIView {
 
     let scrollView = {
         let view = UIScrollView()
-        view.backgroundColor = .white
         view.showsHorizontalScrollIndicator = false
         view.bounces = false // 끝에 부딪혔을 때 일어나는 bounces애니메이션을 비활성화
         return view
@@ -68,22 +67,22 @@ final class VideoTrackView: UIView {
     }()
     
     let rightSpacer = UIView()
+    
+    let focusedStrokeView = {
+        let view = FocusedOverlayView(strokeWidth: 2, radius: 7.5)
+        // view.dropShadow(radius: 7.5, opacity: 0.1)
+        return view
+    }()
 
-    let leftHandle = {
+    let leftHandleArea = {
         let view = UIView()
-        view.layer.cornerRadius = 4
-        view.layer.cornerCurve = .continuous
-        view.clipsToBounds = true
-        view.backgroundColor = .yellow
+        // view.backgroundColor = .yellow.withAlphaComponent(0.5)
         return view
     }()
     
-    let rightHandle = {
+    let rightHandleArea = {
         let view = UIView()
-        view.layer.cornerRadius = 4
-        view.layer.cornerCurve = .continuous
-        view.clipsToBounds = true
-        view.backgroundColor = .yellow
+        // view.backgroundColor = .yellow.withAlphaComponent(0.5)
         return view
     }()
     
@@ -91,8 +90,8 @@ final class VideoTrackView: UIView {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         self.addGestureRecognizer(pinchGesture)
-        leftHandle.addGestureRecognizer(panGestureLeft)
-        rightHandle.addGestureRecognizer(panGestureRight)
+        leftHandleArea.addGestureRecognizer(panGestureLeft)
+        rightHandleArea.addGestureRecognizer(panGestureRight)
         
         setAutoLayout()
         setBinding()
@@ -121,8 +120,9 @@ final class VideoTrackView: UIView {
         clipHStack.addArrangedSubview(leftSpacer)
         clipHStack.addArrangedSubview(videoClipCV)
         clipHStack.addArrangedSubview(rightSpacer)
-        scrollView.addSubview(leftHandle)
-        scrollView.addSubview(rightHandle)
+        scrollView.addSubview(focusedStrokeView)
+        scrollView.addSubview(leftHandleArea)
+        scrollView.addSubview(rightHandleArea)
         
         scrollView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -192,9 +192,9 @@ final class VideoTrackView: UIView {
             .rx.event
             .map { [weak self] gesture -> CGPoint? in
                 guard let self else { return nil }
-                let translation = gesture.translation(in: self.leftHandle)
+                let translation = gesture.translation(in: self.leftHandleArea)
                 // 연속적 제스처이기 때문에 translation을 매번 0으로 초기화 시켜줘야 의도한 동작이 나옴
-                gesture.setTranslation(.zero, in: self.leftHandle)
+                gesture.setTranslation(.zero, in: self.leftHandleArea)
                 return translation
             }
             .compactMap { $0 }
@@ -215,9 +215,9 @@ final class VideoTrackView: UIView {
             .rx.event
             .map { [weak self] gesture -> CGPoint? in
                 guard let self else { return nil }
-                let translation = gesture.translation(in: self.rightHandle)
+                let translation = gesture.translation(in: self.rightHandleArea)
                 // 연속적 제스처이기 때문에 translation을 매번 0으로 초기화 시켜줘야 의도한 동작이 나옴
-                gesture.setTranslation(.zero, in: self.rightHandle)
+                gesture.setTranslation(.zero, in: self.rightHandleArea)
                 return translation
             }
             .compactMap { $0 }
@@ -307,16 +307,25 @@ final class VideoTrackView: UIView {
                 guard let attributes = owner.videoClipCV.layoutAttributesForItem(at: path) else { return }
                 // 왼쪽 스페이서 넓이만큼 오프셋 필요함
                 let spacerWidth = owner.leftSpacer.frame.width
+                let handleWidth = CGFloat(50)
                 
                 // attributes의 프레임 정보를 바탕으로 포커스 뷰 그려주기 (오토레이아웃 필요 없음)
-                let leftOrigin = CGPoint(x: attributes.frame.minX + spacerWidth + 10, y: attributes.frame.minY + 20)
-                let rightOrigin = CGPoint(x: attributes.frame.maxX + spacerWidth - 18 - 4, y: attributes.frame.minY + 20)
+                let leftOrigin = CGPoint(x: attributes.frame.minX + spacerWidth - 15, y: attributes.frame.minY + 18)
+                let rightOrigin = CGPoint(x: attributes.frame.maxX + spacerWidth + 10 - handleWidth, y: attributes.frame.minY + 18)
                 
-                let leftSize = CGSize(width: 8, height: attributes.frame.height - 20)
-                let rightSize = CGSize(width: 8, height: attributes.frame.height - 20)
+                let leftSize = CGSize(width: handleWidth, height: attributes.frame.height)
+                let rightSize = CGSize(width: handleWidth, height: attributes.frame.height)
                 
-                owner.leftHandle.frame = CGRect(origin: leftOrigin, size: leftSize)
-                owner.rightHandle.frame = CGRect(origin: rightOrigin, size: rightSize)
+                owner.leftHandleArea.frame = CGRect(origin: leftOrigin, size: leftSize)
+                owner.rightHandleArea.frame = CGRect(origin: rightOrigin, size: rightSize)
+                
+                let rectOffset = CGRect(
+                    x: attributes.frame.minX + spacerWidth,
+                    y: attributes.frame.minY + 18,
+                    width: attributes.frame.width - 4,
+                    height: attributes.frame.height)
+                owner.focusedStrokeView.frame = rectOffset
+                owner.focusedStrokeView.setNeedsDisplay()
             }
             .disposed(by: bag)
         
