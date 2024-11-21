@@ -22,29 +22,18 @@ final class EditorVC: UIViewController {
         sv.spacing = 15
         return sv
     }()
-    
-    let navigationHStack = UIStackView()
-    
-    let exportButton = {
-        let button = UIButton(configuration: .filled())
-        button.setTitle("내보내기", for: .normal)
-        return button
-    }()
-    
-    let videoPlayerContainer = UIView()
+        
+    let editConsoleView = EditConsoleView()
     
     let videoPlayerView = {
         let view = VideoPlayerView()
-        view.backgroundColor = .chuLightGray
-        view.smoothCorner(radius: 7.5)
+        view.dropShadow(radius: 7.5, opacity: 0.05)
         return view
     }()
     
     let playbackConsoleView = PlaybackConsoleView()
     
     let videoTrackView = VideoTrackView()
-    
-    let editConsoleView = EditConsoleView()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -55,19 +44,25 @@ final class EditorVC: UIViewController {
         setBinding()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        // 영상 선택창에서 다시 돌아올 때 네비게이션 바를 숨김
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        // 다른 창으로 넘어갈 때 숨겼던 네비게이션 바를 표시
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
-        mainVStack.addArrangedSubview(navigationHStack)
-        mainVStack.addArrangedSubview(videoPlayerContainer)
+        mainVStack.addArrangedSubview(editConsoleView)
+        mainVStack.addArrangedSubview(videoPlayerView)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
-        mainVStack.addArrangedSubview(editConsoleView)
-        navigationHStack.addArrangedSubview(exportButton)
-        videoPlayerContainer.addSubview(videoPlayerView)
 
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
-        videoPlayerView.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(78) }
         editConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
@@ -85,7 +80,7 @@ final class EditorVC: UIViewController {
             controlStatus: videoPlayerView.controlStatus.asObservable(),
             playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable(),
             hdrTap: editConsoleView.hdrButton.rx.tap.asObservable(),
-            exportTap: exportButton.rx.tap.asObservable())
+            exportTap: editConsoleView.exportButton.rx.tap.asObservable())
         
         let output = editorVM.transform(input: input)
 
@@ -162,5 +157,6 @@ final class EditorVC: UIViewController {
 }
 
 #Preview {
-    EditorVC()
+    UINavigationController(rootViewController: EditorVC()
+)
 }

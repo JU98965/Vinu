@@ -13,7 +13,7 @@ final class EditConsoleView: UIView {
     // MARK: - Components
     let mainHStack = {
         let sv = UIStackView()
-        sv.distribution = .fillEqually
+        sv.distribution = .fill
         sv.isLayoutMarginsRelativeArrangement = true
         sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
         sv.backgroundColor = .white
@@ -34,6 +34,17 @@ final class EditConsoleView: UIView {
         return button
     }()
     
+    let exportButton = {
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .tintBlue
+        config.image = UIImage(named: "export_icon")?
+            .withTintColor(.white)
+            .resizeImage(newWidth: 16)
+        let button = UIButton(configuration: config)
+        button.smoothCorner(radius: 7.5)
+        return button
+    }()
+    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,9 +58,9 @@ final class EditConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(mainHStack)
-        mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
         mainHStack.addArrangedSubview(hdrButton)
         mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
+        mainHStack.addArrangedSubview(exportButton)
         
         mainHStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
     }

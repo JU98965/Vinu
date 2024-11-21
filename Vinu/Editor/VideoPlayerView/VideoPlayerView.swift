@@ -21,18 +21,48 @@ final class VideoPlayerView: UIView {
     let controlStatus = PublishSubject<AVPlayer.TimeControlStatus>()
     
     // MARK: - Components
+    let mainContainerView = {
+        let view = UIView()
+        view.smoothCorner(radius: 7.5)
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    let backContainerView = UIView()
+    
+    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterialLight))
+    
+    let frontContainerView = UIView()
+    
     let player = PreviewPlayer()
     
-    var playerLayer: AVPlayerLayer?
+    var backPlayerLayer: AVPlayerLayer?
+
+    var frontPlayerLayer: AVPlayerLayer?
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setAutoLayout()
         setBinding()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Layout
+    private func setAutoLayout() {
+        // 플레이어 컨테이너 뷰의 서브 뷰로 또 다른 플레이어 컨테이너가 있으면 있으면 한 플레이어가 나머지 플레이어를 덮어버림
+        self.addSubview(mainContainerView)
+        mainContainerView.addSubview(backContainerView)
+        mainContainerView.addSubview(blurView)
+        mainContainerView.addSubview(frontContainerView)
+        
+        mainContainerView.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }  
+        backContainerView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        blurView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        frontContainerView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     // MARK: - Binding
@@ -54,12 +84,18 @@ final class VideoPlayerView: UIView {
         // 아이템이 재생 가능 상태가 되면 플레이어를 구성
         output.configure
             .bind(with: self) { owner, _ in
-                owner.playerLayer = AVPlayerLayer(player: owner.player)
-                owner.playerLayer?.videoGravity = .resizeAspect
-                owner.playerLayer?.frame = owner.bounds
+                owner.backPlayerLayer = AVPlayerLayer(player: owner.player)
+                owner.backPlayerLayer?.videoGravity = .resizeAspectFill
+                owner.backPlayerLayer?.frame = owner.backContainerView.bounds
                 
-                if let playerLayer = owner.playerLayer {
-                    owner.layer.addSublayer(playerLayer)
+                owner.frontPlayerLayer = AVPlayerLayer(player: owner.player)
+                owner.frontPlayerLayer?.videoGravity = .resizeAspect
+                owner.frontPlayerLayer?.frame = owner.frontContainerView.bounds
+                
+                if let playerLayer = owner.frontPlayerLayer,
+                   let playerBackLayer = owner.backPlayerLayer {
+                    owner.backContainerView.layer.addSublayer(playerBackLayer)
+                    owner.frontContainerView.layer.addSublayer(playerLayer)
                     // 로딩 후 즉시 탐색을 위해 재생 및 정지
                     owner.player.play()
                     owner.player.pause()

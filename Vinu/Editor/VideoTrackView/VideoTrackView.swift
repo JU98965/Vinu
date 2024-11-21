@@ -86,6 +86,12 @@ final class VideoTrackView: UIView {
         return view
     }()
     
+    let playheadView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        return view
+    }()
+    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -114,6 +120,7 @@ final class VideoTrackView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(scrollView)
+        self.addSubview(playheadView)
         scrollView.addSubview(contentVStack)
         contentVStack.addArrangedSubview(trackIndicator)
         contentVStack.addArrangedSubview(clipHStack)
@@ -124,6 +131,11 @@ final class VideoTrackView: UIView {
         scrollView.addSubview(leftHandleArea)
         scrollView.addSubview(rightHandleArea)
         
+        playheadView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.verticalEdges.equalToSuperview().inset(-7.5)
+            $0.width.equalTo(1.5)
+        }
         scrollView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
@@ -347,5 +359,5 @@ final class VideoTrackView: UIView {
 }
 
 #Preview {
-    VideoTrackView()
+    EditorVC()
 }
