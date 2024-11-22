@@ -22,10 +22,33 @@ final class ExporterVC: UIViewController {
         return sv
     }()
     
-    let estimatedFileSizeLabel = {
+    let progressContainer = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 15
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 15)
+        sv.backgroundColor = .white
+        sv.smoothCorner(radius: 7.5)
+        sv.dropShadow(radius: 7.5, opacity: 0.025)
+        return sv
+    }()
+    
+    let progressLabelHStack = UIStackView()
+    
+    let statusLabel = {
         let label = UILabel()
-        label.text = String(localized: "예상 크기: 12MB")
-        label.textColor = .darkGray
+        label.text = String(localized: "준비중")
+        label.textColor = .textGray
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let progressLabel = {
+        let label = UILabel()
+        label.text = String(localized: "0%")
+        label.textColor = .tintBlue
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .center
         return label
@@ -33,40 +56,52 @@ final class ExporterVC: UIViewController {
     
     let progressBar = {
         let bar = UIProgressView(progressViewStyle: .bar)
-        bar.backgroundColor = .lightGray
-        bar.progressTintColor = .tintSoda
-        bar.smoothCorner(radius: 16)
+        bar.backgroundColor = .chuLightGray
+        bar.progressTintColor = .tintBlue
+        bar.smoothCorner(radius: 3.75)
         bar.clipsToBounds = true
         return bar
     }()
     
-    let progressLabel = {
+    let estimatedFileSizeContainer = {
+        let sv = UIStackView()
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 15)
+        sv.backgroundColor = .white
+        sv.smoothCorner(radius: 7.5)
+        sv.dropShadow(radius: 7.5, opacity: 0.025)
+        return sv
+    }()
+    
+    let estimatedFileSizeTitleLabel = {
         let label = UILabel()
-        label.text = String(localized: "진행률: 0%")
-        label.textColor = .darkGray
+        label.text = String(localized: "예상 파일 크기")
+        label.textColor = .textGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textAlignment = .center
         return label
     }()
     
-    let statusLabel = {
+    let estimatedFileSizeFactorLabel = {
         let label = UILabel()
-        label.text = String(localized: "준비중")
-        label.textColor = .darkGray
+        label.text = "10MB"
+        label.textColor = .tintBlue
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textAlignment = .center
         return label
     }()
-    
+
     let exportButton = {
-        let button = UIButton(configuration: .filled())
-        button.setTitle("내보내기", for: .normal)
-        return button
-    }()
-    
-    let backHomeButton = {
-        let button = UIButton(configuration: .filled())
-        button.setTitle("홈으로 돌아가기", for: .normal)
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .tintBlue
+        config.baseForegroundColor = .white
+        config.title = String(localized: "내보내기")
+        config.cornerStyle = .large
+        
+        let button = UIButton(configuration: config)
+        button.dropShadow(
+            radius: 8,
+            opacity: 0.5,
+            offset: CGSize(width: 0, height: 5),
+            color: .tintBlue)
         return button
     }()
     
@@ -82,15 +117,27 @@ final class ExporterVC: UIViewController {
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
-        mainVStack.addArrangedSubview(estimatedFileSizeLabel)
-        mainVStack.addArrangedSubview(progressBar)
-        mainVStack.addArrangedSubview(progressLabel)
-        mainVStack.addArrangedSubview(statusLabel)
-        mainVStack.addArrangedSubview(exportButton)
+        view.addSubview(exportButton)
+        mainVStack.addArrangedSubview(progressContainer)
+        mainVStack.addArrangedSubview(estimatedFileSizeContainer)
+        progressContainer.addArrangedSubview(progressLabelHStack)
+        progressContainer.addArrangedSubview(progressBar)
+        progressLabelHStack.addArrangedSubview(statusLabel)
+        progressLabelHStack.addArrangedSubview(UIView())
+        progressLabelHStack.addArrangedSubview(progressLabel)
+        estimatedFileSizeContainer.addArrangedSubview(estimatedFileSizeTitleLabel)
+        estimatedFileSizeContainer.addArrangedSubview(estimatedFileSizeFactorLabel)
         
-        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
-        exportButton.snp.makeConstraints { $0.height.equalTo(64) }
-        progressBar.snp.makeConstraints { $0.height.equalTo(32) }
+        mainVStack.snp.makeConstraints {
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.centerY.equalToSuperview()
+        }
+        exportButton.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(50)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.height.equalTo(50)
+        }
+        progressBar.snp.makeConstraints { $0.height.equalTo(15) }
     }
     
     // MARK: - Binding
@@ -103,15 +150,11 @@ final class ExporterVC: UIViewController {
         let output = exporterVM.transform(input: input)
         
         output.estimatedFileSizeText
-            .bind(to: estimatedFileSizeLabel.rx.text)
+            .bind(to: estimatedFileSizeFactorLabel.rx.text)
             .disposed(by: bag)
         
         output.isExportButtonEnabled
             .bind(to: exportButton.rx.isEnabled)
-            .disposed(by: bag)
-        
-        output.isExportButtonHidden
-            .bind(to: exportButton.rx.isHidden)
             .disposed(by: bag)
         
         output.progress
@@ -124,6 +167,14 @@ final class ExporterVC: UIViewController {
         
         output.statusText
             .bind(to: statusLabel.rx.text)
+            .disposed(by: bag)
+        
+        output.exportButtonConfig
+            .bind(with: self) { owner, config in
+                let button = owner.exportButton
+                button.configuration?.title = config.title
+                button.isHidden = config.isHidden
+            }
             .disposed(by: bag)
     }
 }

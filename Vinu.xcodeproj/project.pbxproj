@@ -11,6 +11,7 @@
 		510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DB2CDA349100D479D2 /* OnlyOnce.swift */; };
 		510C47DE2CDA4FA000D479D2 /* CustomIntensityVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */; };
 		510C47E02CDA59D400D479D2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DF2CDA59D100D479D2 /* UIView.swift */; };
+		5118E4432CF0BFBC00A4EB93 /* ExportButtonStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5118E4422CF0BFA900A4EB93 /* ExportButtonStatus.swift */; };
 		5124F5E92CDD307D00DB6E0C /* SelectedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */; };
 		513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698772CB8442F004175DE /* LoadigVM+Old.swift */; };
 		5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698792CB84E7A004175DE /* VideoHelper.swift */; };
@@ -99,6 +100,7 @@
 		510C47DB2CDA349100D479D2 /* OnlyOnce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyOnce.swift; sourceTree = "<group>"; };
 		510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntensityVisualEffectView.swift; sourceTree = "<group>"; };
 		510C47DF2CDA59D100D479D2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		5118E4422CF0BFA900A4EB93 /* ExportButtonStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportButtonStatus.swift; sourceTree = "<group>"; };
 		5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedOverlayView.swift; sourceTree = "<group>"; };
 		513698772CB8442F004175DE /* LoadigVM+Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadigVM+Old.swift"; sourceTree = "<group>"; };
 		513698792CB84E7A004175DE /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
@@ -485,6 +487,7 @@
 			children = (
 				51F738DF2CE26214003E036B /* ExporterVC.swift */,
 				51F738E12CE3815D003E036B /* ExporterVM.swift */,
+				5118E4422CF0BFA900A4EB93 /* ExportButtonStatus.swift */,
 				51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */,
 				51F739042CE656ED003E036B /* AVAssetExportSession.swift */,
 			);
@@ -610,6 +613,7 @@
 				51F738E62CE3B5BE003E036B /* VideoPlacement.swift in Sources */,
 				519BF0A82C9AB7DC0064FE0A /* MainVC.swift in Sources */,
 				519BF0C62C9AC5CF0064FE0A /* MainVM.swift in Sources */,
+				5118E4432CF0BFBC00A4EB93 /* ExportButtonStatus.swift in Sources */,
 				51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */,
 				519BF0D32C9AEBF40064FE0A /* ThumbnailData.swift in Sources */,
 				51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */,

@@ -19,10 +19,10 @@ final class ExporterVM {
     struct Output {
         let estimatedFileSizeText: Observable<String>
         let isExportButtonEnabled: Observable<Bool>
-        let isExportButtonHidden: Observable <Bool>
         let progress: Observable<Float>
         let progressText: Observable<String>
         let statusText: Observable<String>
+        let exportButtonConfig: Observable<ExportButtonStatus>
     }
     
     private let exporter: AVAssetExportSession?
@@ -36,8 +36,6 @@ final class ExporterVM {
     func transform(input: Input) -> Output {
         // exporter객체를 스트림 차원에서 관리하기 위한 서브젝트
         let exporter = BehaviorSubject(value: exporter).asObservable()
-        // 내보내기 버튼의 숨기기 상태
-        let isExportButtonHidden = BehaviorSubject(value: false)
 
         // exporter의 상태가 변하면 값을 방출
         let exporterStatus = exporter
@@ -46,7 +44,12 @@ final class ExporterVM {
                 $0.rx.observeWeakly(AVAssetExportSession.Status.self, "status")
                     .compactMap { $0 }
             }
+            .observe(on: MainScheduler.instance) // observeWeakly는 메인스레드에서 실행 안되는 듯
             .share(replay: 1)
+        
+        // exporter 상태에 따라서 내보내기 버튼의 상태도 바뀜
+        let exportButtonConfig = exporterStatus
+            .map { ExportButtonStatus(expoterStatus: $0) }
         
         // 예상 파일 크기 받아오기
         let estimatedFileSizeText = estimatedFileSizeText()
@@ -55,56 +58,33 @@ final class ExporterVM {
         // 익스포터가 nil이면 내보내기 버튼 활성화 조차 안되게
         let isExportButtonEnabled = exporter
             .map { $0 != nil }
-        
-        // 내보내기 버튼이 두 번 눌리지 않도록 한 번 눌리면 버튼 숨기기
-        input.exportButtonTap
-            .withLatestFrom(isExportButtonHidden) { !$1 }
-            .bind(to: isExportButtonHidden)
-            .disposed(by: bag)
-        
+
         // 내보내기 버튼 눌리면 내보내기 작업 실행
         input.exportButtonTap
-            .bind(with: self, onNext: { owner, _ in
-                owner.export()
-            })
+            .bind(with: self) { owner, _ in owner.export() }
             .disposed(by: bag)
         
         // exporter의 상태에 따라 텍스트 전달
         let statusText = exporterStatus
-            .map { status in
-                switch status {
-                case .exporting:
-                    return String(localized: "내보내는 중")
-                case .completed:
-                    return String(localized: "내보내기 완료")
-                case .failed:
-                    return String(localized: "내보내기 실패")
-                case .cancelled:
-                    return String(localized: "취소됨")
-                default:
-                    return String(localized: "대기중")
-                }
-            }
+            .flatMapLatest(getStatusText(status:))
         
-        // 내보내기 중에는
-        let progress = input.exportButtonTap
+        // .exporting 상태일 때 진행률 가져오기
+        let progress = exporterStatus
+            .compactMap { $0 == .exporting ? () : nil }
             .flatMapLatest(getPeriodicProgress)
             .share(replay: 1)
         
         // 진행률 텍스트 전달
         let progressText = progress
-            .map { progress in
-                let baseString = String(localized: "진행률: ")
-                return baseString + "\(Int(progress * 100))%"
-            }
+            .map { "\(Int($0 * 100))%" }
         
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,
-            isExportButtonHidden: isExportButtonHidden.asObservable(),
             progress: progress,
             progressText: progressText,
-            statusText: statusText)
+            statusText: statusText,
+            exportButtonConfig: exportButtonConfig)
     }
     
     // MARK: - Methods
@@ -113,13 +93,12 @@ final class ExporterVM {
         Observable.create { observer in
             Task {
                 let fileLength = try? await self.exporter?.estimatedOutputFileLengthInBytes
-                let baseString = String(localized: "예상 크기: ")
                 
                 if let fileLength {
-                    let text = baseString + ByteCountFormatter.string(fromByteCount: fileLength, countStyle: .file)
+                    let text = ByteCountFormatter.string(fromByteCount: fileLength, countStyle: .file)
                     observer.onNext(text)
                 } else {
-                    let text = baseString + String(localized: "알 수 없음")
+                    let text = String(localized: "알 수 없음")
                     observer.onNext(text)
                 }
             }
@@ -151,7 +130,26 @@ final class ExporterVM {
                 if progress == 1.0 { timer.invalidate() }
             }
             
-            return Disposables.create{ self.exportTimer?.invalidate() }
+            return Disposables.create { self.exportTimer?.invalidate() }
+        }
+    }
+    
+    private func getStatusText(status: AVAssetExportSession.Status) -> Observable<String> {
+        Observable.create { observer in
+            switch status {
+            case .exporting:
+                observer.onNext(String(localized: "내보내는 중"))
+            case .completed:
+                observer.onNext(String(localized: "내보내기 완료"))
+            case .failed:
+                observer.onNext(String(localized: "내보내기 실패"))
+            case .cancelled:
+                observer.onNext(String(localized: "취소됨"))
+            default:
+                observer.onNext(String(localized: "대기중"))
+            }
+            
+            return Disposables.create()
         }
     }
 }
