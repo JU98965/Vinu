@@ -16,7 +16,7 @@ final class PlaybackConsoleView: UIView {
         sv.distribution = .fillEqually
         sv.backgroundColor = .white
         sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.05)
+        sv.dropShadow(radius: 7.5, opacity: 0.025)
         return sv
     }()
     

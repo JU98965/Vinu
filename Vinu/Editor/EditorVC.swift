@@ -146,11 +146,24 @@ final class EditorVC: UIViewController {
         
         // 내보내기 버튼을 누르면 화면 전환
         output.presentExportVC
-            .debug()
             .bind(with: self) { owner, configration in
                 let vc = ExporterVC()
                 vc.exporterVM = ExporterVM(configration)
                 owner.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: bag)
+        
+        // hdr활성화 여부에 따라 버튼 상태 변경
+        output.isHDRAllowed
+            .bind(with: self) { owner, isAllowed in
+                let button = owner.editConsoleView.hdrButton
+                if !isAllowed {
+                    button.configuration?.baseForegroundColor = .textGray
+                    button.configuration?.baseBackgroundColor = .clear
+                } else {
+                    button.configuration?.baseForegroundColor = .white
+                    button.configuration?.baseBackgroundColor = .tintBlue
+                }
             }
             .disposed(by: bag)
     }

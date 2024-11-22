@@ -33,6 +33,7 @@ final class EditorVM {
         let shouldPlay: Observable<Bool>
         let playbackImage: Observable<UIImage?>
         let presentExportVC: Observable<ExporterConfiguration>
+        let isHDRAllowed: Observable<Bool>
     }
     
     let configuration: EditorConfiguration
@@ -164,6 +165,10 @@ final class EditorVM {
             .bind(to: makingOptions)
             .disposed(by: bag)
         
+        // hdr활성화 여부에 따라 버튼 상태 변경
+        let isHDRAllowed = makingOptions
+            .map { $0.isHDRAllowed }
+        
         // playerItem이 준비될 때까지는 내보내기 이벤트 무효
         let exportTap = input.exportTap
             .skip(until: playerItem)
@@ -184,7 +189,8 @@ final class EditorVM {
             scaleFactorText: scaleFactorText,
             shouldPlay: shouldPlay,
             playbackImage: playbackImage,
-            presentExportVC: exportTap)
+            presentExportVC: exportTap,
+            isHDRAllowed: isHDRAllowed)
     }
     
     // MARK: - Private methods

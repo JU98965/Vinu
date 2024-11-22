@@ -13,12 +13,17 @@ final class EditConsoleView: UIView {
     // MARK: - Components
     let mainHStack = {
         let sv = UIStackView()
-        sv.distribution = .fill
+        sv.spacing = 15
+        return sv
+    }()
+    
+    let editHStack = {
+        let sv = UIStackView()
         sv.isLayoutMarginsRelativeArrangement = true
         sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
         sv.backgroundColor = .white
         sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.05)
+        sv.dropShadow(radius: 7.5, opacity: 0.025)
         return sv
     }()
     
@@ -32,6 +37,16 @@ final class EditConsoleView: UIView {
         let button = UIButton(configuration: config)
         button.smoothCorner(radius: 7.5)
         return button
+    }()
+    
+    let exportHStack = {
+        let sv = UIStackView()
+        sv.isLayoutMarginsRelativeArrangement = true
+        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
+        sv.backgroundColor = .white
+        sv.smoothCorner(radius: 7.5)
+        sv.dropShadow(radius: 7.5, opacity: 0.025)
+        return sv
     }()
     
     let exportButton = {
@@ -58,11 +73,14 @@ final class EditConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(mainHStack)
-        mainHStack.addArrangedSubview(hdrButton)
-        mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
-        mainHStack.addArrangedSubview(exportButton)
+        mainHStack.addArrangedSubview(editHStack)
+        mainHStack.addArrangedSubview(exportHStack)
+        editHStack.addArrangedSubview(hdrButton)
+        editHStack.addArrangedSubview(UIView()) // 스페이서 용도
+        exportHStack.addArrangedSubview(exportButton)
         
         mainHStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
+        exportHStack.snp.makeConstraints { $0.size.equalTo(50) }
     }
 }
 
