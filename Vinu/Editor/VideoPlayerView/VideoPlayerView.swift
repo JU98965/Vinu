@@ -96,6 +96,13 @@ final class VideoPlayerView: UIView {
                    let playerBackLayer = owner.backPlayerLayer {
                     owner.backContainerView.layer.addSublayer(playerBackLayer)
                     owner.frontContainerView.layer.addSublayer(playerLayer)
+                    
+                    // 무음 모드를 무시하고 avplayer에서 소리가 나게 하기
+                    do {
+                        try AVAudioSession.sharedInstance().setCategory(.playback)
+                    } catch(let error) {
+                        print(error.localizedDescription)
+                    }
                     // 로딩 후 즉시 탐색을 위해 재생 및 정지
                     owner.player.play()
                     owner.player.pause()
