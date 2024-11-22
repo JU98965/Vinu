@@ -23,6 +23,7 @@ final class ExporterVM {
         let progressText: Observable<String>
         let statusText: Observable<String>
         let exportButtonConfig: Observable<ExportButtonStatus>
+        let backMainView: Observable<Void>
     }
     
     private let exporter: AVAssetExportSession?
@@ -61,9 +62,22 @@ final class ExporterVM {
 
         // 내보내기 버튼 눌리면 내보내기 작업 실행
         input.exportButtonTap
+            .withLatestFrom(exporterStatus)
+            .filter { $0 == .unknown || $0 == .waiting }
             .bind(with: self) { owner, _ in owner.export() }
             .disposed(by: bag)
         
+        // 내보내기 완료, 실패 후 홈 화면으로 돌아가기
+        let backMainView = input.exportButtonTap
+            .withLatestFrom(exporterStatus) { _, status -> AVAssetExportSession.Status in status }
+            .compactMap {
+                if $0 == .completed || $0 == .failed {
+                    return ()
+                } else {
+                    return nil
+                }
+            }
+
         // exporter의 상태에 따라 텍스트 전달
         let statusText = exporterStatus
             .flatMapLatest(getStatusText(status:))
@@ -84,7 +98,8 @@ final class ExporterVM {
             progress: progress,
             progressText: progressText,
             statusText: statusText,
-            exportButtonConfig: exportButtonConfig)
+            exportButtonConfig: exportButtonConfig,
+            backMainView: backMainView)
     }
     
     // MARK: - Methods

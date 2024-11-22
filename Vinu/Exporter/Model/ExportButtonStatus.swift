@@ -18,10 +18,7 @@ struct ExportButtonStatus {
         case .exporting:
             self.isHidden = true
             self.title = ""
-        case .completed:
-            self.isHidden = false
-            self.title = String(localized: "홈으로 돌아가기")
-        case .failed:
+        case .completed, .failed:
             self.isHidden = false
             self.title = String(localized: "홈으로 돌아가기")
         case .cancelled:

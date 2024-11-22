@@ -176,6 +176,12 @@ final class ExporterVC: UIViewController {
                 button.isHidden = config.isHidden
             }
             .disposed(by: bag)
+        
+        output.backMainView
+            .bind(with: self) { owner, _ in
+                owner.navigationController?.popToRootViewController(animated: true)
+            }
+            .disposed(by: bag)
     }
 }
 

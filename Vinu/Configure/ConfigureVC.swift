@@ -130,15 +130,13 @@ final class ConfigureVC: UIViewController {
         // 모든 데이터 로딩이 끝나면 EditorVC로 화면전환
         output.presentEditorVC
             .bind(with: self) { owner, config in
-                // 화면전환은 window layer가 담당하므로 거기에 트랜지션 효과 추가
                 let editorVC = EditorVC()
                 editorVC.editorVM = EditorVM(config)
                 
-                let vc = UINavigationController(rootViewController: editorVC)
-                vc.modalPresentationStyle = .fullScreen
-                owner.present(vc, animated: false) {
-                    // 네비게이션 스택 모두 닫아주기
-                    owner.navigationController?.popToRootViewController(animated: false)
+                owner.navigationController?.pushViewController(editorVC, animated: true)
+                // 화면 전환이 끝나면 네비게이션 스택을 다시 구성
+                if let rootVC = owner.navigationController?.viewControllers.first {
+                    owner.navigationController?.setViewControllers([rootVC, editorVC], animated: false)
                 }
             }
             .disposed(by: bag)
