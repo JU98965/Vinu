@@ -21,16 +21,16 @@ final class FocusedOverlayView: UIView {
     
     let leftHandleView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.smoothCorner(radius: 7.5 / 3)
+        view.backgroundColor = .backWhite
+        view.smoothCorner(radius: 7.5 / 2)
         view.dropShadow(radius: 3, opacity: 0.25)
         return view
     }()
     
     let rightHandleView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.smoothCorner(radius: 7.5 / 3)
+        view.backgroundColor = .backWhite
+        view.smoothCorner(radius: 7.5 / 2)
         view.dropShadow(radius: 3, opacity: 0.25)
         return view
     }()

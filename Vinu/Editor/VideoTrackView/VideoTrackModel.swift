@@ -20,9 +20,9 @@ struct VideoTrackModel {
     init(image: UIImage, duration: CMTime) {
         self.image = image
         self.duration = duration
-        self.originalWidth_ = duration.seconds * 60
+        self.originalWidth_ = duration.seconds * 60 / 5 // 60포인트당 5초
         self.startPoint_ = 0
-        self.endPoint_ = duration.seconds * 60
+        self.endPoint_ = duration.seconds * 60 / 5 // 60포인트당 5초
         self.scale = 1.0
     }
     
