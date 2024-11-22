@@ -198,6 +198,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5118E4462CF0DE0500A4EB93 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5118E4422CF0BFA900A4EB93 /* ExportButtonStatus.swift */,
+				51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5118E4472CF0DE2300A4EB93 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				51F739042CE656ED003E036B /* AVAssetExportSession.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		5124F5EC2CDD309200DB6E0C /* SelectedOverlayView */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,11 +502,10 @@
 		51F738DE2CE26174003E036B /* Exporter */ = {
 			isa = PBXGroup;
 			children = (
+				5118E4472CF0DE2300A4EB93 /* Extension */,
+				5118E4462CF0DE0500A4EB93 /* Model */,
 				51F738DF2CE26214003E036B /* ExporterVC.swift */,
 				51F738E12CE3815D003E036B /* ExporterVM.swift */,
-				5118E4422CF0BFA900A4EB93 /* ExportButtonStatus.swift */,
-				51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */,
-				51F739042CE656ED003E036B /* AVAssetExportSession.swift */,
 			);
 			path = Exporter;
 			sourceTree = "<group>";
