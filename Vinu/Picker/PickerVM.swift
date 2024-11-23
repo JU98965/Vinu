@@ -24,15 +24,34 @@ final class PickerVM {
         let selectItemsCount: Observable<Int>
         let assets: Observable<[PHAsset]>
         let nextButtonEnabling: Observable<Bool>
+        let thumbnailCVBackState: Observable<(isAuthorized: Bool, isItemsEmpty: Bool)>
     }
     
     private let bag = DisposeBag()
     
     func transform(input: Input) -> Output {
         // 썸네일 셀 아이템 상태를 저장하는 서브젝트
-        let thumbnailItems = BehaviorSubject<[ThumbnailSectionData]>(value: fetchThumbnailItems())
+        let thumbnailItems = BehaviorSubject<[ThumbnailSectionData]>(value: [])
         // 번호표 상태를 저장하는 서브젝트
         let numberTagIndexPaths = BehaviorSubject<[IndexPath]>(value: [])
+        
+        // 사진 앨범 권한 확인
+        let isAuthorized = checkAuthorization()
+            .share(replay: 1)
+        
+        // 권한 허용 여부에 따라 아이템을 가져올지 말지 결정
+        isAuthorized
+            .debug()
+            .compactMap { [weak self] isAuthorized in
+                isAuthorized ? self?.fetchThumbnailItems() : nil
+            }
+            .bind(to: thumbnailItems)
+            .disposed(by: bag)
+        
+        let thumbnailCVBackState = isAuthorized
+            .withLatestFrom(thumbnailItems) { isAuthorized, thumbnailItems in
+                return (isAuthorized: isAuthorized, isItemsEmpty: thumbnailItems.isEmpty)
+            }
         
         // 썸네일 셀을 탭하면 선택 or 선택 해제
         input.selectedThumbnailPath
@@ -129,7 +148,8 @@ final class PickerVM {
             pendingItems: pendingItems,
             selectItemsCount: selectItemsCount,
             assets: assets,
-            nextButtonEnabling: nextButtonEnabling)
+            nextButtonEnabling: nextButtonEnabling,
+            thumbnailCVBackState: thumbnailCVBackState)
     }
     
     // 메타데이터를 가져와서, 셀에 들어갈 데이터를 생성
@@ -146,5 +166,48 @@ final class PickerVM {
         let items = assets.map { ThumbnailData(id: UUID(), asset: $0) }
         
         return items.sectionData
+    }
+    
+    private func checkAuthorization() -> Observable<Bool> {
+        Observable.create { observer in
+            /// .notDetermined: 아직 아무것도 결정하지 않음
+            /// .restricted: 외부적인 제한에 의해 권한을 사용할 수 없음 (이건 내가 어케 못함)
+            /// .denied: 거절됨
+            /// .authorized: 허가됨
+            /// .limited: 제한적 접근 허가됨
+            
+            let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+
+            switch status {
+            case .notDetermined:
+                Task { @MainActor in
+                    // 아직 아무것도 결정하지 않았다면 권한 요청 후 결과 받아오기
+                    let result = await self.requtestAuthorization()
+                    observer.onNext(result)
+                }
+            case .denied, .restricted:
+                observer.onNext(false)
+            case .authorized, .limited:
+                observer.onNext(true)
+            @unknown default:
+                print("예외 발생", #function)
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func requtestAuthorization() async -> Bool {
+        let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+        
+        switch status {
+        case .denied, .restricted:
+            return false
+        case .authorized, .limited:
+            return true
+        default:
+            print("예외 발생", #function)
+            return false
+        }
     }
 }
