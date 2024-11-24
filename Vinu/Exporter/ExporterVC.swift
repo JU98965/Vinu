@@ -32,7 +32,7 @@ final class ExporterVC: UIViewController {
     
     let imageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "export_image")?.resizeImage(newWidth: 150)
+        view.image = UIImage(named: "export_image")?.resizeImage(newWidth: 250)
         view.contentMode = .center
         view.dropShadow(
             radius: 15,
