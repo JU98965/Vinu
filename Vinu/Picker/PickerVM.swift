@@ -16,10 +16,11 @@ final class PickerVM {
         let selectedThumbnailPath: Observable<IndexPath>
         let selectedPendingPath: Observable<IndexPath>
         let tapNextButton: Observable<Void>
+        let tapRedirectButton: Observable<Void>
     }
     
     struct Output {
-        let thumbnailItems: Observable<[ThumbnailSectionData]>
+        let thumbnailSectionDataArr: Observable<[ThumbnailSectionData]>
         let pendingItems: Observable<[ThumbnailSectionData]>
         let selectItemsCount: Observable<Int>
         let assets: Observable<[PHAsset]>
@@ -31,7 +32,7 @@ final class PickerVM {
     
     func transform(input: Input) -> Output {
         // 썸네일 셀 아이템 상태를 저장하는 서브젝트
-        let thumbnailItems = BehaviorSubject<[ThumbnailSectionData]>(value: [])
+        let thumbnailSectionDataArr = BehaviorSubject<[ThumbnailSectionData]>(value: [])
         // 번호표 상태를 저장하는 서브젝트
         let numberTagIndexPaths = BehaviorSubject<[IndexPath]>(value: [])
         
@@ -41,21 +42,21 @@ final class PickerVM {
         
         // 권한 허용 여부에 따라 아이템을 가져올지 말지 결정
         isAuthorized
-            .debug()
             .compactMap { [weak self] isAuthorized in
                 isAuthorized ? self?.fetchThumbnailItems() : nil
             }
-            .bind(to: thumbnailItems)
+            .debug()
+            .bind(to: thumbnailSectionDataArr)
             .disposed(by: bag)
         
         let thumbnailCVBackState = isAuthorized
-            .withLatestFrom(thumbnailItems) { isAuthorized, thumbnailItems in
-                return (isAuthorized: isAuthorized, isItemsEmpty: thumbnailItems.isEmpty)
+            .withLatestFrom(thumbnailSectionDataArr) { isAuthorized, sectionDataArr in
+                return (isAuthorized: isAuthorized, isItemsEmpty: sectionDataArr.items.isEmpty)
             }
         
         // 썸네일 셀을 탭하면 선택 or 선택 해제
         input.selectedThumbnailPath
-            .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailItems)) {
+            .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailSectionDataArr)) {
                 let selectPath = $0
                 var numberTagPaths = $1.0
                 var items = $1.1.items
@@ -81,14 +82,14 @@ final class PickerVM {
             }
             .bind { result in
                 // 각 서브젝트에 새로운 값을 업데이트 및 방출
-                thumbnailItems.onNext(result.items)
+                thumbnailSectionDataArr.onNext(result.items)
                 numberTagIndexPaths.onNext(result.numberTagPaths)
             }
             .disposed(by: bag)
         
         // 계류 셀 탭하면 선택 해제
         input.selectedPendingPath
-            .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailItems)) {
+            .withLatestFrom(Observable.combineLatest(numberTagIndexPaths, thumbnailSectionDataArr)) {
                 let selectPath = $0
                 var numberTagPaths = $1.0
                 var items = $1.1.items
@@ -110,7 +111,7 @@ final class PickerVM {
             }
             .bind { result in
                 // 각 서브젝트에 새로운 값을 업데이트 및 방출
-                thumbnailItems.onNext(result.items)
+                thumbnailSectionDataArr.onNext(result.items)
                 numberTagIndexPaths.onNext(result.numberTagPaths)
             }
             .disposed(by: bag)
@@ -118,7 +119,7 @@ final class PickerVM {
         // 계류 콜렉션뷰에 사용될 아이템 걸러내기
         let pendingItems = Observable
             // 썸네일 아이템, 번호표 패스의 정보가 함께 필요하기 때문에 zip으로 짝을 맞춰서 가져옴
-            .zip(thumbnailItems, numberTagIndexPaths) { sectionData, numberTagPaths in
+            .zip(thumbnailSectionDataArr, numberTagIndexPaths) { sectionData, numberTagPaths in
                 let items = sectionData.items
                 var pendingItems = [ThumbnailData]()
                 numberTagPaths.forEach { pendingItems.append(items[$0.row]) }
@@ -143,8 +144,20 @@ final class PickerVM {
         let nextButtonEnabling = numberTagIndexPaths
             .map { !$0.isEmpty }
         
+        // 설정으로 이동 버튼을 누르면 설정 창으로 리디렉션
+        input.tapRedirectButton
+            .bind(with: self) { owner, _ in
+                // 설정 창으로 이동
+                guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+                      UIApplication.shared.canOpenURL(settingsURL)
+                else { return }
+                
+                UIApplication.shared.open(settingsURL)
+            }
+            .disposed(by: bag)
+        
         return Output(
-            thumbnailItems: thumbnailItems.asObservable(),
+            thumbnailSectionDataArr: thumbnailSectionDataArr.asObservable(),
             pendingItems: pendingItems,
             selectItemsCount: selectItemsCount,
             assets: assets,

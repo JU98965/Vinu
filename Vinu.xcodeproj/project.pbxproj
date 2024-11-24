@@ -79,6 +79,8 @@
 		51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D566D42CDBF50A00F93E82 /* GradientView.swift */; };
 		51E1E1AC2CD11B8B00414BF3 /* PlaybackConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */; };
 		51EBA9202CBC242D0025E432 /* ConfigureError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBA91F2CBC242D0025E432 /* ConfigureError.swift */; };
+		51F541E82CF3047A00249933 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F541E72CF3047A00249933 /* EmptyView.swift */; };
+		51F541EC2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F541EB2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift */; };
 		51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */; };
 		51F738D62CDFD568003E036B /* ConfigureVM+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */; };
 		51F738E02CE26214003E036B /* ExporterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F738DF2CE26214003E036B /* ExporterVC.swift */; };
@@ -168,6 +170,8 @@
 		51D566D42CDBF50A00F93E82 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackConsoleView.swift; sourceTree = "<group>"; };
 		51EBA91F2CBC242D0025E432 /* ConfigureError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureError.swift; sourceTree = "<group>"; };
+		51F541E72CF3047A00249933 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
+		51F541EB2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeniedAuthorizationEmptyView.swift; sourceTree = "<group>"; };
 		51F738D22CDE8C3B003E036B /* ConfigureCardCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureCardCellData.swift; sourceTree = "<group>"; };
 		51F738D52CDFD561003E036B /* ConfigureVM+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigureVM+Concurrency.swift"; sourceTree = "<group>"; };
 		51F738DF2CE26214003E036B /* ExporterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExporterVC.swift; sourceTree = "<group>"; };
@@ -358,6 +362,7 @@
 			children = (
 				519BF0D12C9AE9240064FE0A /* ThumbnailCell */,
 				51CB74292CDE0CAB00C87F6C /* PendingItemView */,
+				51F541ED2CF337F900249933 /* EmptyView */,
 				519BF0CA2C9AD8F50064FE0A /* PickerVC.swift */,
 				519BF0D42C9AEDE70064FE0A /* PickerVM.swift */,
 			);
@@ -497,6 +502,15 @@
 				514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */,
 			);
 			path = VideoTrackView;
+			sourceTree = "<group>";
+		};
+		51F541ED2CF337F900249933 /* EmptyView */ = {
+			isa = PBXGroup;
+			children = (
+				51F541EB2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift */,
+				51F541E72CF3047A00249933 /* EmptyView.swift */,
+			);
+			path = EmptyView;
 			sourceTree = "<group>";
 		};
 		51F738DE2CE26174003E036B /* Exporter */ = {
@@ -651,6 +665,7 @@
 				519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */,
 				5146D5432CAC3A6700C407F3 /* UICollectionView.swift in Sources */,
 				51F739052CE656F3003E036B /* AVAssetExportSession.swift in Sources */,
+				51F541E82CF3047A00249933 /* EmptyView.swift in Sources */,
 				51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */,
 				51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */,
 				51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */,
@@ -662,6 +677,7 @@
 				513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */,
 				51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */,
 				51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */,
+				51F541EC2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift in Sources */,
 				519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */,
 				510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */,
 				510C47DE2CDA4FA000D479D2 /* CustomIntensityVisualEffectView.swift in Sources */,

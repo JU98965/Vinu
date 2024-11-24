@@ -49,7 +49,7 @@ extension UIColor {
     }
     
     static var tintBlue: UIColor {
-        UIColor(hex: 0x4B90FC)
+        UIColor(hex: 0x7AACF9)
     }
     static var chuColorPalette: [UIColor] {
         let array: [UIColor] = [

@@ -31,6 +31,8 @@ final class PickerVC: UIViewController {
         return cv
     }()
     
+    let deniedEmptyView = DeniedAuthorizationEmptyView()
+    
     let pendingItemView = PendingItemView()
     
     let nextButton = {
@@ -92,12 +94,13 @@ final class PickerVC: UIViewController {
         let input = PickerVM.Input(
             selectedThumbnailPath: thumbnailCV.rx.itemSelected.asObservable(),
             selectedPendingPath: pendingItemView.pendingCV.rx.itemSelected.asObservable(),
-            tapNextButton: nextButton.rx.tap.asObservable())
+            tapNextButton: nextButton.rx.tap.asObservable(),
+            tapRedirectButton: deniedEmptyView.redirectButton.rx.tap.asObservable())
         
         let output = pickerVM.transform(input: input)
         
         // 썸네일 컬렉션 뷰 바인딩
-        output.thumbnailItems
+        output.thumbnailSectionDataArr
             .bind(to: thumbnailCV.rx.items(dataSource: bindThumbnailData()))
             .disposed(by: bag)
         
@@ -124,6 +127,21 @@ final class PickerVC: UIViewController {
         
         output.nextButtonEnabling
             .bind(to: nextButton.rx.isEnabled)
+            .disposed(by: bag)
+        
+        output.thumbnailCVBackState
+            .debug()
+            .bind(with: self) { owner, backState in
+                let (isAuthorized, isItemsEmpty) = backState
+                // 아이템이 있으면 이미 권한이 있다는 소리니까, 백그라운드 뷰 표시할 필요 없음
+                guard isItemsEmpty else { return }
+                print("넘어오나?")
+                if isAuthorized {
+                    owner.thumbnailCV.backgroundView = EmptyView()
+                } else {
+                    owner.thumbnailCV.backgroundView = owner.deniedEmptyView
+                }
+            }
             .disposed(by: bag)
     }
     
