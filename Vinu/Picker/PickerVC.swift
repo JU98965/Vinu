@@ -130,12 +130,11 @@ final class PickerVC: UIViewController {
             .disposed(by: bag)
         
         output.thumbnailCVBackState
-            .debug()
             .bind(with: self) { owner, backState in
                 let (isAuthorized, isItemsEmpty) = backState
                 // 아이템이 있으면 이미 권한이 있다는 소리니까, 백그라운드 뷰 표시할 필요 없음
                 guard isItemsEmpty else { return }
-                print("넘어오나?")
+
                 if isAuthorized {
                     owner.thumbnailCV.backgroundView = EmptyView()
                 } else {

@@ -45,7 +45,6 @@ final class PickerVM {
             .compactMap { [weak self] isAuthorized in
                 isAuthorized ? self?.fetchThumbnailItems() : nil
             }
-            .debug()
             .bind(to: thumbnailSectionDataArr)
             .disposed(by: bag)
         
