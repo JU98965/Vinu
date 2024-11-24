@@ -15,6 +15,14 @@ final class MainVC: UIViewController {
     private let bag = DisposeBag()
     
     // MARK: - Componets
+    let patternImageView = {
+        let color = UIColor.black.withAlphaComponent(0.05)
+        let view = UIImageView()
+        view.image = UIImage(named: "main_pattern")?.withTintColor(color)
+        view.contentMode = .scaleAspectFill
+        return view
+    }()
+    
     let mainVStack = {
         let sv = UIStackView()
         sv.axis = .vertical
@@ -24,28 +32,51 @@ final class MainVC: UIViewController {
         return sv
     }()
     
-    let subTitleLabel = {
+    let titleVStack = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 15
+        return sv
+    }()
+    
+    let titleLabel = {
         let label = UILabel()
-        label.text = String(localized: "영상을 이어붙이는 가장 쉬운 방법")
-        label.font = .preferredFont(forTextStyle: .title1)
+        label.text = String(localized: "손쉽게 하나의 영상으로 짜잔")
+        label.font = .preferredFont(forTextStyle: .extraLargeTitle)
         label.adjustsFontSizeToFitWidth = true
-        label.textColor = .textGray
-        label.textAlignment = .center
-        label.dropShadow(radius: 8, opacity: 0.1)
+        label.textColor = .white
+        label.dropShadow(radius: 7.5, opacity: 0.1)
         return label
     }()
     
-    let imageContentView = UIView()
+    let subTitleLabel = {
+        let label = UILabel()
+        label.text = String(localized: "\"비누\"가 순식간에 합쳐드릴게요.\n완전 무료! 광고도 없답니다.")
+        label.font = .boldSystemFont(ofSize: label.font.pointSize)
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .white
+        label.dropShadow(radius: 7.5, opacity: 0.1)
+
+        return label
+    }()
+
     let imageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "main_entry_image")?.withTintColor(.tintBlue)
+        view.image = UIImage(named: "main_entry_image")?.resizeImage(newWidth: 200)
+        view.contentMode = .center
+        view.dropShadow(
+            radius: 15,
+            opacity: 0.05,
+            offset: CGSize(width: 0, height: 5))
         return view
     }()
     
     let startButton = {
         var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintBlue
-        config.baseForegroundColor = .white
+        config.baseBackgroundColor = .backWhite
+        config.baseForegroundColor = .tintBlue
         config.cornerStyle = .large
         config.attributedTitle = AttributedString(
             String(localized: "시작하기"),
@@ -53,16 +84,15 @@ final class MainVC: UIViewController {
         let button = UIButton(configuration: config)
         button.dropShadow(
             radius: 8,
-            opacity: 0.5,
-            offset: CGSize(width: 0, height: 5),
-            color: .tintBlue)
+            opacity: 0.05,
+            offset: CGSize(width: 0, height: 5))
         return button
     }()
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backWhite
+        view.backgroundColor = .tintBlue
 //        setNavigationBar(title: String(localized: "Vinu"))
 
         setAutoLayout()
@@ -81,14 +111,16 @@ final class MainVC: UIViewController {
 
     // MARK: - Layout
     private func setAutoLayout() {
+        view.addSubview(patternImageView)
         view.addSubview(mainVStack)
-        mainVStack.addArrangedSubview(imageContentView)
-        mainVStack.addArrangedSubview(subTitleLabel)
+        mainVStack.addArrangedSubview(imageView)
+        mainVStack.addArrangedSubview(titleVStack)
         mainVStack.addArrangedSubview(startButton)
-        imageContentView.addSubview(imageView)
-        
+        titleVStack.addArrangedSubview(titleLabel)
+        titleVStack.addArrangedSubview(subTitleLabel)
+
+        patternImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
-        imageView.snp.makeConstraints { $0.center.equalToSuperview() }
         startButton.snp.makeConstraints { $0.height.equalTo(50) }
     }
     
