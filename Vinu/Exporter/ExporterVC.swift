@@ -46,7 +46,8 @@ final class ExporterVC: UIViewController {
     let notificationLabel = {
         let padding = UIEdgeInsets(horizontal: 15) + UIEdgeInsets(bottom: 50)
         let label = PaddingUILabel(padding: padding)
-        label.text = String(localized: "내보내기 전 디바이스의 저장 공간이 충분한지 확인해 주세요.")
+        // label.text = "사용자가 작업을 취소했어요. 창을 닫고 다시 시도해 주세요."
+        label.font = .systemFont(ofSize: 14)
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         label.textColor = .textGray
@@ -160,6 +161,11 @@ final class ExporterVC: UIViewController {
         // 내보내기 실패 or 취소 시, 프로그래스 바와 진행률 퍼센트 레이블의 색을 비활성화 색으로 변경
         output.disableColor
             .bind(to: progressStateView.progressBar.rx.progressTintColor, progressStateView.progressLabel.rx.textColor)
+            .disposed(by: bag)
+        
+        // 알림 텍스트
+        output.notificationText
+            .bind(to: notificationLabel.rx.text)
             .disposed(by: bag)
     }
 }

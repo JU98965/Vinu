@@ -26,6 +26,7 @@ final class ExporterVM {
         let popToRootView: Observable<Void>
         let popThisView: Observable<Void>
         let disableColor: Observable<UIColor>
+        let notificationText: Observable<String>
     }
     
     private let exporter: AVAssetExportSession?
@@ -114,6 +115,10 @@ final class ExporterVM {
             .bind(to: disableColor)
             .disposed(by: bag)
         
+        // exporter의 상태가 변할 때마다 알림 텍스트를 전달
+        let notificationText = exporterStatus
+            .flatMapLatest(getNotificationText(status:))
+        
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,
@@ -123,7 +128,8 @@ final class ExporterVM {
             exportButtonTitle: exportButtonTitle,
             popToRootView: popToRootView.asObservable(),
             popThisView: popThisView.asObservable(),
-            disableColor: disableColor.asObservable())
+            disableColor: disableColor.asObservable(),
+            notificationText: notificationText)
     }
     
     // MARK: - Methods
@@ -159,7 +165,6 @@ final class ExporterVM {
     private func cancelExporting() {
         self.exporter?.cancelExport()
         self.exportTimer?.invalidate()
-        print("내보내기 취소")
     }
     
     private func getPeriodicProgress() -> Observable<Float> {
@@ -224,5 +229,29 @@ final class ExporterVM {
         }
     }
     
-    
+    private func getNotificationText(status: AVAssetExportSession.Status) -> Observable<String> {
+        Observable.create { observer in
+            
+            /// completed, failed, cancelled
+            /// 위 상태가 되면 재시도 불가, 인스턴스 다시 만들어야 함
+            /// 재시도 하고 싶다면 창을 닫고 다시 열도록 유도하는 게 나을 듯
+            
+            switch status {
+            case .unknown, .waiting:
+                observer.onNext(String(localized: "내보내기 전 디바이스의 저장 공간이 충분한지 확인해 주세요."))
+            case .exporting:
+                observer.onNext(String(localized: "내보내기 중 앱을 종료하면 작업 내용을 잃을 수 있어요."))
+            case .completed:
+                observer.onNext(String(localized: "내보내기가 완료되었어요. 사진 앱을 확인해 주세요."))
+            case .failed:
+                observer.onNext(String(localized: "알 수 없는 이유로 작업을 실패했어요. 창을 닫고 다시 시도해 주세요."))
+            case .cancelled:
+                observer.onNext(String(localized: "사용자가 작업을 취소했어요. 창을 닫고 다시 시도해 주세요."))
+            @unknown default:
+                print(#function, "예외 발생")
+            }
+            
+            return Disposables.create()
+        }
+    }
 }
