@@ -23,7 +23,6 @@ final class ExporterVM {
         let progressText: Observable<String>
         let statusText: Observable<String>
         let exportButtonTitle: Observable<String>
-        let popToRootView: Observable<Void>
         let popThisView: Observable<Void>
         let disableColor: Observable<UIColor>
         let notificationText: Observable<String>
@@ -40,8 +39,6 @@ final class ExporterVM {
     func transform(input: Input) -> Output {
         // exporter객체를 스트림 차원에서 관리하기 위한 서브젝트
         let exporter = BehaviorSubject(value: exporter).asObservable()
-        // 홈 화면으로 돌아간다는 신호를 전달하기 위한 서브젝트
-        let popToRootView = PublishSubject<Void>()
         // 이전 화면으로 돌아간다는 신호를 전달하기 위한 서브젝트
         let popThisView = PublishSubject<Void>()
         // exporter가 비활성화 됐을 때 비활성화 색상을 전달하기 위한 서브젝트
@@ -83,8 +80,12 @@ final class ExporterVM {
                     // 내보내기 중, 버튼 눌리면 작업 취소
                     owner.cancelExporting()
                 case .completed:
-                    // 내보내기 완료, 버튼 눌리면 홈 화면으로 돌아가기
-                    popToRootView.onNext(())
+                    // 내보내기 완료, 버튼 눌리면 사진 앱으로 이동
+                    guard let settingsURL = URL(string: "photos-redirect://"),
+                          UIApplication.shared.canOpenURL(settingsURL)
+                    else { return }
+                    
+                    UIApplication.shared.open(settingsURL)
                 case .failed, .cancelled:
                     // 내보내기 실패 or 취소, 버튼 눌리면 지금 뷰는 닫기
                     popThisView.onNext(())
@@ -118,7 +119,7 @@ final class ExporterVM {
         // exporter의 상태가 변할 때마다 알림 텍스트를 전달
         let notificationText = exporterStatus
             .flatMapLatest(getNotificationText(status:))
-        
+
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,
@@ -126,7 +127,6 @@ final class ExporterVM {
             progressText: progressText,
             statusText: statusText,
             exportButtonTitle: exportButtonTitle,
-            popToRootView: popToRootView.asObservable(),
             popThisView: popThisView.asObservable(),
             disableColor: disableColor.asObservable(),
             notificationText: notificationText)
@@ -218,7 +218,7 @@ final class ExporterVM {
             case .exporting:
                 observer.onNext(String(localized: "취소"))
             case .completed:
-                observer.onNext(String(localized: "홈으로 돌아가기"))
+                observer.onNext(String(localized: "사진 앱으로 이동"))
             case .failed, .cancelled:
                 observer.onNext(String(localized: "닫기"))
             @unknown default:

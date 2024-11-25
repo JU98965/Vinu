@@ -144,13 +144,6 @@ final class ExporterVC: UIViewController {
             })
             .disposed(by: bag)
         
-        // 내보내기 완료 시, 버튼 누르면 홈 화면으로 이동
-        output.popToRootView
-            .bind(with: self) { owner, _ in
-                owner.navigationController?.popToRootViewController(animated: true)
-            }
-            .disposed(by: bag)
-        
         // 내보내기 실패 or 취소 시, 버튼 누르면 이전 화면으로 이동
         output.popThisView
             .bind(with: self) { owner, _ in
