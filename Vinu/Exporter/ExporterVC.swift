@@ -53,13 +53,6 @@ final class ExporterVC: UIViewController {
         return label
     }()
     
-    let exportButtonContainer = {
-        let sv = UIStackView()
-        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(horizontal: 35)
-        sv.isLayoutMarginsRelativeArrangement = true
-        return sv
-    }()
-    
     let exportButton = {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .tintBlue
@@ -89,16 +82,19 @@ final class ExporterVC: UIViewController {
     private func setAutoLayout() {
         view.addSubview(patternImageView)
         view.addSubview(mainVStack)
+        view.addSubview(exportButton)
         mainVStack.addArrangedSubview(imageView)
         mainVStack.addArrangedSubview(progressStateView)
         mainVStack.addArrangedSubview(notificationLabel)
-        mainVStack.addArrangedSubview(exportButtonContainer)
-        // exportButtonContainer
-        exportButtonContainer.addArrangedSubview(exportButton)
+        mainVStack.addArrangedSubview(UIView())
         
         patternImageView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(15) }
-        exportButton.snp.makeConstraints { $0.height.equalTo(50) }
+        exportButton.snp.makeConstraints {
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(30)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
+            $0.height.equalTo(50)
+        }
     }
     
     // MARK: - Binding
@@ -110,38 +106,60 @@ final class ExporterVC: UIViewController {
         
         let output = exporterVM.transform(input: input)
         
+        // 예상 파일 크기 텍스트
         output.estimatedFileSizeText
             .bind(to: progressStateView.estimatedFileSizeFactorLabel.rx.text)
             .disposed(by: bag)
         
+        // 익스포터가 nil이면 내보내기 버튼 활성화 조차 안되게
         output.isExportButtonEnabled
             .bind(to: exportButton.rx.isEnabled)
             .disposed(by: bag)
         
+        // 작업 진행률 수치
         output.progress
-            .bind(to: progressStateView.progressBar.rx.progress)
+            .bind(with: self, onNext: { owner, progress in
+                UIView.animate(withDuration: 0.5) {
+                    owner.progressStateView.progressBar.progress = progress
+                    owner.progressStateView.progressBar.layoutIfNeeded()
+                }
+            })
             .disposed(by: bag)
         
+        // 진행률 퍼센트 텍스트
         output.progressText
             .bind(to: progressStateView.progressLabel.rx.text)
             .disposed(by: bag)
         
+        // exporter의 상태 텍스트
         output.statusText
             .bind(to: progressStateView.statusLabel.rx.text)
             .disposed(by: bag)
         
-        output.exportButtonConfig
-            .bind(with: self) { owner, config in
-                let button = owner.exportButton
-                button.configuration?.title = config.title
-                button.isHidden = config.isHidden
-            }
+        // 상태에 따른 버튼 타이틀
+        output.exportButtonTitle
+            .bind(with: self, onNext: { owner, title in
+                owner.exportButton.configuration?.title = title
+            })
             .disposed(by: bag)
         
-        output.backMainView
+        // 내보내기 완료 시, 버튼 누르면 홈 화면으로 이동
+        output.popToRootView
             .bind(with: self) { owner, _ in
                 owner.navigationController?.popToRootViewController(animated: true)
             }
+            .disposed(by: bag)
+        
+        // 내보내기 실패 or 취소 시, 버튼 누르면 이전 화면으로 이동
+        output.popThisView
+            .bind(with: self) { owner, _ in
+                owner.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: bag)
+        
+        // 내보내기 실패 or 취소 시, 프로그래스 바와 진행률 퍼센트 레이블의 색을 비활성화 색으로 변경
+        output.disableColor
+            .bind(to: progressStateView.progressBar.rx.progressTintColor, progressStateView.progressLabel.rx.textColor)
             .disposed(by: bag)
     }
 }
