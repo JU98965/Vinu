@@ -67,8 +67,8 @@ final class ConfigureVC: UIViewController {
         
         mainVStack.snp.makeConstraints { $0.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(top: 15)) }
         createButton.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(50)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(30)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.height.equalTo(50)
         }
         

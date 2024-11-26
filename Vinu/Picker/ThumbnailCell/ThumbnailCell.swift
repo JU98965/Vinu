@@ -27,7 +27,7 @@ final class ThumbnailCell: UICollectionViewCell {
     
     let durationLabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 11, weight: .semibold)
+        label.font = .systemFont(ofSize: 12, weight: .bold)
         label.text = "12:34" // temp
         label.textColor = .white
         label.dropShadow(radius: 3, opacity: 0.75)
@@ -38,6 +38,7 @@ final class ThumbnailCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.clipsToBounds = true
+        contentView.smoothCorner(radius: 3)
 
         setAutoLayout()
     }

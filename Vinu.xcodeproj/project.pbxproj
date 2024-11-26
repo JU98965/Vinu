@@ -884,7 +884,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 병합을 위해 사진에 접근합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 편집을 위해 사진에 접근합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -919,7 +919,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 병합을 위해 사진에 접근합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 편집을 위해 사진에 접근합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

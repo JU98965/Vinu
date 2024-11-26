@@ -51,7 +51,7 @@ final class MainVC: UIViewController {
     
     let subTitleLabel = {
         let label = UILabel()
-        label.text = String(localized: "순식간에 합쳐드릴게요.\n완전 무료! 광고도 없답니다.")
+        label.text = String(localized: "비누가 순식간에 합쳐드릴게요.\n완전 무료! 광고도 없답니다.")
         label.font = .boldSystemFont(ofSize: label.font.pointSize)
         label.textAlignment = .center
         label.numberOfLines = 2

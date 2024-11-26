@@ -20,8 +20,8 @@ extension UIViewController {
             navigationBarAppearance.shadowColor = .clear // 그림자 없애기
             
             if let title { // 타이틀 설정
-                navigationBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.textGray] // 타이틀 색깔
-                self.navigationController?.navigationBar.tintColor = .textGray
+                navigationBarAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.darkGray] // 타이틀 색깔
+                self.navigationController?.navigationBar.tintColor = .tintBlue
                 self.title = title
             }
             if let leftBarButtonItems {

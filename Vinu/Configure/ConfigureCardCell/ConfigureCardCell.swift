@@ -34,7 +34,7 @@ final class ConfigureCardCell: UICollectionViewCell {
     
     let titleLabel = {
         let label = UILabel()
-        // label.text = "16:9" // temp
+        // label.text = "16:9"
         // label.textColor = .textGray
         label.font = .boldSystemFont(ofSize: 14)
         label.textAlignment = .center

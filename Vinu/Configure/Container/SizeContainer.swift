@@ -20,7 +20,7 @@ final class SizeContainer: UIView {
     let sizeLabel = {
         let label = PaddingUILabel(padding: UIEdgeInsets(horizontal: 15))
         label.text = String(localized: "화면 비율")
-        label.textColor = .darkGray
+        label.textColor = .textGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()

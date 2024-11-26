@@ -23,7 +23,7 @@ final class TitleContainer: UIView {
     let titleLabel = {
         let label = UILabel()
         label.text = String(localized: "프로젝트 제목")
-        label.textColor = .darkGray
+        label.textColor = .textGray
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
