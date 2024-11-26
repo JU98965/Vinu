@@ -22,14 +22,16 @@ final class EditorVC: UIViewController {
         sv.spacing = 15
         return sv
     }()
-        
-    let editConsoleView = EditConsoleView()
+    
+    let navigationConsoleView = NavigationConsoleView()
     
     let videoPlayerView = {
         let view = VideoPlayerView()
         view.dropShadow(radius: 7.5, opacity: 0.05)
         return view
     }()
+    
+    let editConsoleView = EditConsoleView()
     
     let playbackConsoleView = PlaybackConsoleView()
     
@@ -57,15 +59,15 @@ final class EditorVC: UIViewController {
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(mainVStack)
-        mainVStack.addArrangedSubview(editConsoleView)
+        mainVStack.addArrangedSubview(navigationConsoleView)
         mainVStack.addArrangedSubview(videoPlayerView)
+        mainVStack.addArrangedSubview(editConsoleView)
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
 
         mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(78) }
-        editConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
     }
     
     // MARK: - Binding
@@ -80,7 +82,8 @@ final class EditorVC: UIViewController {
             controlStatus: videoPlayerView.controlStatus.asObservable(),
             playbackTap: playbackConsoleView.playbackButton.rx.tap.asObservable(),
             hdrTap: editConsoleView.hdrButton.rx.tap.asObservable(),
-            exportTap: editConsoleView.exportButton.rx.tap.asObservable())
+            exportTap: navigationConsoleView.exportButton.rx.tap.asObservable(),
+            popTap: navigationConsoleView.popButton.rx.tap.asObservable())
         
         let output = editorVM.transform(input: input)
 
@@ -157,13 +160,18 @@ final class EditorVC: UIViewController {
         output.isHDRAllowed
             .bind(with: self) { owner, isAllowed in
                 let button = owner.editConsoleView.hdrButton
-                if !isAllowed {
-                    button.configuration?.baseForegroundColor = .textGray
-                    button.configuration?.baseBackgroundColor = .clear
+                if isAllowed {
+                    button.configuration?.baseForegroundColor = .tintBlue
                 } else {
-                    button.configuration?.baseForegroundColor = .white
-                    button.configuration?.baseBackgroundColor = .tintBlue
+                    button.configuration?.baseForegroundColor = .textGray
                 }
+            }
+            .disposed(by: bag)
+        
+        // 홈 화면으로 돌아가기 전 확인 얼럿 표시
+        output.displayPopAlert
+            .bind(with: self) { owner, _ in
+                owner.alertPopThisView()
             }
             .disposed(by: bag)
     }

@@ -62,6 +62,8 @@
 		519BF0D52C9AEDE70064FE0A /* PickerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0D42C9AEDE70064FE0A /* PickerVM.swift */; };
 		519F097B2C9DB9D4009A16E2 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 519F097A2C9DB9D4009A16E2 /* RxDataSources */; };
 		51B048EA2CBFA39500C9382B /* FocusedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B048E92CBFA39500C9382B /* FocusedOverlayView.swift */; };
+		51C3F9AD2CF5B590004C6C15 /* NavigationConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3F9AC2CF5B590004C6C15 /* NavigationConsoleView.swift */; };
+		51C3F9B12CF5BA52004C6C15 /* EditorVC+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */; };
 		51C622F02CECA72E005E9E92 /* TitleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622EF2CECA72E005E9E92 /* TitleContainer.swift */; };
 		51C622F22CECAF0C005E9E92 /* SizeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F12CECAF0C005E9E92 /* SizeContainer.swift */; };
 		51C622F42CECB536005E9E92 /* PlacementContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F32CECB536005E9E92 /* PlacementContainer.swift */; };
@@ -151,6 +153,8 @@
 		519BF0D22C9AEBF40064FE0A /* ThumbnailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailData.swift; sourceTree = "<group>"; };
 		519BF0D42C9AEDE70064FE0A /* PickerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerVM.swift; sourceTree = "<group>"; };
 		51B048E92CBFA39500C9382B /* FocusedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedOverlayView.swift; sourceTree = "<group>"; };
+		51C3F9AC2CF5B590004C6C15 /* NavigationConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationConsoleView.swift; sourceTree = "<group>"; };
+		51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditorVC+Alert.swift"; sourceTree = "<group>"; };
 		51C622EF2CECA72E005E9E92 /* TitleContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleContainer.swift; sourceTree = "<group>"; };
 		51C622F12CECAF0C005E9E92 /* SizeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeContainer.swift; sourceTree = "<group>"; };
 		51C622F32CECB536005E9E92 /* PlacementContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementContainer.swift; sourceTree = "<group>"; };
@@ -394,8 +398,10 @@
 				51E1E1AA2CD0FD3100414BF3 /* VideoTrackView */,
 				51E1E1A92CD0FD0A00414BF3 /* VideoPlayerView */,
 				51FE51EC2CD38471008C15B9 /* PlaybackConsoleView */,
+				51C3F9AE2CF5B8A6004C6C15 /* NavigationConsoleView */,
 				51F738FD2CE60B2A003E036B /* EditConsoleView */,
 				51F738EF2CE4BD95003E036B /* VideoHelper */,
+				51C3F9AF2CF5BA2B004C6C15 /* Extension */,
 				51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */,
 				51D30D412CA2CE24003B9DF1 /* EditorVM.swift */,
 				516976282CBEE178008A69BF /* EditorConfiguration.swift */,
@@ -421,6 +427,22 @@
 				519BF0CF2C9AE9080064FE0A /* ThumbnailCell.swift */,
 			);
 			path = ThumbnailCell;
+			sourceTree = "<group>";
+		};
+		51C3F9AE2CF5B8A6004C6C15 /* NavigationConsoleView */ = {
+			isa = PBXGroup;
+			children = (
+				51C3F9AC2CF5B590004C6C15 /* NavigationConsoleView.swift */,
+			);
+			path = NavigationConsoleView;
+			sourceTree = "<group>";
+		};
+		51C3F9AF2CF5BA2B004C6C15 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		51C622F52CECBA03005E9E92 /* Container */ = {
@@ -651,8 +673,10 @@
 				519BF0A62C9AB7DC0064FE0A /* SceneDelegate.swift in Sources */,
 				519421332CA92AD600392BF5 /* PreviewPlayer+Rx.swift in Sources */,
 				513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */,
+				51C3F9AD2CF5B590004C6C15 /* NavigationConsoleView.swift in Sources */,
 				51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */,
 				51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */,
+				51C3F9B12CF5BA52004C6C15 /* EditorVC+Alert.swift in Sources */,
 				51F541EC2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift in Sources */,
 				519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */,
 				510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */,

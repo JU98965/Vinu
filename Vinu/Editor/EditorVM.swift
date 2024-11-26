@@ -21,6 +21,7 @@ final class EditorVM {
         let playbackTap: Observable<Void>
         let hdrTap: Observable<Void>
         let exportTap: Observable<Void>
+        let popTap: Observable<Void>
     }
     
     struct Output {
@@ -34,6 +35,7 @@ final class EditorVM {
         let playbackImage: Observable<UIImage?>
         let presentExportVC: Observable<ExporterConfiguration>
         let isHDRAllowed: Observable<Bool>
+        let displayPopAlert: Observable<Void>
     }
     
     let configuration: EditorConfiguration
@@ -179,6 +181,8 @@ final class EditorVM {
                     videoComposition: videoHelper.videoComposition)
             }
 
+        // 홈 화면으로 돌아가기 전 확인하는 얼럿 표시
+        let displayPopAlert = input.popTap
      
         return Output(
             playerItem: playerItem,
@@ -190,7 +194,8 @@ final class EditorVM {
             shouldPlay: shouldPlay,
             playbackImage: playbackImage,
             presentExportVC: exportTap,
-            isHDRAllowed: isHDRAllowed)
+            isHDRAllowed: isHDRAllowed,
+            displayPopAlert: displayPopAlert)
     }
     
     // MARK: - Private methods

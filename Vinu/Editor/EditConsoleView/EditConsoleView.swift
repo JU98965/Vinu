@@ -17,44 +17,12 @@ final class EditConsoleView: UIView {
         return sv
     }()
     
-    let editHStack = {
-        let sv = UIStackView()
-        sv.isLayoutMarginsRelativeArrangement = true
-        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
-        sv.backgroundColor = .white
-        sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.025)
-        return sv
-    }()
-    
     let hdrButton = {
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintBlue
-        config.baseForegroundColor = .white
+        var config = UIButton.Configuration.plain()
+        config.baseForegroundColor = .tintBlue
         config.attributedTitle = AttributedString(
             String(localized: "HDR"),
             attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)]))
-        let button = UIButton(configuration: config)
-        button.smoothCorner(radius: 7.5)
-        return button
-    }()
-    
-    let exportHStack = {
-        let sv = UIStackView()
-        sv.isLayoutMarginsRelativeArrangement = true
-        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
-        sv.backgroundColor = .white
-        sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.025)
-        return sv
-    }()
-    
-    let exportButton = {
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .tintBlue
-        config.image = UIImage(named: "export_icon")?
-            .withTintColor(.white)
-            .resizeImage(newWidth: 16)
         let button = UIButton(configuration: config)
         button.smoothCorner(radius: 7.5)
         return button
@@ -73,14 +41,11 @@ final class EditConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(mainHStack)
-        mainHStack.addArrangedSubview(editHStack)
-        mainHStack.addArrangedSubview(exportHStack)
-        editHStack.addArrangedSubview(hdrButton)
-        editHStack.addArrangedSubview(UIView()) // 스페이서 용도
-        exportHStack.addArrangedSubview(exportButton)
-        
+        mainHStack.addArrangedSubview(hdrButton)
+        mainHStack.addArrangedSubview(UIView())
+
         mainHStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
-        exportHStack.snp.makeConstraints { $0.size.equalTo(50) }
+        hdrButton.snp.makeConstraints { $0.height.equalTo(30) }
     }
 }
 
