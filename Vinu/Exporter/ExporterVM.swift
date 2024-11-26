@@ -14,6 +14,7 @@ final class ExporterVM {
     
     struct Input {
         let exportButtonTap: Observable<Void>
+        let viewDidDisappear: Observable<Void>
     }
     
     struct Output {
@@ -126,7 +127,14 @@ final class ExporterVM {
                 owner.occurHaptic(status: status)
             }
             .disposed(by: bag)
-
+        
+        // 내보내기 중 화면을 닫으면 내보내기 취소
+        input.viewDidDisappear
+            .withLatestFrom(exporterStatus)
+            .filter { $0 == .exporting }
+            .bind(with: self) { owner, _ in owner.cancelExporting() }
+            .disposed(by: bag)
+        
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
             isExportButtonEnabled: isExportButtonEnabled,

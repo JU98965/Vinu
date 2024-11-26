@@ -79,6 +79,10 @@ final class ExporterVC: UIViewController {
         setBinding()
     }
     
+    @objc override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+    
     // MARK: - Layout
     private func setAutoLayout() {
         view.addSubview(patternImageView)
@@ -102,9 +106,15 @@ final class ExporterVC: UIViewController {
     private func setBinding() {
         guard let exporterVM else { return }
         
-        let input = ExporterVM.Input(
-            exportButtonTap: exportButton.rx.tap.asObservable())
+        // sentMessage는 메서드 실행 전 방출
+        let viewDidDisappear = self.rx.sentMessage(#selector(viewDidDisappear(_:)))
+            .map { parameter in }
         
+        let input = ExporterVM.Input(
+            exportButtonTap: exportButton.rx.tap.asObservable(),
+            viewDidDisappear: viewDidDisappear)
+        
+        // MARK: - Output
         let output = exporterVM.transform(input: input)
         
         // 예상 파일 크기 텍스트
