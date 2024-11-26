@@ -27,7 +27,7 @@ final class EditorVC: UIViewController {
     
     let videoPlayerView = {
         let view = VideoPlayerView()
-        view.dropShadow(radius: 7.5, opacity: 0.05)
+        view.dropShadow(radius: 7.5, opacity: 0.025)
         return view
     }()
     

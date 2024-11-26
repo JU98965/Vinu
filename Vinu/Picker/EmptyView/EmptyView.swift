@@ -22,7 +22,7 @@ final class EmptyView: UIView {
     let imageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "questionmark")?
-            .resizeImage(newWidth: 50)
+            .resizeImage(newWidth: 30)
             .withTintColor(.textGray)
         return view
     }()
@@ -32,6 +32,7 @@ final class EmptyView: UIView {
         label.textColor = .textGray
         label.adjustsFontSizeToFitWidth = true
         label.text = String(localized: "사진에서 불러올 수 있는 비디오가 없는 것 같아요.")
+        label.font = .systemFont(ofSize: label.font.pointSize, weight: .semibold)
         return label
     }()
     

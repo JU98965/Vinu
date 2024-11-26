@@ -43,7 +43,7 @@ final class PickerVC: UIViewController {
             String(localized: "다음"),
             attributes: AttributeContainer([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]))
         let button = UIButton(configuration: config)
-        button.smoothCorner(radius: 64 / 4)
+        button.smoothCorner(radius: 15)
         button.clipsToBounds = true
         return button
     }()

@@ -33,24 +33,17 @@ final class DeniedAuthorizationEmptyView: UIView {
         label.numberOfLines = 2
         label.adjustsFontSizeToFitWidth = true
         label.text = String(localized: "사진에 접근할 수 없어요.\n앱 설정에서 사진 접근을 허용하고 다시 시도해 주세요.")
+        label.font = .systemFont(ofSize: label.font.pointSize, weight: .semibold)
         return label
     }()
 
     
     let redirectButton = {
-        let title = String(localized: "설정으로 이동")
-        let attributedString = NSMutableAttributedString(string: title)
-        attributedString.addAttribute(
-            .underlineStyle,
-            value: NSUnderlineStyle.single.rawValue,
-            range: NSRange(location: 0, length: title.count))
-        attributedString.addAttribute(
-            .foregroundColor,
-            value: UIColor.tintBlue,
-            range: NSRange(location: 0, length: title.count))
-        
-        let button = UIButton(configuration: .plain())
-        button.setAttributedTitle(attributedString, for: .normal)
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .tintBlue
+        config.title = String(localized: "설정으로 이동")
+        let button = UIButton(configuration: config)
+        button.smoothCorner(radius: 7.5)
         return button
     }()
 
@@ -75,6 +68,7 @@ final class DeniedAuthorizationEmptyView: UIView {
             $0.centerY.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(30)
         }
+        redirectButton.snp.makeConstraints { $0.height.equalTo(30) }
     }
 }
 
