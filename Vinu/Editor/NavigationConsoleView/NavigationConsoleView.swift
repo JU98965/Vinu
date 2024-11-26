@@ -13,16 +13,6 @@ final class NavigationConsoleView: UIView {
     // MARK: - Components
     let mainHStack = UIStackView()
     
-    let popButtonContainer = {
-        let sv = UIStackView()
-        sv.isLayoutMarginsRelativeArrangement = true
-        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
-        sv.backgroundColor = .white
-        sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.025)
-        return sv
-    }()
-    
     let popButton = {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .tintBlue
@@ -32,16 +22,6 @@ final class NavigationConsoleView: UIView {
         let button = UIButton(configuration: config)
         button.smoothCorner(radius: 7.5)
         return button
-    }()
-    
-    let exportButtonContainer = {
-        let sv = UIStackView()
-        sv.isLayoutMarginsRelativeArrangement = true
-        sv.directionalLayoutMargins = NSDirectionalEdgeInsets(edges: 5)
-        sv.backgroundColor = .white
-        sv.smoothCorner(radius: 7.5)
-        sv.dropShadow(radius: 7.5, opacity: 0.025)
-        return sv
     }()
     
     let exportButton = {
@@ -68,15 +48,13 @@ final class NavigationConsoleView: UIView {
     // MARK: - Layout
     private func setAutoLayout() {
         self.addSubview(mainHStack)
-        mainHStack.addArrangedSubview(popButtonContainer)
+        mainHStack.addArrangedSubview(popButton)
         mainHStack.addArrangedSubview(UIView()) // 스페이서 용도
-        mainHStack.addArrangedSubview(exportButtonContainer)
-        popButtonContainer.addArrangedSubview(popButton)
-        exportButtonContainer.addArrangedSubview(exportButton)
+        mainHStack.addArrangedSubview(exportButton)
         
         mainHStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: 15)) }
-        popButtonContainer.snp.makeConstraints { $0.size.equalTo(50) }
-        exportButtonContainer.snp.makeConstraints { $0.size.equalTo(50) }
+        popButton.snp.makeConstraints { $0.size.equalTo(35) }
+        exportButton.snp.makeConstraints { $0.size.equalTo(35) }
     }
 }
 

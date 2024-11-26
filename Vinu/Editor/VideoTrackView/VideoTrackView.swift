@@ -18,10 +18,10 @@ final class VideoTrackView: UIView {
     private let once = OnlyOnce()
     // 외부로부터의 데이터 바인딩을 위한 인풋용 서브젝트
     let sourceIn = PublishSubject<[VideoTrackModel]>()
-//    let sourceIn = BehaviorSubject<[VideoTrackModel]>(value: [
-//        .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 5, preferredTimescale: 1)),
-//        .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 3, preferredTimescale: 1)),
-//    ])
+    // let sourceIn = BehaviorSubject<[VideoTrackModel]>(value: [
+    //     .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 20, preferredTimescale: 1)),
+    //     .init(image: UIImage(named: "main_view_image")!, duration: .init(seconds: 30, preferredTimescale: 1)),
+    // ])
 
     let timeRanges = PublishSubject<[CMTimeRange]>()
     let scrollProgress = PublishSubject<CGFloat>()
@@ -319,11 +319,11 @@ final class VideoTrackView: UIView {
                 guard let attributes = owner.videoClipCV.layoutAttributesForItem(at: path) else { return }
                 // 왼쪽 스페이서 넓이만큼 오프셋 필요함
                 let spacerWidth = owner.leftSpacer.frame.width
-                let handleWidth = CGFloat(50)
+                let handleWidth = CGFloat(30)
                 
                 // attributes의 프레임 정보를 바탕으로 포커스 뷰 그려주기 (오토레이아웃 필요 없음)
-                let leftOrigin = CGPoint(x: attributes.frame.minX + spacerWidth - 15, y: attributes.frame.minY + 18)
-                let rightOrigin = CGPoint(x: attributes.frame.maxX + spacerWidth + 10 - handleWidth, y: attributes.frame.minY + 18)
+                let leftOrigin = CGPoint(x: attributes.frame.minX + spacerWidth - 5, y: attributes.frame.minY + 18)
+                let rightOrigin = CGPoint(x: attributes.frame.maxX + spacerWidth - handleWidth - 4 + 5, y: attributes.frame.minY + 18)
                 
                 let leftSize = CGSize(width: handleWidth, height: attributes.frame.height)
                 let rightSize = CGSize(width: handleWidth, height: attributes.frame.height)

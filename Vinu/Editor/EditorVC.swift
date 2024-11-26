@@ -65,7 +65,7 @@ final class EditorVC: UIViewController {
         mainVStack.addArrangedSubview(playbackConsoleView)
         mainVStack.addArrangedSubview(videoTrackView)
 
-        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(bottom: 15)) }
+        mainVStack.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide).inset(UIEdgeInsets(vertical: 15)) }
         playbackConsoleView.snp.makeConstraints { $0.height.equalTo(50) }
         videoTrackView.snp.makeConstraints { $0.height.equalTo(78) }
     }

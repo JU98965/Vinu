@@ -41,7 +41,7 @@ final class MainVC: UIViewController {
     
     let titleLabel = {
         let label = UILabel()
-        label.text = String(localized: "손쉽게 하나의 영상으로 짜잔")
+        label.text = String(localized: "손쉽게 하나의 영상으로")
         label.font = .preferredFont(forTextStyle: .extraLargeTitle)
         label.adjustsFontSizeToFitWidth = true
         label.textColor = .white
@@ -51,7 +51,7 @@ final class MainVC: UIViewController {
     
     let subTitleLabel = {
         let label = UILabel()
-        label.text = String(localized: "\"비누\"가 순식간에 합쳐드릴게요.\n완전 무료! 광고도 없답니다.")
+        label.text = String(localized: "순식간에 합쳐드릴게요.\n완전 무료! 광고도 없답니다.")
         label.font = .boldSystemFont(ofSize: label.font.pointSize)
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -93,7 +93,6 @@ final class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .tintBlue
-//        setNavigationBar(title: String(localized: "Vinu"))
 
         setAutoLayout()
         setBinding()

@@ -14,7 +14,7 @@ final class ThumbnailCell: UICollectionViewCell {
     // MARK: - Components
     let imageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "main_view_image")
+        // view.image = UIImage(named: "main_view_image")
         view.contentMode = .scaleAspectFill
         return view
     }()

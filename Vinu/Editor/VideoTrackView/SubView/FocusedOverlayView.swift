@@ -22,7 +22,7 @@ final class FocusedOverlayView: UIView {
     let leftHandleView = {
         let view = UIView()
         view.backgroundColor = .backWhite
-        view.smoothCorner(radius: 7.5 / 2)
+        view.smoothCorner(radius: 5 / 2)
         view.dropShadow(radius: 3, opacity: 0.25)
         return view
     }()
@@ -30,7 +30,7 @@ final class FocusedOverlayView: UIView {
     let rightHandleView = {
         let view = UIView()
         view.backgroundColor = .backWhite
-        view.smoothCorner(radius: 7.5 / 2)
+        view.smoothCorner(radius: 5 / 2)
         view.dropShadow(radius: 3, opacity: 0.25)
         return view
     }()
@@ -62,11 +62,11 @@ final class FocusedOverlayView: UIView {
         strokeView.snp.makeConstraints { $0.edges.equalToSuperview() }
         leftHandleView.snp.makeConstraints {
             $0.leading.verticalEdges.equalToSuperview().inset(7.5)
-            $0.width.equalTo(7.5)
+            $0.width.equalTo(5)
         }
         rightHandleView.snp.makeConstraints {
             $0.trailing.verticalEdges.equalToSuperview().inset(7.5)
-            $0.width.equalTo(7.5)
+            $0.width.equalTo(5)
         }
     }
     

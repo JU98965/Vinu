@@ -23,6 +23,7 @@ final class PlaybackConsoleView: UIView {
     let elapsedTimeLabel = {
         let label = PaddingUILabel(padding: UIEdgeInsets(left: 15))
         label.text = "00:00 / 00:00" // temp
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .textGray
         return label
     }()
