@@ -174,10 +174,14 @@ final class EditorVC: UIViewController {
                 owner.alertPopThisView()
             }
             .disposed(by: bag)
+        
+        // 재생 중에는 트랙뷰의 인터렉션을 비활성화
+        output.isTrackViewInteractionAllowed
+            .bind(to: videoTrackView.rx.isUserInteractionEnabled)
+            .disposed(by: bag)
     }
 }
 
 #Preview {
-    UINavigationController(rootViewController: EditorVC()
-)
+    UINavigationController(rootViewController: EditorVC())
 }

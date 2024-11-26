@@ -36,6 +36,7 @@ final class EditorVM {
         let presentExportVC: Observable<ExporterConfiguration>
         let isHDRAllowed: Observable<Bool>
         let displayPopAlert: Observable<Void>
+        let isTrackViewInteractionAllowed: Observable<Bool>
     }
     
     let configuration: EditorConfiguration
@@ -196,6 +197,10 @@ final class EditorVM {
         playerItem
             .bind(onNext: { _ in HapticManager.shared.occurLight(intensity: 0.75) })
             .disposed(by: bag)
+        
+        // 재생 중에는 트랙뷰의 인터렉션을 비활성화
+        let isTrackViewInteractionAllowed = isPlaying
+            .map { !$0 }
      
         return Output(
             playerItem: playerItem,
@@ -208,7 +213,8 @@ final class EditorVM {
             playbackImage: playbackImage,
             presentExportVC: exportTap,
             isHDRAllowed: isHDRAllowed,
-            displayPopAlert: displayPopAlert)
+            displayPopAlert: displayPopAlert,
+            isTrackViewInteractionAllowed: isTrackViewInteractionAllowed)
     }
     
     // MARK: - Private methods
