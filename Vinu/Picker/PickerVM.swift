@@ -155,6 +155,12 @@ final class PickerVM {
             }
             .disposed(by: bag)
         
+        // 번호표에 변동이 생기는 경우, 즉 아이템을 선택하거나 삭제했을 경우 햅틱 발생
+        numberTagIndexPaths
+            .skip(1) // 초기화로 인한 방출 1회 무시
+            .bind(onNext: { _ in HapticManager.shared.occurSelect() })
+            .disposed(by: bag)
+        
         return Output(
             thumbnailSectionDataArr: thumbnailSectionDataArr.asObservable(),
             pendingItems: pendingItems,

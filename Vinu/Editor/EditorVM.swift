@@ -183,6 +183,19 @@ final class EditorVM {
 
         // 홈 화면으로 돌아가기 전 확인하는 얼럿 표시
         let displayPopAlert = input.popTap
+        
+        // 소수점 2자리 단위로 확대 배율이 변할 때마다 햅틱 피드백 발생
+        input.scaleFactor
+            .skip(1) // 초기화로 인한 방출 1회 무시
+            .map { Int($0 * 100) }
+            .distinctUntilChanged()
+            .bind { _ in HapticManager.shared.occurRigid(intensity: 0.5) }
+            .disposed(by: bag)
+        
+        // 플레이어 아이템이 업데이트 될 때마다 햅틱 피드백 발생
+        playerItem
+            .bind(onNext: { _ in HapticManager.shared.occurLight(intensity: 0.75) })
+            .disposed(by: bag)
      
         return Output(
             playerItem: playerItem,

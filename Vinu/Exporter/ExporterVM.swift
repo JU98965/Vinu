@@ -119,6 +119,13 @@ final class ExporterVM {
         // exporter의 상태가 변할 때마다 알림 텍스트를 전달
         let notificationText = exporterStatus
             .flatMapLatest(getNotificationText(status:))
+        
+        // exporter의 상태가 변할 때마다 적절한 햅틱 피드백 발생
+        exporterStatus
+            .bind(with: self) { owner, status in
+                owner.occurHaptic(status: status)
+            }
+            .disposed(by: bag)
 
         return Output(
             estimatedFileSizeText: estimatedFileSizeText,
@@ -252,6 +259,21 @@ final class ExporterVM {
             }
             
             return Disposables.create()
+        }
+    }
+    
+    private func occurHaptic(status: AVAssetExportSession.Status) {
+        
+        /// exporter의 상태가 변할 때마다 적절한 햅틱 피드백 발생
+        /// 성공, 실패 외에는 특별히 다른 피드백은 필요 없을 듯
+
+        switch status {
+        case .completed:
+            HapticManager.shared.occurSuccess()
+        case .failed:
+            HapticManager.shared.occurError()
+        default:
+            break
         }
     }
 }

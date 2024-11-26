@@ -64,6 +64,7 @@
 		51B048EA2CBFA39500C9382B /* FocusedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B048E92CBFA39500C9382B /* FocusedOverlayView.swift */; };
 		51C3F9AD2CF5B590004C6C15 /* NavigationConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3F9AC2CF5B590004C6C15 /* NavigationConsoleView.swift */; };
 		51C3F9B12CF5BA52004C6C15 /* EditorVC+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */; };
+		51C3F9B32CF5D57E004C6C15 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C3F9B22CF5D57E004C6C15 /* HapticManager.swift */; };
 		51C622F02CECA72E005E9E92 /* TitleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622EF2CECA72E005E9E92 /* TitleContainer.swift */; };
 		51C622F22CECAF0C005E9E92 /* SizeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F12CECAF0C005E9E92 /* SizeContainer.swift */; };
 		51C622F42CECB536005E9E92 /* PlacementContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F32CECB536005E9E92 /* PlacementContainer.swift */; };
@@ -155,6 +156,7 @@
 		51B048E92CBFA39500C9382B /* FocusedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedOverlayView.swift; sourceTree = "<group>"; };
 		51C3F9AC2CF5B590004C6C15 /* NavigationConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationConsoleView.swift; sourceTree = "<group>"; };
 		51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditorVC+Alert.swift"; sourceTree = "<group>"; };
+		51C3F9B22CF5D57E004C6C15 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		51C622EF2CECA72E005E9E92 /* TitleContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleContainer.swift; sourceTree = "<group>"; };
 		51C622F12CECAF0C005E9E92 /* SizeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeContainer.swift; sourceTree = "<group>"; };
 		51C622F32CECB536005E9E92 /* PlacementContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementContainer.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				519BF0C02C9AC5940064FE0A /* Editor */,
 				51F738DE2CE26174003E036B /* Exporter */,
 				519BF0C22C9AC5AE0064FE0A /* Model */,
+				51C3F9B42CF5F5B9004C6C15 /* Manager */,
 				5146D53D2CAC39F800C407F3 /* Extension */,
 				5146D5522CAC3B9A00C407F3 /* UIComponent */,
 				513698762CB8441F004175DE /* Trash */,
@@ -443,6 +446,14 @@
 				51C3F9B02CF5BA36004C6C15 /* EditorVC+Alert.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		51C3F9B42CF5F5B9004C6C15 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				51C3F9B22CF5D57E004C6C15 /* HapticManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		51C622F52CECBA03005E9E92 /* Container */ = {
@@ -697,6 +708,7 @@
 				517D56C12CC4051A00009E23 /* VideoTrackVM.swift in Sources */,
 				519BF0D02C9AE9080064FE0A /* ThumbnailCell.swift in Sources */,
 				517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */,
+				51C3F9B32CF5D57E004C6C15 /* HapticManager.swift in Sources */,
 				51D30D522CA30332003B9DF1 /* DivideView.swift in Sources */,
 				5141F4002CA4611100839239 /* ProjectCoreData+CoreDataClass.swift in Sources */,
 				5146D5512CAC3B7100C407F3 /* UIImage.swift in Sources */,
