@@ -14,6 +14,7 @@
 		5124F5E92CDD307D00DB6E0C /* SelectedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */; };
 		513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698772CB8442F004175DE /* LoadigVM+Old.swift */; };
 		5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698792CB84E7A004175DE /* VideoHelper.swift */; };
+		5138F5AA2CF715FE00A1595F /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5138F5A92CF715FE00A1595F /* InfoPlist.xcstrings */; };
 		5141F3F52CA4082100839239 /* ProjectDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5141F3F42CA4081A00839239 /* ProjectDataManager.swift */; };
 		5141F4002CA4611100839239 /* ProjectCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5141F3FC2CA4611100839239 /* ProjectCoreData+CoreDataClass.swift */; };
 		5141F4012CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5141F3FD2CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift */; };
@@ -106,6 +107,7 @@
 		5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedOverlayView.swift; sourceTree = "<group>"; };
 		513698772CB8442F004175DE /* LoadigVM+Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadigVM+Old.swift"; sourceTree = "<group>"; };
 		513698792CB84E7A004175DE /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
+		5138F5A92CF715FE00A1595F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		5141F3F42CA4081A00839239 /* ProjectDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDataManager.swift; sourceTree = "<group>"; };
 		5141F3FC2CA4611100839239 /* ProjectCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProjectCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5141F3FD2CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProjectCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -231,6 +233,14 @@
 				510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */,
 			);
 			path = Trash;
+			sourceTree = "<group>";
+		};
+		5138F5AB2CF7182200A1595F /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				5138F5A92CF715FE00A1595F /* InfoPlist.xcstrings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		5141F3EB2CA406C400839239 /* CoreData */ = {
@@ -391,6 +401,7 @@
 				519BF0AF2C9AB7DE0064FE0A /* Assets.xcassets */,
 				519BF0B12C9AB7DE0064FE0A /* LaunchScreen.storyboard */,
 				519BF0B42C9AB7DE0064FE0A /* Info.plist */,
+				5138F5AB2CF7182200A1595F /* Localization */,
 			);
 			path = Vinu;
 			sourceTree = "<group>";
@@ -638,6 +649,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5138F5AA2CF715FE00A1595F /* InfoPlist.xcstrings in Resources */,
 				519BF0B02C9AB7DE0064FE0A /* Assets.xcassets in Resources */,
 				519BF0B32C9AB7DE0064FE0A /* Base in Resources */,
 			);
@@ -812,6 +824,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -869,6 +882,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -883,6 +897,7 @@
 				DEVELOPMENT_TEAM = 4ZYD8FJ88F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "비누";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 편집을 위해 사진에 접근합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -918,6 +933,7 @@
 				DEVELOPMENT_TEAM = 4ZYD8FJ88F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vinu/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "비누";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "비디오 편집을 위해 사진에 접근합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
