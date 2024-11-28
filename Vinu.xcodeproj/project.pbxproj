@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47D72CD9F35100D479D2 /* GradientButton.swift */; };
 		510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DB2CDA349100D479D2 /* OnlyOnce.swift */; };
 		510C47E02CDA59D400D479D2 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DF2CDA59D100D479D2 /* UIView+.swift */; };
 		5124F5E92CDD307D00DB6E0C /* SelectedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */; };
@@ -33,7 +32,6 @@
 		5146D5662CAC79C500C407F3 /* VideoClipCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5146D5652CAC799F00C407F3 /* VideoClipCollectionView.swift */; };
 		514BD1D82CCEB10500611AC5 /* VideoTrackModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */; };
 		514DECBB2CAD2E2D0004EA00 /* FrameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514DECBA2CAD2E2D0004EA00 /* FrameCell.swift */; };
-		51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */; };
 		51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A032C9C823700E06B99 /* PaddingUILabel.swift */; };
 		51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A052C9CA66D00E06B99 /* PendingCell.swift */; };
 		516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516976282CBEE178008A69BF /* EditorConfiguration.swift */; };
@@ -71,9 +69,7 @@
 		51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D412CA2CE24003B9DF1 /* EditorVM.swift */; };
 		51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D472CA2F952003B9DF1 /* ConfigureVC.swift */; };
 		51D30D4B2CA2F96B003B9DF1 /* ConfigureVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D4A2CA2F969003B9DF1 /* ConfigureVM.swift */; };
-		51D30D522CA30332003B9DF1 /* DivideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D512CA30320003B9DF1 /* DivideView.swift */; };
 		51D30D552CA30C22003B9DF1 /* ConfigureCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D542CA30C22003B9DF1 /* ConfigureCardCell.swift */; };
-		51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D566D42CDBF50A00F93E82 /* GradientView.swift */; };
 		51E1E1AC2CD11B8B00414BF3 /* PlaybackConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */; };
 		51EBA9202CBC242D0025E432 /* ConfigureError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EBA91F2CBC242D0025E432 /* ConfigureError.swift */; };
 		51F541E82CF3047A00249933 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F541E72CF3047A00249933 /* EmptyView.swift */; };
@@ -96,7 +92,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		510C47D72CD9F35100D479D2 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
 		510C47DB2CDA349100D479D2 /* OnlyOnce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyOnce.swift; sourceTree = "<group>"; };
 		510C47DF2CDA59D100D479D2 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedOverlayView.swift; sourceTree = "<group>"; };
@@ -122,7 +117,6 @@
 		5146D5652CAC799F00C407F3 /* VideoClipCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClipCollectionView.swift; sourceTree = "<group>"; };
 		514BD1D72CCEB10500611AC5 /* VideoTrackModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackModel.swift; sourceTree = "<group>"; };
 		514DECBA2CAD2E2D0004EA00 /* FrameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameCell.swift; sourceTree = "<group>"; };
-		516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerStrokeView.swift; sourceTree = "<group>"; };
 		51688A032C9C823700E06B99 /* PaddingUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingUILabel.swift; sourceTree = "<group>"; };
 		51688A052C9CA66D00E06B99 /* PendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCell.swift; sourceTree = "<group>"; };
 		51688A072C9CB2AA00E06B99 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -160,9 +154,7 @@
 		51D30D412CA2CE24003B9DF1 /* EditorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorVM.swift; sourceTree = "<group>"; };
 		51D30D472CA2F952003B9DF1 /* ConfigureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureVC.swift; sourceTree = "<group>"; };
 		51D30D4A2CA2F969003B9DF1 /* ConfigureVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureVM.swift; sourceTree = "<group>"; };
-		51D30D512CA30320003B9DF1 /* DivideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivideView.swift; sourceTree = "<group>"; };
 		51D30D542CA30C22003B9DF1 /* ConfigureCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureCardCell.swift; sourceTree = "<group>"; };
-		51D566D42CDBF50A00F93E82 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		51E1E1AB2CD11B8B00414BF3 /* PlaybackConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackConsoleView.swift; sourceTree = "<group>"; };
 		51EBA91F2CBC242D0025E432 /* ConfigureError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureError.swift; sourceTree = "<group>"; };
 		51F541E72CF3047A00249933 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
@@ -255,12 +247,8 @@
 		5146D5522CAC3B9A00C407F3 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				510C47DB2CDA349100D479D2 /* OnlyOnce.swift */,
 				51688A032C9C823700E06B99 /* PaddingUILabel.swift */,
-				510C47D72CD9F35100D479D2 /* GradientButton.swift */,
-				51D566D42CDBF50A00F93E82 /* GradientView.swift */,
-				516889FF2C9C588D00E06B99 /* InnerStrokeView.swift */,
-				51D30D512CA30320003B9DF1 /* DivideView.swift */,
+				510C47DB2CDA349100D479D2 /* OnlyOnce.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -720,11 +708,9 @@
 				519BF0C62C9AC5CF0064FE0A /* HomeVM.swift in Sources */,
 				51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */,
 				519BF0D32C9AEBF40064FE0A /* ThumbnailData.swift in Sources */,
-				51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */,
 				5146D5452CAC3A7D00C407F3 /* PHAsset+.swift in Sources */,
 				51F738ED2CE4BB9F003E036B /* AVMutableVideoComposition+.swift in Sources */,
 				518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */,
-				510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */,
 				51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */,
 				5146D54D2CAC3AEB00C407F3 /* Array+ThumbnailData.swift in Sources */,
 				516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */,
@@ -739,7 +725,6 @@
 				5146D5432CAC3A6700C407F3 /* UICollectionView+.swift in Sources */,
 				51F739052CE656F3003E036B /* AVAssetExportSession+.swift in Sources */,
 				51F541E82CF3047A00249933 /* EmptyView.swift in Sources */,
-				51D566D52CDBF50A00F93E82 /* GradientView.swift in Sources */,
 				51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */,
 				51FE8E8D2CCF9B9D0083AA11 /* VideoPlayerView.swift in Sources */,
 				51F738FC2CE60475003E036B /* EditConsoleView.swift in Sources */,
@@ -770,7 +755,6 @@
 				519BF0D02C9AE9080064FE0A /* ThumbnailCell.swift in Sources */,
 				517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */,
 				51C3F9B32CF5D57E004C6C15 /* HapticManager.swift in Sources */,
-				51D30D522CA30332003B9DF1 /* DivideView.swift in Sources */,
 				5141F4002CA4611100839239 /* ProjectCoreData+CoreDataClass.swift in Sources */,
 				5146D5512CAC3B7100C407F3 /* UIImage+.swift in Sources */,
 				5141F4012CA4611100839239 /* ProjectCoreData+CoreDataProperties.swift in Sources */,

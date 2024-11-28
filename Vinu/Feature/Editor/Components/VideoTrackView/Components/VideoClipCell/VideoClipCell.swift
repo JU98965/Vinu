@@ -25,7 +25,7 @@ final class VideoClipCell: UICollectionViewCell {
         cv.isScrollEnabled = false
         cv.smoothCorner(radius: 7.5)
         cv.clipsToBounds = true
-        cv.backgroundColor = .chuTint
+        cv.backgroundColor = .gray
         // 모든 수치가 정해져 있어 layoutsubview 시점에 초기화 시켜줄 필요 없음
         cv.setSinglelineLayout(spacing: .zero, itemSize: .init(width: 64, height: 64))
         return cv

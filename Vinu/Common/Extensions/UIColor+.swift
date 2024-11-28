@@ -31,23 +31,4 @@ extension UIColor {
     static var tintBlue: UIColor {
         UIColor(hex: 0x7AACF9)
     }
-    static var chuColorPalette: [UIColor] {
-        let array: [UIColor] = [
-            .init(hex: 0xd4b8a6),
-            .init(hex: 0x8e7d7b),
-            .init(hex: 0x7b6d71),
-            .init(hex: 0xa28d8d),
-            .init(hex: 0x7f6f7b),
-            .init(hex: 0x6b5a6b),
-            .init(hex: 0x9d7a73),
-            .init(hex: 0xb4a79b),
-            .init(hex: 0x6b6f43),
-            .init(hex: 0x8a8c5e),
-            .init(hex: 0x9a9e71),
-            .init(hex: 0xb4b86e)
-        ]
-        return array
-    }
-    
-    static let chuTint = UIColor.chuColorPalette.randomElement()
 }
