@@ -23,7 +23,7 @@ final class ConfigureVM {
         let placeHolder: Observable<String>
         let sizeItems: Observable<[SizeCardData]>
         let placementItems: Observable<[PlacementCardData]>
-        let isCreateButtonEnabled: Observable<Bool>
+        let isCreateButtonEnabled: Observable<Bool?>
         let createButtonTitle: Observable<String>
         let presentEditorVC: Observable<EditorConfiguration>
     }
@@ -120,7 +120,7 @@ final class ConfigureVM {
         // 비디오 에디터에 필요한 데이터 미리 로드
         let metadataArr = phAssets
             .flatMapLatest { phAssets in
-                return Observable.create { observer in
+                return Observable<[VideoMetadata]?>.create { observer in
                     let task = Task { @MainActor in
                         let result = await self.fetchVideoMetadataArr(phAssets)
                         
@@ -128,7 +128,7 @@ final class ConfigureVM {
                         case .success(let data):
                             observer.onNext(data)
                         case .failure(let error):
-#warning("실패시 화면에 안내 띄우고 초기화면으로 돌아가게 유도해야 할 듯")
+                            observer.onNext(nil)
                             print(error)
                         }
                         
@@ -145,23 +145,30 @@ final class ConfigureVM {
         
         // 비디오 클립을 가져와야 생성 버튼 활성화
         let isCreateButtonEnabled = metadataArr
-            .map { !$0.isEmpty }
+            .map() { metadataArr -> Bool? in
+                guard let metadataArr else { return nil }
+                return !(metadataArr.isEmpty)
+            }
         
         // 생성 버튼의 타이틀의 텍스트 설정
-        let createButtonTitle = isCreateButtonEnabled
-            .map {
-                if $0 {
-                    "프로젝트 시작하기"
+        let createButtonTitle = metadataArr
+            .map { metadataArr in
+                let failureText = String(localized: "데이터를 불러오지 못했어요.")
+                guard let metadataArr else { return failureText }
+
+                if !metadataArr.isEmpty {
+                    return String(localized: "프로젝트 시작하기")
                 } else {
-                    "데이터를 불러오고 있어요."
+                    return String(localized: "데이터를 불러오고 있어요.")
                 }
             }
         
         // 생성 버튼을 누르면 프로젝트 데이터 생성
         let presentEditorVC = input.tapCreateButton
             .withLatestFrom(Observable.combineLatest(titleText, size, placement, metadataArr))
-            .map { combined in
+            .map { combined -> EditorConfiguration? in
                 let (titleText, size, placement, metadataArr) = combined
+                guard let metadataArr else { return nil }
                 
                 let result = EditorConfiguration(title: titleText, size: size, placement: placement, metadataArr: metadataArr)
                 
@@ -169,6 +176,7 @@ final class ConfigureVM {
                 
                 return result
             }
+            .compactMap { $0 }
         
         return Output(
             placeHolder: placeHolder,

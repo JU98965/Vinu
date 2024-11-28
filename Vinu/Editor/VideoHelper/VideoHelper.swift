@@ -50,7 +50,7 @@ final class VideoHelper {
                         at: accumulatedTime)
                 }
             } catch {
-#warning("nil일 경우 실패 얼럿이라도 띄워야 하는 거 아닌가?")
+                print(#function, "예외 발생")
                 return nil
             }
 

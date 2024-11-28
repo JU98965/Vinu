@@ -98,31 +98,42 @@ final class ConfigureVC: UIViewController {
             selectedSizePath: selectedSizePath,
             selectedPlacementPath: selectedPlacementPath)
         
+        // MARK: - Output
         let output = configureVM.transform(input: input)
         
+        // 화면 비율 컬렉션 뷰 아이템
         output.sizeItems
             .bind(to: sizeContainer.sizeCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
                 cell.configure(itemData: item)
             }
             .disposed(by: bag)
         
+        // 화면 배치 컬렉션 뷰 아이템
         output.placementItems
             .bind(to: placementContainer.placementCV.rx.items(cellIdentifier: ConfigureCardCell.identifier, cellType: ConfigureCardCell.self)) { index, item, cell in
                 cell.configure(itemData: item)
             }
             .disposed(by: bag)
         
+        // 프로젝트 제목 플레이스 홀더 텍스트
         output.placeHolder
             .bind(to: titleContainer.titleTF.rx.placeholder)
             .disposed(by: bag)
         
+        // 프로젝트 시작하기 버튼 활성화 여부 (nil일 경우는 인디케이터 없이 비활성화)
         output.isCreateButtonEnabled
             .bind(with: self, onNext: { owner, isEnabled in
-                owner.createButton.isEnabled = isEnabled
-                owner.createButton.configuration?.showsActivityIndicator = !isEnabled
+                if let isEnabled {
+                    owner.createButton.isEnabled = isEnabled
+                    owner.createButton.configuration?.showsActivityIndicator = !isEnabled
+                } else {
+                    owner.createButton.isEnabled = false
+                    owner.createButton.configuration?.showsActivityIndicator = false
+                }
             })
             .disposed(by: bag)
         
+        // 프로젝트 시작하기 버튼 제목
         output.createButtonTitle
             .bind(to: createButton.rx.title())
             .disposed(by: bag)
