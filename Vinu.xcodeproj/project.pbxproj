@@ -248,7 +248,6 @@
 			isa = PBXGroup;
 			children = (
 				51688A032C9C823700E06B99 /* PaddingUILabel.swift */,
-				510C47DB2CDA349100D479D2 /* OnlyOnce.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -386,6 +385,7 @@
 				51C3F9B42CF5F5B9004C6C15 /* Managers */,
 				5146D53D2CAC39F800C407F3 /* Extensions */,
 				5146D5522CAC3B9A00C407F3 /* Components */,
+				51BD1DFE2CF9027F00CBC7D1 /* Utils */,
 				513698762CB8441F004175DE /* Archive */,
 			);
 			path = Common;
@@ -506,6 +506,14 @@
 				51F738FE2CE6151C003E036B /* ExporterConfiguration.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		51BD1DFE2CF9027F00CBC7D1 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				510C47DB2CDA349100D479D2 /* OnlyOnce.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		51C3F9AF2CF5BA2B004C6C15 /* Extensions */ = {
