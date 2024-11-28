@@ -1,5 +1,5 @@
 //
-//  MainVM.swift
+//  HomeVM.swift
 //  Vinu
 //
 //  Created by 신정욱 on 9/18/24.
@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-final class MainVM {
+final class HomeVM {
     private let bag = DisposeBag()
 
     struct Input {
@@ -16,10 +16,10 @@ final class MainVM {
     }
     
     struct Output {
-        let presentVideoPickerVC: Observable<Void>
+        let presentPickerVC: Observable<Void>
     }
 
     func transform(input: Input) -> Output {
-        return Output(presentVideoPickerVC: input.tapNewProjectButton)
+        return Output(presentPickerVC: input.tapNewProjectButton)
     }
 }

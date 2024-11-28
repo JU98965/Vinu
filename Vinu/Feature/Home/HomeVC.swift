@@ -1,5 +1,5 @@
 //
-//  MainVC.swift
+//  HomeVC.swift
 //  Vinu
 //
 //  Created by 신정욱 on 9/18/24.
@@ -10,8 +10,8 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class MainVC: UIViewController {
-    private let mainVM = MainVM()
+final class HomeVC: UIViewController {
+    private let homeVM = HomeVM()
     private let bag = DisposeBag()
     
     // MARK: - Componets
@@ -125,11 +125,11 @@ final class MainVC: UIViewController {
     
     // MARK: - Binding
     private func setBinding() {
-        let input = MainVM.Input(tapNewProjectButton: startButton.rx.tap.asObservable())
-        let output = mainVM.transform(input: input)
+        let input = HomeVM.Input(tapNewProjectButton: startButton.rx.tap.asObservable())
+        let output = homeVM.transform(input: input)
         
         // 비디오 피커 띄우기
-        output.presentVideoPickerVC
+        output.presentPickerVC
             .bind(with: self) { owner, _ in
                 let vc = PickerVC()
                 owner.navigationController?.pushViewController(vc, animated: true)
@@ -139,5 +139,5 @@ final class MainVC: UIViewController {
 }
 
 #Preview {
-    UINavigationController(rootViewController: MainVC())
+    UINavigationController(rootViewController: HomeVC())
 }

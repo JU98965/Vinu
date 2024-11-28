@@ -46,13 +46,13 @@
 		51957C2E2CD575E4001AB554 /* IndicatorPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51957C2D2CD575E4001AB554 /* IndicatorPointView.swift */; };
 		519BF0A42C9AB7DC0064FE0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A32C9AB7DC0064FE0A /* AppDelegate.swift */; };
 		519BF0A62C9AB7DC0064FE0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A52C9AB7DC0064FE0A /* SceneDelegate.swift */; };
-		519BF0A82C9AB7DC0064FE0A /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A72C9AB7DC0064FE0A /* MainVC.swift */; };
+		519BF0A82C9AB7DC0064FE0A /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0A72C9AB7DC0064FE0A /* HomeVC.swift */; };
 		519BF0AE2C9AB7DC0064FE0A /* Vinu.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0AC2C9AB7DC0064FE0A /* Vinu.xcdatamodeld */; };
 		519BF0B02C9AB7DE0064FE0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 519BF0AF2C9AB7DE0064FE0A /* Assets.xcassets */; };
 		519BF0B32C9AB7DE0064FE0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 519BF0B22C9AB7DE0064FE0A /* Base */; };
 		519BF0BC2C9AC4F40064FE0A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 519BF0BB2C9AC4F40064FE0A /* SnapKit */; };
 		519BF0BF2C9AC50E0064FE0A /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 519BF0BE2C9AC50E0064FE0A /* RxCocoa */; };
-		519BF0C62C9AC5CF0064FE0A /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0C52C9AC5CF0064FE0A /* MainVM.swift */; };
+		519BF0C62C9AC5CF0064FE0A /* HomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0C52C9AC5CF0064FE0A /* HomeVM.swift */; };
 		519BF0CB2C9AD8F50064FE0A /* PickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0CA2C9AD8F50064FE0A /* PickerVC.swift */; };
 		519BF0CD2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0CC2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift */; };
 		519BF0D02C9AE9080064FE0A /* ThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519BF0CF2C9AE9080064FE0A /* ThumbnailCell.swift */; };
@@ -137,12 +137,12 @@
 		519BF0A02C9AB7DC0064FE0A /* Vinu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vinu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		519BF0A32C9AB7DC0064FE0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		519BF0A52C9AB7DC0064FE0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		519BF0A72C9AB7DC0064FE0A /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
+		519BF0A72C9AB7DC0064FE0A /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		519BF0AD2C9AB7DC0064FE0A /* Vinu.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Vinu.xcdatamodel; sourceTree = "<group>"; };
 		519BF0AF2C9AB7DE0064FE0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		519BF0B22C9AB7DE0064FE0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		519BF0B42C9AB7DE0064FE0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		519BF0C52C9AC5CF0064FE0A /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
+		519BF0C52C9AC5CF0064FE0A /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
 		519BF0CA2C9AD8F50064FE0A /* PickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerVC.swift; sourceTree = "<group>"; };
 		519BF0CC2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPlayerDelegate.swift; sourceTree = "<group>"; };
 		519BF0CF2C9AE9080064FE0A /* ThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCell.swift; sourceTree = "<group>"; };
@@ -275,13 +275,13 @@
 			path = PreviewPlayer;
 			sourceTree = "<group>";
 		};
-		518408F42CAB214600779D12 /* Main */ = {
+		518408F42CAB214600779D12 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				519BF0A72C9AB7DC0064FE0A /* MainVC.swift */,
-				519BF0C52C9AC5CF0064FE0A /* MainVM.swift */,
+				519BF0A72C9AB7DC0064FE0A /* HomeVC.swift */,
+				519BF0C52C9AC5CF0064FE0A /* HomeVM.swift */,
 			);
-			path = Main;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		518408F52CAB216500779D12 /* Picker */ = {
@@ -369,7 +369,7 @@
 		51BD1DE82CF8CA6A00CBC7D1 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				518408F42CAB214600779D12 /* Main */,
+				518408F42CAB214600779D12 /* Home */,
 				518408F52CAB216500779D12 /* Picker */,
 				518408F62CAB21B100779D12 /* Configure */,
 				519BF0C02C9AC5940064FE0A /* Editor */,
@@ -716,8 +716,8 @@
 			files = (
 				510C47E02CDA59D400D479D2 /* UIView+.swift in Sources */,
 				51F738E62CE3B5BE003E036B /* VideoPlacement.swift in Sources */,
-				519BF0A82C9AB7DC0064FE0A /* MainVC.swift in Sources */,
-				519BF0C62C9AC5CF0064FE0A /* MainVM.swift in Sources */,
+				519BF0A82C9AB7DC0064FE0A /* HomeVC.swift in Sources */,
+				519BF0C62C9AC5CF0064FE0A /* HomeVM.swift in Sources */,
 				51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */,
 				519BF0D32C9AEBF40064FE0A /* ThumbnailData.swift in Sources */,
 				51688A002C9C588D00E06B99 /* InnerStrokeView.swift in Sources */,
