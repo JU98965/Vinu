@@ -235,7 +235,6 @@
 				5146D54A2CAC3AD800C407F3 /* Int+.swift */,
 				5146D5482CAC3AC500C407F3 /* NSDirectionalEdgeInsets+.swift */,
 				5146D5462CAC3A9F00C407F3 /* UIEdgeInsets+.swift */,
-				5146D5442CAC3A7D00C407F3 /* PHAsset+.swift */,
 				5146D5422CAC3A6700C407F3 /* UICollectionView+.swift */,
 				5146D5402CAC3A4400C407F3 /* UIViewController+.swift */,
 				5146D53E2CAC3A2A00C407F3 /* UIColor+.swift */,
@@ -277,6 +276,7 @@
 				519BF0CA2C9AD8F50064FE0A /* PickerVC.swift */,
 				519BF0D42C9AEDE70064FE0A /* PickerVM.swift */,
 				51BD1DEB2CF8EFE500CBC7D1 /* Components */,
+				51BD1DFF2CF9049000CBC7D1 /* Extensions */,
 			);
 			path = Picker;
 			sourceTree = "<group>";
@@ -514,6 +514,14 @@
 				510C47DB2CDA349100D479D2 /* OnlyOnce.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		51BD1DFF2CF9049000CBC7D1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5146D5442CAC3A7D00C407F3 /* PHAsset+.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		51C3F9AF2CF5BA2B004C6C15 /* Extensions */ = {
