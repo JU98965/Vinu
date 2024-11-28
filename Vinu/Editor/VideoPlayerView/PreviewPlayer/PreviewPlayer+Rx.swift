@@ -32,18 +32,6 @@ extension Reactive where Base: PreviewPlayer {
     }
     
     // MARK: - DelegateProxy
-    #warning("안쓰는 프록시 정리해야함")
-    var status: Observable<AVPlayer.Status> {
-        return delegate.methodInvoked(#selector(PreviewPlayerDelegate.didChangeStatus(status:)))
-            .compactMap { parameter in parameter[0] as? Int }
-            .compactMap { AVPlayer.Status(rawValue: $0) }
-    }
-    
-    var rate: Observable<Float> {
-        return delegate.methodInvoked(#selector(PreviewPlayerDelegate.didChangeRate(rate:)))
-            .compactMap { parameter in parameter[0] as? Float }
-    }
-    
     var timeControlStatus: Observable<AVPlayer.TimeControlStatus> {
         return delegate.methodInvoked(#selector(PreviewPlayerDelegate.didChangeTimeControlStatus(timeControlStatus:)))
             .compactMap { parameter in parameter[0] as? Int }

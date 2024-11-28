@@ -14,22 +14,11 @@ final class PreviewPlayer: AVPlayer {
     var delegate: PreviewPlayerDelegate?
     private var chaseTime: CMTime = .zero
     // KVO는 변수에 담아서 쓰지 않으면 작동 안하는 것 같음
-    private var statusObserver: NSKeyValueObservation?
-    private var rateObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
     private var playerItemStatusObserver: NSKeyValueObservation?
 
     override init() {
         super.init()
-        // 플레이어의 상태 변화를 관찰
-        self.statusObserver = self.observe(\.status, options: [.new]) { [weak self] object, change in
-            // 델리게이트 프록시 쪽에서 Any타입으로 업캐스팅되면 어차피 원시값으로 할당되기 때문에 사전에 Int로 할당
-            self?.delegate?.didChangeStatus?(status: object.status.rawValue)
-        }
-        // 플레이어의 재생 속도 변화를 관찰 (1.0 기본속도, 0.0 정지)
-        self.rateObserver = self.observe(\.rate, options: [.new]) { [weak self] object, change in
-            self?.delegate?.didChangeRate?(rate: object.rate)
-        }
         // 플레이어의 재생 상태 변화를 관찰 (재생, 정지 등)
         self.timeControlStatusObserver = self.observe(\.timeControlStatus, options: [.new]) { [weak self] object, change in
             // 델리게이트 프록시 쪽에서 Any타입으로 업캐스팅되면 어차피 원시값으로 할당되기 때문에 사전에 Int로 할당

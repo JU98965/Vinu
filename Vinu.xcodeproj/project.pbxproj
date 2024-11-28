@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		510C47D82CD9F36900D479D2 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47D72CD9F35100D479D2 /* GradientButton.swift */; };
 		510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DB2CDA349100D479D2 /* OnlyOnce.swift */; };
-		510C47DE2CDA4FA000D479D2 /* CustomIntensityVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */; };
 		510C47E02CDA59D400D479D2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 510C47DF2CDA59D100D479D2 /* UIView.swift */; };
 		5124F5E92CDD307D00DB6E0C /* SelectedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */; };
-		513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698772CB8442F004175DE /* LoadigVM+Old.swift */; };
 		5136987A2CB84E80004175DE /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513698792CB84E7A004175DE /* VideoHelper.swift */; };
 		5138F5AA2CF715FE00A1595F /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5138F5A92CF715FE00A1595F /* InfoPlist.xcstrings */; };
 		5141F3F52CA4082100839239 /* ProjectDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5141F3F42CA4081A00839239 /* ProjectDataManager.swift */; };
@@ -39,7 +37,6 @@
 		51688A042C9C823700E06B99 /* PaddingUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A032C9C823700E06B99 /* PaddingUILabel.swift */; };
 		51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51688A052C9CA66D00E06B99 /* PendingCell.swift */; };
 		516976292CBEE178008A69BF /* EditorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516976282CBEE178008A69BF /* EditorConfiguration.swift */; };
-		517320E72CD937D4003D685C /* ShadowButtonBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517320E62CD937D4003D685C /* ShadowButtonBase.swift */; };
 		517D56BB2CC3D4E600009E23 /* VideoTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */; };
 		517D56C12CC4051A00009E23 /* VideoTrackVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517D56C02CC4051700009E23 /* VideoTrackVM.swift */; };
 		518408EE2CAA8BA500779D12 /* VideoClipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518408ED2CAA8B9100779D12 /* VideoClipCell.swift */; };
@@ -70,7 +67,6 @@
 		51C622F22CECAF0C005E9E92 /* SizeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F12CECAF0C005E9E92 /* SizeContainer.swift */; };
 		51C622F42CECB536005E9E92 /* PlacementContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C622F32CECB536005E9E92 /* PlacementContainer.swift */; };
 		51CB74282CDE0CA600C87F6C /* PendingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CB74272CDE0CA600C87F6C /* PendingItemView.swift */; };
-		51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D3D2CA2B124003B9DF1 /* VideoData.swift */; };
 		51D30D402CA2BF04003B9DF1 /* EditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */; };
 		51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D412CA2CE24003B9DF1 /* EditorVM.swift */; };
 		51D30D482CA2F952003B9DF1 /* ConfigureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D30D472CA2F952003B9DF1 /* ConfigureVC.swift */; };
@@ -102,10 +98,8 @@
 /* Begin PBXFileReference section */
 		510C47D72CD9F35100D479D2 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
 		510C47DB2CDA349100D479D2 /* OnlyOnce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyOnce.swift; sourceTree = "<group>"; };
-		510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntensityVisualEffectView.swift; sourceTree = "<group>"; };
 		510C47DF2CDA59D100D479D2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		5124F5E82CDD307D00DB6E0C /* SelectedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedOverlayView.swift; sourceTree = "<group>"; };
-		513698772CB8442F004175DE /* LoadigVM+Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadigVM+Old.swift"; sourceTree = "<group>"; };
 		513698792CB84E7A004175DE /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
 		5138F5A92CF715FE00A1595F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		5141F3F42CA4081A00839239 /* ProjectDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDataManager.swift; sourceTree = "<group>"; };
@@ -133,7 +127,6 @@
 		51688A052C9CA66D00E06B99 /* PendingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCell.swift; sourceTree = "<group>"; };
 		51688A072C9CB2AA00E06B99 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		516976282CBEE178008A69BF /* EditorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorConfiguration.swift; sourceTree = "<group>"; };
-		517320E62CD937D4003D685C /* ShadowButtonBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowButtonBase.swift; sourceTree = "<group>"; };
 		517D56BA2CC3D4E600009E23 /* VideoTrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackView.swift; sourceTree = "<group>"; };
 		517D56C02CC4051700009E23 /* VideoTrackVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrackVM.swift; sourceTree = "<group>"; };
 		518408ED2CAA8B9100779D12 /* VideoClipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClipCell.swift; sourceTree = "<group>"; };
@@ -163,7 +156,6 @@
 		51C622F12CECAF0C005E9E92 /* SizeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeContainer.swift; sourceTree = "<group>"; };
 		51C622F32CECB536005E9E92 /* PlacementContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementContainer.swift; sourceTree = "<group>"; };
 		51CB74272CDE0CA600C87F6C /* PendingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingItemView.swift; sourceTree = "<group>"; };
-		51D30D3D2CA2B124003B9DF1 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
 		51D30D3F2CA2BF04003B9DF1 /* EditorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorVC.swift; sourceTree = "<group>"; };
 		51D30D412CA2CE24003B9DF1 /* EditorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorVM.swift; sourceTree = "<group>"; };
 		51D30D472CA2F952003B9DF1 /* ConfigureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureVC.swift; sourceTree = "<group>"; };
@@ -222,17 +214,13 @@
 			path = SelectedOverlayView;
 			sourceTree = "<group>";
 		};
-		513698762CB8441F004175DE /* Trash */ = {
+		513698762CB8441F004175DE /* Unused */ = {
 			isa = PBXGroup;
 			children = (
 				5141F3EB2CA406C400839239 /* CoreData */,
-				51D30D3D2CA2B124003B9DF1 /* VideoData.swift */,
 				5141F3F42CA4081A00839239 /* ProjectDataManager.swift */,
-				513698772CB8442F004175DE /* LoadigVM+Old.swift */,
-				517320E62CD937D4003D685C /* ShadowButtonBase.swift */,
-				510C47DD2CDA4EB000D479D2 /* CustomIntensityVisualEffectView.swift */,
 			);
-			path = Trash;
+			path = Unused;
 			sourceTree = "<group>";
 		};
 		5138F5AB2CF7182200A1595F /* Localization */ = {
@@ -397,7 +385,7 @@
 				51C3F9B42CF5F5B9004C6C15 /* Manager */,
 				5146D53D2CAC39F800C407F3 /* Extension */,
 				5146D5522CAC3B9A00C407F3 /* UIComponent */,
-				513698762CB8441F004175DE /* Trash */,
+				513698762CB8441F004175DE /* Unused */,
 				519BF0AF2C9AB7DE0064FE0A /* Assets.xcassets */,
 				519BF0B12C9AB7DE0064FE0A /* LaunchScreen.storyboard */,
 				519BF0B42C9AB7DE0064FE0A /* Info.plist */,
@@ -695,7 +683,6 @@
 				519BF0CB2C9AD8F50064FE0A /* PickerVC.swift in Sources */,
 				519BF0A62C9AB7DC0064FE0A /* SceneDelegate.swift in Sources */,
 				519421332CA92AD600392BF5 /* PreviewPlayer+Rx.swift in Sources */,
-				513698782CB84445004175DE /* LoadigVM+Old.swift in Sources */,
 				51C3F9AD2CF5B590004C6C15 /* NavigationConsoleView.swift in Sources */,
 				51D30D422CA2CE2E003B9DF1 /* EditorVM.swift in Sources */,
 				51F738D32CDE8C47003E036B /* ConfigureCardCellData.swift in Sources */,
@@ -703,8 +690,6 @@
 				51F541EC2CF30FCD00249933 /* DeniedAuthorizationEmptyView.swift in Sources */,
 				519421312CA9213800392BF5 /* PreviewPlayer.swift in Sources */,
 				510C47DC2CDA34B900D479D2 /* OnlyOnce.swift in Sources */,
-				510C47DE2CDA4FA000D479D2 /* CustomIntensityVisualEffectView.swift in Sources */,
-				517320E72CD937D4003D685C /* ShadowButtonBase.swift in Sources */,
 				5146D5412CAC3A4400C407F3 /* UIViewController.swift in Sources */,
 				51688A062C9CA66D00E06B99 /* PendingCell.swift in Sources */,
 				5124F5E92CDD307D00DB6E0C /* SelectedOverlayView.swift in Sources */,
@@ -744,7 +729,6 @@
 				51F738FF2CE6152E003E036B /* ExporterConfiguration.swift in Sources */,
 				519BF0CD2C9ADAA60064FE0A /* PreviewPlayerDelegate.swift in Sources */,
 				51F738EB2CE4A60B003E036B /* VideoMakingOptions.swift in Sources */,
-				51D30D3E2CA2B353003B9DF1 /* VideoData.swift in Sources */,
 				51F738D62CDFD568003E036B /* ConfigureVM+Concurrency.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
