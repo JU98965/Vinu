@@ -15,11 +15,13 @@ extension ConfigureVM {
     func fetchVideoMetadataArr(_ phAssets: [PHAsset]) async -> Result<[VideoMetadata], ConfigureError> {
         let avAssets = await fetchAVAssets(phAssets)
         
-        async let metadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
-        async let images = fetchImages(phAssets).compactMap { $0 }
+        async let fetchedMetadataArr = fetchMetadataArr(avAssets).compactMap { $0 }
+        async let fetchedImages = fetchImages(phAssets).compactMap { $0 }
+        
+        let (metadataArr, images) = await (fetchedMetadataArr, fetchedImages)
 
-        if await metadataArr.count == images.count {
-            let result = await zip(metadataArr, images).map { zipped in
+        if metadataArr.count == images.count {
+            let result = zip(metadataArr, images).map { zipped in
                 var (metadata, image) = zipped
                 metadata.image = image
                 return metadata
@@ -33,27 +35,31 @@ extension ConfigureVM {
     // MARK: - fetchAVAsset
     // PHAsset 배열을 AVAsset배열로 변환
     private func fetchAVAssets(_ phAssets: [PHAsset]) async -> [AVAsset?] {
-        // phAssets 개수만큼 빈 배열 만들기
-        var avAssets = [AVAsset?](repeating: nil, count: phAssets.count)
-        
-        // 한번에 for를 병렬적으로 돌리기 위해서 TaskGroup사용
-        // AVAsset이 Sendable한지 모르겠으니 일단 immutable한 값을 리턴
-        await withTaskGroup(of: (Int, AVAsset?).self) { group in
+        // fetchAVAsset을 병렬적으로 돌리기 위해서 TaskGroup사용
+        return await withTaskGroup(of: (Int, AVAsset?).self, returning: [AVAsset?].self) { group in
+            // phAssets 개수만큼 빈 배열 만들기
+            var avAssets = [AVAsset?](repeating: nil, count: phAssets.count)
+
+            
+            // addTask로 자식 작업 만들기
+            // 순서 보장은 안되고, 완료되는 거 먼저 저기 밑에 for문으로 들어감
             for (i, phAsset) in phAssets.enumerated() {
                 group.addTask {
                     let avAsset = await self.fetchAVAsset(phAsset)
+                    // AVAsset이 Sendable한지 모르겠으니 일단 immutable한 값을 리턴
                     return (i, avAsset)
                 }
             }
             
-            // withTaskGroup은 완료 순서대로 담긴다고 함
-            // 때문에 인덱스로 배열의 제 자리에 넣어주기
+            
             for await (i, avAsset) in group {
+                // 순서를 보장해야 해서 append 안 씀
                 avAssets[i] = avAsset
             }
+            
+            
+            return avAssets
         }
-        
-        return avAssets
     }
     
     private func fetchAVAsset(_ phAsset: PHAsset) async -> AVAsset? {
@@ -73,9 +79,10 @@ extension ConfigureVM {
     // MARK: - fetchMetaData
     // AVAsset에서 필요한 메타 데이터 뽑아내기
     private func fetchMetadataArr(_ avAssets: [AVAsset?]) async -> [VideoMetadata?] {
-        var metadataArr = [VideoMetadata?](repeating: nil, count: avAssets.count)
-        
-        await withTaskGroup(of: (Int, VideoMetadata?).self) { group in
+        return await withTaskGroup(of: (Int, VideoMetadata?).self, returning: [VideoMetadata?].self) { group in
+            var metadataArr = [VideoMetadata?](repeating: nil, count: avAssets.count)
+
+            
             for (i, avAsset) in avAssets.enumerated() {
                 group.addTask {
                     let metadata = await self.fetchMetaData(avAsset)
@@ -83,12 +90,14 @@ extension ConfigureVM {
                 }
             }
             
+            
             for await (i, metadata) in group {
                 metadataArr[i] = metadata
             }
+            
+            
+            return metadataArr
         }
-        
-        return metadataArr
     }
     
     private func fetchMetaData(_ avAsset: AVAsset?) async -> VideoMetadata? {
@@ -125,9 +134,10 @@ extension ConfigureVM {
     // MARK: - fetchImages
     // phAsset에서 비디오 트랙에 들어갈 프레임 이미지 추출 (일단은 썸네일 이미지 1장으로 대체)
     private func fetchImages(_ phAssets: [PHAsset]) async -> [UIImage?] {
-        var images = [UIImage?](repeating: nil, count: phAssets.count)
-        
-        await withTaskGroup(of: (Int, UIImage?).self) { group in
+        return await withTaskGroup(of: (Int, UIImage?).self, returning: [UIImage?].self) { group in
+            var images = [UIImage?](repeating: nil, count: phAssets.count)
+            
+            
             for (i, phAsset) in phAssets.enumerated() {
                 group.addTask {
                     let image = await self.fetchImage(phAsset)
@@ -135,12 +145,14 @@ extension ConfigureVM {
                 }
             }
             
+            
             for await (i, image) in group {
                 images[i] = image
             }
+            
+            
+            return images
         }
-        
-        return images
     }
 
     private func fetchImage(_ phAsset: PHAsset) async -> UIImage? {
