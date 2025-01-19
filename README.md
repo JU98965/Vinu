@@ -1,6 +1,6 @@
 ![Header](https://github.com/user-attachments/assets/ec0a5a88-88ed-4033-8d6c-7e2d43314691)
 
-## 앱스토어 다운로드
+## 다운로드
 [![AppStore](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/kr/app/%EB%B9%84%EB%88%84-%EC%86%90%EC%89%AC%EC%9A%B4-%EB%B9%84%EB%94%94%EC%98%A4-%EB%B3%91%ED%95%A9/id6738731574)
 
 <br/>
@@ -43,3 +43,7 @@
 <br/>
 
 ## 문제 해결
+[🔗 문제 해결 사례](https://axiomatic-mambo-9a8.notion.site/180b946392fe80d393f9ee1fa940e86b?pvs=4)
+
+<br/>
+
