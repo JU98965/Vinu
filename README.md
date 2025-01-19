@@ -31,10 +31,13 @@
 - 강제 언래핑은 사용하지 않습니다. 단, 별도의 nil 체크 로직이 존재할 경우에는 주석과 함께 제한적으로 사용이 가능합니다.
 - 5단어 이상의 이름은 지양합니다.
 - 이하의 약어만 허용합니다.
-ViewController → VC
-ViewModel → VM
-TableView → TV
-CollectionView → CV
+  > ViewController → VC
+  > 
+  > ViewModel → VM
+  > 
+  > TableView → TV
+  > 
+  > CollectionView → CV
 - 메서드 이름은 동사 원형을 사용합니다.
 
 <br/>
