@@ -47,3 +47,7 @@
 
 <br/>
 
+## 지원
+[🔗 사용 설명서](https://axiomatic-mambo-9a8.notion.site/14bb946392fe801daad3c77314e35d6d?pvs=4)
+
+[✉️ jjingeo1230@gmail.com](mailto:jjingeo1230@gmail.com)
